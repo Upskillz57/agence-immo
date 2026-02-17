@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,6 +23,8 @@ export default function Header({ transparent = false }: HeaderProps) {
 
 
   const [active, setActive] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  
 
   useEffect(() => {
     if (transparent) return;
@@ -69,7 +72,23 @@ export default function Header({ transparent = false }: HeaderProps) {
   
   }, [transparent, pathname]);
   
-
+  useEffect(() => {
+    const main = document.getElementById("main-scroll");
+  
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+      if (main) main.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+      if (main) main.style.overflow = "scroll";
+    }
+  
+    return () => {
+      document.body.style.overflow = "auto";
+      if (main) main.style.overflow = "scroll";
+    };
+  }, [menuOpen]);
+  
   
 
   return (
@@ -91,21 +110,35 @@ export default function Header({ transparent = false }: HeaderProps) {
       )}
 
       {/* CONTENU */}
-      <div className="relative z-20 max-w-7xl mx-auto px-8 h-full flex justify-between items-center">
+      <div className="relative z-20 max-w-7xl mx-auto px-6 md:px-8 h-full flex items-center justify-between">
 
+  {/* MOBILE HAMBURGER */}
+  <div className="md:hidden">
+    <button
+      onClick={() => setMenuOpen(!menuOpen)}
+      className="text-white"
+    >
+      {menuOpen ? <X size={28} /> : <Menu size={28} />}
+    </button>
+  </div>
 
-      <Link href="/" className="relative w-[200px] h-[70px] block">
-  <Image
-    src="/logo-marchal.png"
-    alt="Marchal Immobilier"
-    fill
-    className="object-contain cursor-pointer"
-    priority
-  />
-</Link>
+  {/* LOGO CENTRÉ MOBILE / GAUCHE DESKTOP */}
+  <Link
+    href="/"
+    className="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 w-[150px] md:w-[200px] h-[55px] md:h-[70px]"
+    >
+    <Image
+      src="/logo-marchal.png"
+      alt="Marchal Immobilier"
+      fill
+      className="object-contain"
+      priority
+    />
+  </Link>
 
+  {/* NAV DESKTOP */}
+  <nav className="hidden md:flex gap-12">
 
-        <nav className="flex gap-12">
         <Link href="#estimation" className="relative group text-white text-[14px] font-bold">
   Estimer un bien
   <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
@@ -152,6 +185,33 @@ export default function Header({ transparent = false }: HeaderProps) {
 
         </nav>
       </div>
+      {/* MOBILE MENU OVERLAY */}
+{menuOpen && (
+  <div className="fixed inset-0 bg-[#122e53] z-50 flex flex-col items-center justify-center gap-10 text-white text-xl md:hidden">
+
+    <Link href="#estimation" onClick={() => setMenuOpen(false)}>
+      Estimer un bien
+    </Link>
+
+    <Link href="/biens-a-vendre" onClick={() => setMenuOpen(false)}>
+      Vendre
+    </Link>
+
+    <Link href="/biens-a-vendre" onClick={() => setMenuOpen(false)}>
+      Acheter
+    </Link>
+
+    <Link href="/agence/conseillers" onClick={() => setMenuOpen(false)}>
+      Nos Conseillers
+    </Link>
+
+    <Link href="/contact" onClick={() => setMenuOpen(false)}>
+      Contact
+    </Link>
+
+  </div>
+)}
+
     </header>
   );
 }
