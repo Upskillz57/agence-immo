@@ -50,7 +50,8 @@ export default function HeroSlider() {
   };
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
+    <div className="relative h-[100dvh] w-full overflow-hidden">
+
 
       {/* IMAGES SUPERPOSÉES POUR CROSSFADE */}
       {slides.map((slide, i) => (
@@ -77,14 +78,26 @@ export default function HeroSlider() {
       <div className="absolute inset-0 bg-black/40" />
 
       {/* Texte bas gauche */}
-      <div className="absolute bottom-20 left-16 text-white z-20 max-w-xl">
+      <div className="
+  absolute
+  bottom-32
+  left-6
+  right-6
+  md:bottom-20
+  md:left-16
+  md:right-auto
+  text-white
+  z-20
+  max-w-xl
+">
+
       <h2
-  className={`${sourceSerif.className} text-4xl md:text-5xl lg:text-5xl font-medium leading-[1.08] tracking-[-0.01em] mb-6`}
+  className={`${sourceSerif.className} text-3xl md:text-5xl lg:text-5xl font-medium leading-[1.08] tracking-[-0.01em] mb-6`}
 >
   {slides[index].title}
 </h2>
 
-<p className="text-lg md:text-xl font-normal opacity-85 max-w-lg">
+<p className="text-base md:text-xl font-normal opacity-90 max-w-lg text-gray-200">
   {slides[index].subtitle}
 </p>
 
@@ -92,19 +105,21 @@ export default function HeroSlider() {
 
       {/* Flèche gauche */}
       <button
-        onClick={prevSlide}
-        className="absolute left-8 top-1/2 -translate-y-1/2 z-30 bg-white/20 backdrop-blur-md p-3 rounded-full text-white hover:bg-white/40 transition"
-      >
-        <ChevronLeft size={28} />
-      </button>
+  onClick={prevSlide}
+  className="hidden md:flex absolute left-8 top-1/2 -translate-y-1/2 z-30 bg-white/20 backdrop-blur-md p-3 rounded-full text-white hover:bg-white/40 transition"
+>
+  <ChevronLeft size={28} />
+</button>
+
 
       {/* Flèche droite */}
       <button
-        onClick={nextSlide}
-        className="absolute right-8 top-1/2 -translate-y-1/2 z-30 bg-white/20 backdrop-blur-md p-3 rounded-full text-white hover:bg-white/40 transition"
-      >
-        <ChevronRight size={28} />
-      </button>
+  onClick={nextSlide}
+  className="hidden md:flex absolute right-8 top-1/2 -translate-y-1/2 z-30 bg-white/20 backdrop-blur-md p-3 rounded-full text-white hover:bg-white/40 transition"
+>
+  <ChevronRight size={28} />
+</button>
+
 
       {/* Indicateurs */}
       <div className="absolute bottom-8 left-16 flex gap-3 z-30">
@@ -119,24 +134,65 @@ export default function HeroSlider() {
       </div>
 
       {/* Search bar centrée */}
-      <div className="relative z-20 flex items-center justify-center h-full px-6">
-        <div className="bg-white rounded-full px-6 py-4 flex items-center gap-4 shadow-xl w-full max-w-3xl">
-          <select className="bg-transparent outline-none">
-            <option>For sale</option>
-          </select>
-          <select className="bg-transparent outline-none">
-            <option>Any price</option>
-          </select>
-          <input
-            type="text"
-            placeholder="Location"
-            className="flex-1 bg-transparent outline-none"
-          />
-          <button className="bg-black text-white px-6 py-2 rounded-full">
-            Search
-          </button>
-        </div>
-      </div>
+    
+  {/* Search bar style LuxuryEstate */}
+<div className="absolute inset-0 flex items-center justify-center z-20 px-6">
+  <div className="
+    bg-white/95
+    backdrop-blur-md
+    rounded-full
+    px-6
+    py-3
+    flex
+    items-center
+    gap-4
+    shadow-2xl
+    w-full
+    max-w-2xl
+  ">
+
+    <input
+      type="text"
+      placeholder="Localisation"
+      className="flex-1 bg-transparent outline-none text-gray-800 placeholder-gray-500 text-base"
+    />
+
+    {/* Desktop */}
+    <button className="hidden md:flex bg-black text-white px-6 py-2 rounded-full items-center justify-center">
+      Rechercher
+    </button>
+
+    {/* Mobile */}
+    <button className="
+  md:hidden
+  w-12 h-12
+  rounded-full
+  bg-black
+  flex
+  items-center
+  justify-center
+  shrink-0
+">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="white"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="w-5 h-5"
+  >
+    <circle cx="11" cy="11" r="7" />
+    <line x1="16.65" y1="16.65" x2="21" y2="21" />
+  </svg>
+</button>
+
+
+  </div>
+</div>
+
+
 
     </div>
   );

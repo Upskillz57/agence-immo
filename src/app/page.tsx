@@ -21,14 +21,19 @@ export default function HomePage() {
 
       <main
   id="main-scroll"
-  className="snap-y snap-mandatory h-screen overflow-y-scroll scroll-smooth"
+  className="snap-y snap-mandatory h-[100dvh] overflow-y-scroll scroll-smooth"
 >
 
 
         {/* HERO */}
-        <section className="snap-start h-screen">
-          <HeroSlider />
-        </section>
+        <section className="snap-start h-[100dvh] relative">
+  <HeroSlider />
+  <div className="absolute inset-0 bg-black/40 md:hidden pointer-events-none" />
+</section>
+
+
+
+
 
         {/* SECTION 2 */}
         <section
@@ -163,63 +168,59 @@ export default function HomePage() {
 {/* SECTION 4 - VERSION AJUSTÉE */}
 <section
   id="section-4"
-  className="snap-start min-h-screen bg-[#f5f5f5] flex items-center pt-28"
+  className="snap-start bg-[#f5f5f5] flex items-center py-20 md:pt-28"
 >
-  <div className="max-w-6xl mx-auto w-full px-6 relative flex items-center">
+  <div className="max-w-6xl mx-auto w-full px-6 relative">
 
-    {/* IMAGE */}
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.9 }}
-      viewport={{ once: true }}
-      className="relative w-full h-[520px] overflow-hidden ml-24"
-    >
-      <img
-        src="/section4-achat.jpg"
-        alt="Acheter"
-        className="w-full h-full object-cover"
-      />
-    </motion.div>
+    <div className="flex flex-col md:flex-row items-center gap-12">
 
-    {/* CARTE TEXTE */}
-    <motion.div
-      initial={{ opacity: 0, x: -80 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.9, delay: 0.2 }}
-      viewport={{ once: true }}
-      className="
-        absolute
-        left-0
-        bg-white
-        shadow-2xl
-        p-10
-        md:p-14
-        max-w-xl
-      "
-    >
-      <p className="uppercase text-sm tracking-widest text-gray-500 mb-4">
-        VOUS SOUHAITEZ
-      </p>
-
-      <h2 className="text-4xl font-semibold text-[#2e3040] mb-6">
-        acheter un bien
-      </h2>
-
-      <p className="text-gray-700 leading-relaxed mb-8">
-        Vous cherchez la maison ou l’appartement idéal ? Nous vous guidons dans votre parcours d’achat avec transparence et efficacité.
-      </p>
-
-      <a
-        href="/biens-a-vendre"
-        className="px-7 py-3 bg-[#2e3040] text-white uppercase tracking-wider text-sm rounded-full hover:bg-black transition-all duration-300"
+      {/* IMAGE */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.9 }}
+        viewport={{ once: true }}
+        className="relative w-full md:w-[60%] h-[320px] md:h-[520px] overflow-hidden"
       >
-        Voir nos biens
-      </a>
-    </motion.div>
+        <img
+          src="/section4-achat.jpg"
+          alt="Acheter"
+          className="w-full h-full object-cover"
+        />
+      </motion.div>
 
+      {/* TEXTE */}
+      <motion.div
+        initial={{ opacity: 0, x: -40 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.9 }}
+        viewport={{ once: true }}
+        className="bg-white shadow-2xl p-8 md:p-14 w-full md:max-w-xl"
+      >
+        <p className="uppercase text-sm tracking-widest text-gray-500 mb-4">
+          VOUS SOUHAITEZ
+        </p>
+
+        <h2 className="text-3xl md:text-4xl font-semibold text-[#2e3040] mb-6">
+          acheter un bien
+        </h2>
+
+        <p className="text-gray-700 leading-relaxed mb-8">
+          Vous cherchez la maison ou l’appartement idéal ? Nous vous guidons dans votre parcours d’achat avec transparence et efficacité.
+        </p>
+
+        <a
+          href="/biens-a-vendre"
+          className="inline-block px-7 py-3 bg-[#2e3040] text-white uppercase tracking-wider text-sm rounded-full hover:bg-black transition-all duration-300"
+        >
+          Voir nos biens
+        </a>
+      </motion.div>
+
+    </div>
   </div>
 </section>
+
 
 
 

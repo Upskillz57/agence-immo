@@ -186,31 +186,59 @@ export default function Header({ transparent = false }: HeaderProps) {
         </nav>
       </div>
       {/* MOBILE MENU OVERLAY */}
-{menuOpen && (
-  <div className="fixed inset-0 bg-[#122e53] z-50 flex flex-col items-center justify-center gap-10 text-white text-xl md:hidden">
+      {menuOpen && (
+  <>
+    {/* BACKDROP FADE */}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
+      onClick={() => setMenuOpen(false)}
+    />
 
-    <Link href="#estimation" onClick={() => setMenuOpen(false)}>
-      Estimer un bien
-    </Link>
+    {/* MENU PANEL SLIDE */}
+    <motion.div
+      initial={{ x: "100%" }}
+      animate={{ x: 0 }}
+      exit={{ x: "100%" }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      className="fixed top-0 right-0 h-full w-[280px] bg-[#122e53] z-50 md:hidden shadow-2xl flex flex-col pt-24 px-8 gap-8 text-white text-lg"
+    >
 
-    <Link href="/biens-a-vendre" onClick={() => setMenuOpen(false)}>
-      Vendre
-    </Link>
+      {/* BOUTON FERMER */}
+      <button
+        onClick={() => setMenuOpen(false)}
+        className="absolute top-6 right-6"
+      >
+        <X size={28} />
+      </button>
 
-    <Link href="/biens-a-vendre" onClick={() => setMenuOpen(false)}>
-      Acheter
-    </Link>
+      <Link href="#estimation" onClick={() => setMenuOpen(false)}>
+        Estimer un bien
+      </Link>
 
-    <Link href="/agence/conseillers" onClick={() => setMenuOpen(false)}>
-      Nos Conseillers
-    </Link>
+      <Link href="/biens-a-vendre" onClick={() => setMenuOpen(false)}>
+        Vendre
+      </Link>
 
-    <Link href="/contact" onClick={() => setMenuOpen(false)}>
-      Contact
-    </Link>
+      <Link href="/biens-a-vendre" onClick={() => setMenuOpen(false)}>
+        Acheter
+      </Link>
 
-  </div>
+      <Link href="/agence/conseillers" onClick={() => setMenuOpen(false)}>
+        Nos Conseillers
+      </Link>
+
+      <Link href="/contact" onClick={() => setMenuOpen(false)}>
+        Contact
+      </Link>
+
+    </motion.div>
+  </>
 )}
+
 
     </header>
   );
