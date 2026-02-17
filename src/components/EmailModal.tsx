@@ -24,10 +24,20 @@ export default function EmailModal({
   });
 
   const [sent, setSent] = useState(false);
-  const [errors, setErrors] = useState<any>({});
+  type FormErrors = {
+    firstName?: boolean;
+    lastName?: boolean;
+    email?: boolean;
+    message?: boolean;
+    consent?: boolean;
+  };
+  
+  const [errors, setErrors] = useState<FormErrors>({});
+  
 
   const validate = () => {
-    let newErrors: any = {};
+    let newErrors: FormErrors = {};
+
 
     if (!form.firstName) newErrors.firstName = true;
     if (!form.lastName) newErrors.lastName = true;
@@ -39,7 +49,8 @@ export default function EmailModal({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
     e.preventDefault();
     if (!validate()) return;
 
@@ -99,34 +110,34 @@ export default function EmailModal({
 
                 {/* Nom / Prenom */}
                 <div className="grid md:grid-cols-2 gap-6">
-                  <Input
-                    placeholder="Prénom"
-                    value={form.firstName}
-                    error={errors.firstName}
-                    onChange={(v) => setForm({ ...form, firstName: v })}
-                  />
-                  <Input
-                    placeholder="Nom"
-                    value={form.lastName}
-                    error={errors.lastName}
-                    onChange={(v) => setForm({ ...form, lastName: v })}
-                  />
-                </div>
+                <Input
+  placeholder="Prénom"
+  value={form.firstName}
+  error={errors.firstName}
+  onChange={(v) => setForm({ ...form, firstName: v })}
+/>
 
-                {/* Email / Tel */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <Input
-                    placeholder="Email"
-                    type="email"
-                    value={form.email}
-                    error={errors.email}
-                    onChange={(v) => setForm({ ...form, email: v })}
-                  />
-                  <Input
-                    placeholder="Téléphone"
-                    value={form.phone}
-                    onChange={(v) => setForm({ ...form, phone: v })}
-                  />
+<Input
+  placeholder="Nom"
+  value={form.lastName}
+  error={errors.lastName}
+  onChange={(v) => setForm({ ...form, lastName: v })}
+/>
+
+<Input
+  placeholder="Email"
+  type="email"
+  value={form.email}
+  error={errors.email}
+  onChange={(v) => setForm({ ...form, email: v })}
+/>
+
+<Input
+  placeholder="Téléphone"
+  value={form.phone}
+  onChange={(v) => setForm({ ...form, phone: v })}
+/>
+
                 </div>
 
                 {/* Message */}
@@ -179,21 +190,30 @@ export default function EmailModal({
 }
 
 /* Input Premium */
-function Input({
-  placeholder,
-  value,
-  onChange,
-  type = "text",
-  error = false,
-}: any) {
-  return (
-    <input
-      type={type}
-      placeholder={placeholder}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className={`bg-white text-[#122e53] p-3 outline-none border-2 transition 
-        ${error ? "border-red-500" : "border-transparent focus:border-[#d4af37]"}`}
-    />
-  );
-}
+interface InputProps {
+    placeholder: string;
+    value: string;
+    onChange: (value: string) => void;
+    type?: string;
+    error?: boolean;
+  }
+  
+  function Input({
+    placeholder,
+    value,
+    onChange,
+    type = "text",
+    error = false,
+  }: InputProps) {
+    return (
+      <input
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={`bg-white text-[#122e53] p-3 outline-none border-2 transition 
+          ${error ? "border-red-500" : "border-transparent focus:border-[#d4af37]"}`}
+      />
+    );
+  }
+  
