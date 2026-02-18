@@ -37,7 +37,7 @@ export default function Footer() {
         {/* COLONNE CENTRE - RÉSEAUX */}
         <div className="flex flex-col items-center text-center">
           <h3 className="uppercase tracking-[0.35em] text-[11px] text-[#C6A75E] mb-10">
-            Follow us
+           Suivez-nous
           </h3>
 
           <div className="flex items-center gap-8">
@@ -89,7 +89,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-8 py-10 flex flex-col md:flex-row justify-between items-center text-gray-400 text-xs tracking-widest">
 
         <p>
-          © {new Date().getFullYear()} Marchal Immobilier — Tous droits réservés.
+          © {new Date().getFullYear()} Marchal Immobilier — Tous droits réservés. Réalisation Upskillz
         </p>
 
         <Image
