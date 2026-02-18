@@ -27,7 +27,7 @@ export default function OpeningAnimation() {
 
   return (
     <div className="fixed inset-0 z-[9999] overflow-hidden">
-
+      
       {/* HERO DERRIÈRE */}
       <div
         className="absolute inset-0 bg-cover bg-center scale-105 transition-transform duration-[2500ms]"
@@ -36,7 +36,7 @@ export default function OpeningAnimation() {
         }}
       />
 
-      {/* LUEUR DORÉE CENTRALE */}
+      {/* LUEUR DORÉE */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: open ? 0 : 0.4 }}
@@ -64,24 +64,27 @@ export default function OpeningAnimation() {
         className="absolute top-0 right-0 w-1/2 h-full bg-[#122e53]"
       />
 
-      {/* LOGO synchronisé */}
+      {/* LOGO RESPONSIVE */}
       <motion.div
         initial={{ opacity: 1, scale: 1 }}
         animate={{
-          opacity: open ? 0 : 1,
+          opacity: open ? 0 : 0.8,
           scale: open ? 0.95 : 1,
         }}
-        transition={{ duration: 1.2, ease: "easeInOut" }}
+        transition={{ duration: 1, ease: "easeInOut" }}
         className="absolute inset-0 flex items-center justify-center"
       >
-        <Image
-          src="/logo-marchal.png"
-          alt="Marchal Immobilier"
-          width={420}
-          height={220}
-          priority
-        />
+        <div className="relative w-[220px] h-[110px] sm:w-[280px] sm:h-[140px] md:w-[420px] md:h-[220px]">
+          <Image
+            src="/logo-marchal.png"
+            alt="Marchal Immobilier"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
       </motion.div>
+
     </div>
   );
 }
