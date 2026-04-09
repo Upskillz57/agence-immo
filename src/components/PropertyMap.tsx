@@ -65,12 +65,14 @@ const handleMove = () => {
 
 const bounds = currentMap.getBounds();
 
-console.log("zone carte", {
-west: bounds.getWest(),
-south: bounds.getSouth(),
-east: bounds.getEast(),
-north: bounds.getNorth()
-});
+if (bounds) {
+    console.log("zone carte", {
+      west: bounds.getWest(),
+      south: bounds.getSouth(),
+      east: bounds.getEast(),
+      north: bounds.getNorth()
+    });
+  }
 
 };
 
