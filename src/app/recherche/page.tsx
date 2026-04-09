@@ -9,7 +9,17 @@ import { LayoutGrid, Map } from "lucide-react";
 import { SlidersHorizontal, Home, BedDouble, Maximize } from "lucide-react";
 import { useEffect } from "react";
 
-export default function RecherchePage(){
+import { Suspense } from "react";
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Chargement...</div>}>
+      <RecherchePage />
+    </Suspense>
+  );
+}
+
+function RecherchePage(){
 
 const params = useSearchParams();
 
