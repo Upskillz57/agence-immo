@@ -15,8 +15,9 @@ interface HeaderProps {
 }
 
 
-export default function Header({ transparent = false }: HeaderProps) {
+export default function Header({ transparent = false, forceScrollBackground = false }: HeaderProps) {
   const pathname = usePathname();
+  const isRecherche = pathname.startsWith("/recherche");
 
   const isAgence = pathname.startsWith("/agence");
 
@@ -89,7 +90,7 @@ export default function Header({ transparent = false }: HeaderProps) {
     };
   }, [menuOpen]);
   
-  
+  const isPropertyPage = pathname.startsWith("/bien");
 
   return (
 <header className="fixed top-0 left-0 w-full z-50 h-[90px]">
@@ -100,7 +101,7 @@ export default function Header({ transparent = false }: HeaderProps) {
       {!transparent && (
         <motion.div
           initial={{ y: "-100%" }}
-          animate={{ y: active ? "0%" : "-100%" }}
+          animate={{ y: (active || forceScrollBackground || isRecherche || isPropertyPage) ? "0%" : "-100%" }}
           transition={{ duration: 0.6, ease: [0.77, 0, 0.175, 1] }}
           className="absolute top-0 left-0 w-full h-full bg-[#122e53] z-0"
 
@@ -139,18 +140,12 @@ export default function Header({ transparent = false }: HeaderProps) {
   {/* NAV DESKTOP */}
   <nav className="hidden md:flex gap-12">
 
-        <Link href="#estimation" className="relative group text-white text-[14px] font-bold">
+  <Link href="/estimation" className="relative group text-white text-[14px] font-bold">
   Estimer un bien
-  <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
 </Link>
 
 <Link href="/biens-a-vendre" className="relative group text-white text-[14px] font-semibold">
   Vendre
-  <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
-</Link>
-
-<Link href="/biens-a-vendre" className="relative group text-white text-[14px] font-semibold">
-  Acheter
   <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
 </Link>
 
@@ -215,17 +210,14 @@ export default function Header({ transparent = false }: HeaderProps) {
         <X size={28} />
       </button>
 
-      <Link href="#estimation" onClick={() => setMenuOpen(false)}>
-        Estimer un bien
-      </Link>
+      <Link href="/estimation" onClick={() => setMenuOpen(false)}>
+  Estimer un bien
+</Link>
 
       <Link href="/biens-a-vendre" onClick={() => setMenuOpen(false)}>
         Vendre
       </Link>
 
-      <Link href="/biens-a-vendre" onClick={() => setMenuOpen(false)}>
-        Acheter
-      </Link>
 
       <Link href="/agence/conseillers" onClick={() => setMenuOpen(false)}>
         Nos Conseillers

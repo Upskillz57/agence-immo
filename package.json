@@ -9,12 +9,16 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@types/mapbox-gl": "^3.4.1",
     "framer-motion": "^12.34.0",
     "lucide-react": "^0.564.0",
+    "mapbox-gl": "^3.19.1",
     "next": "16.1.6",
     "nodemailer": "^8.0.1",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "resend": "^6.10.0",
+    "supercluster": "^8.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

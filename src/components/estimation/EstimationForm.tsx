@@ -223,20 +223,12 @@ export default function EstimationForm() {
 
 
 <h3 className="text-2xl font-semibold text-black tracking-tight">
+  Obtenez votre estimation
+</h3>
 
-
-            Estimation entre
-          </h3>
-
-          <div className="text-3xl md:text-4xl font-semibold my-3 text-black tracking-tight">
-
-
-            {min.toLocaleString()} € – {max.toLocaleString()} €
-          </div>
-
-          <p className="text-gray-600">
-            Recevez le rapport détaillé et les comparables du secteur.
-          </p>
+<p className="text-gray-600">
+  Un conseiller Marchal Immobilier vous recontacte sous 24h avec une estimation fiable et personnalisée.
+</p>
 
           <input
             placeholder="Nom"

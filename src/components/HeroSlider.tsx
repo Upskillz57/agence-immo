@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import SearchTransactionDropdown from "./SearchTransactionDropdown";
+import SearchPriceDropdown from "./SearchPriceDropdown";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -33,6 +36,12 @@ const slides = [
 export default function HeroSlider() {
   const [index, setIndex] = useState(0);
 
+  const router = useRouter();
+
+const [transaction, setTransaction] = useState("vente");
+const [location, setLocation] = useState("");
+const [price, setPrice] = useState("");
+
   useEffect(() => {
     const interval = setInterval(() => {
       nextSlide();
@@ -47,6 +56,18 @@ export default function HeroSlider() {
 
   const prevSlide = () => {
     setIndex((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
+  const handleSearch = () => {
+
+    const params = new URLSearchParams({
+      transaction,
+      location,
+      price
+    });
+  
+    router.push(`/recherche?${params.toString()}`);
+  
   };
 
   return (
@@ -134,66 +155,75 @@ export default function HeroSlider() {
       </div>
 
       {/* Search bar centrée */}
-    
-  {/* Search bar style LuxuryEstate */}
 <div className="absolute inset-0 flex items-center justify-center z-20 px-6">
-  <div className="
-    bg-white/95
-    backdrop-blur-md
-    rounded-full
-    px-6
-    py-3
-    flex
-    items-center
-    gap-4
-    shadow-2xl
-    w-full
-    max-w-2xl
-  ">
 
-    <input
-      type="text"
-      placeholder="Localisation"
-      className="flex-1 bg-transparent outline-none text-gray-800 placeholder-gray-500 text-base"
-    />
-
-    {/* Desktop */}
-    <button className="hidden md:flex bg-black text-white px-6 py-2 rounded-full items-center justify-center">
-      Rechercher
-    </button>
-
-    {/* Mobile */}
-    <button className="
-  md:hidden
-  w-12 h-12
+<div className="
+  bg-white/95
+  backdrop-blur-md
   rounded-full
-  bg-black
+  px-4
+  py-3
   flex
   items-center
-  justify-center
-  shrink-0
+  gap-4
+  shadow-2xl
+  w-full
+  max-w-4xl
 ">
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="white"
-    strokeWidth="1.8"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="w-5 h-5"
-  >
-    <circle cx="11" cy="11" r="7" />
-    <line x1="16.65" y1="16.65" x2="21" y2="21" />
-  </svg>
-</button>
 
+  {/* Transaction */}
+  <SearchTransactionDropdown
+  value={transaction}
+  onChange={setTransaction}
+/>
+
+  {/* Prix */}
+  <SearchPriceDropdown
+  value={price}
+  onChange={setPrice}
+/>
+
+{/* Localisation */}
+<input
+  type="text"
+  placeholder="Ville ou code postal"
+  value={location}
+  onChange={(e)=>setLocation(e.target.value)}
+  className="flex-1 bg-transparent outline-none text-gray-800"
+/>
+  
+
+  {/* Desktop */}
+  <button
+    onClick={handleSearch}
+    className="hidden md:flex bg-[#122e53] text-white px-6 py-2 rounded-full items-center justify-center"
+  >
+    Rechercher
+  </button>
+
+  {/* Mobile */}
+  <button
+    onClick={handleSearch}
+    className="md:hidden w-12 h-12 rounded-full bg-[#122e53] flex items-center justify-center shrink-0"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="white"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-5 h-5"
+    >
+      <circle cx="11" cy="11" r="7" />
+      <line x1="16.65" y1="16.65" x2="21" y2="21" />
+    </svg>
+  </button>
 
   </div>
 </div>
 
-
-
-    </div>
-  );
+</div>
+);
 }

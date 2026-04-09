@@ -3,6 +3,8 @@ import "./globals.css";
 import Header from "../components/Header";
 import { Inter, Source_Serif_4, Montserrat } from "next/font/google";
 import Footer from "../components/Footer";
+import "mapbox-gl/dist/mapbox-gl.css";
+
 
 
 
@@ -16,6 +18,7 @@ const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
+
 
 
 const sourceSerif = Source_Serif_4({
@@ -37,7 +40,7 @@ export default function RootLayout({
     <html lang="fr">
       <body className={`${montserrat.className} antialiased relative`}>
 
-        <Header />
+      <Header />
         {children}
         <Footer />
 

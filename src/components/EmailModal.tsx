@@ -7,12 +7,18 @@ interface Props {
   advisorEmail: string;
   advisorName: string;
   onClose: () => void;
+  propertyTitle?: string;
+  propertyRef?: string;
+  propertyUrl?: string;
 }
 
 export default function EmailModal({
   advisorEmail,
   advisorName,
   onClose,
+  propertyTitle,
+  propertyRef,
+  propertyUrl
 }: Props) {
   const [form, setForm] = useState({
     firstName: "",
@@ -21,9 +27,12 @@ export default function EmailModal({
     phone: "",
     message: "",
     consent: false,
+    company: "",
+    formStart: Date.now()
   });
 
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
   type FormErrors = {
     firstName?: boolean;
     lastName?: boolean;
@@ -52,17 +61,33 @@ export default function EmailModal({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
     e.preventDefault();
+  
     if (!validate()) return;
-
-    await fetch("/api/send-email", {
+  
+    setLoading(true);
+  
+    const res = await fetch("/api/send-mail", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         ...form,
         advisorEmail,
+        advisorName,
+        propertyTitle,
+        propertyRef,
+        propertyUrl
       }),
     });
-
-    setSent(true);
+  
+    setLoading(false);
+  
+    if (res.ok) {
+      setSent(true);
+    } else {
+      alert("Erreur lors de l'envoi");
+    }
   };
 
   return (
@@ -78,12 +103,11 @@ export default function EmailModal({
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
           transition={{ duration: 0.35 }}
-          className="bg-[#122e53] w-full max-w-3xl relative text-white shadow-2xl"
-        >
+          className="bg-[#122e53] w-full max-w-3xl max-h-[90vh] overflow-y-auto relative text-white shadow-2xl"        >
           {/* Ligne dorée fine */}
           <div className="h-[3px] bg-[#d4af37] w-full" />
 
-          <div className="p-10 relative">
+          <div className="p-6 md:p-10 relative">
 
             {/* Close */}
             <button
@@ -102,15 +126,24 @@ export default function EmailModal({
             </p>
 
             {sent ? (
-              <p className="text-[#d4af37] text-lg">
+  <p className="text-[#d4af37] text-lg text-center py-10">
                 Votre message a bien été envoyé.
               </p>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
 
+<input
+  type="text"
+  name="company"
+  autoComplete="off"
+  className="hidden"
+  value={form.company}
+  onChange={(e) => setForm({ ...form, company: e.target.value })}
+/>
+
                 {/* Nom / Prenom */}
-                <div className="grid md:grid-cols-2 gap-6">
-                <Input
+                <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+  <Input
   placeholder="Prénom"
   value={form.firstName}
   error={errors.firstName}
@@ -171,13 +204,13 @@ export default function EmailModal({
 
                 {/* Bouton */}
                 <div className="text-center pt-6">
-                  <button
-                    type="submit"
-                    className="bg-[#d4af37] text-white px-10 py-3 tracking-wide 
-                    hover:bg-white hover:text-[#122e53] transition duration-300"
-                  >
-                    ENVOYER
-                  </button>
+                <button
+  type="submit"
+  className="bg-[#d4af37] text-white px-8 md:px-10 py-2.5 md:py-3 tracking-wide 
+  hover:bg-white hover:text-[#122e53] transition duration-300"
+>
+  {loading ? "ENVOI..." : "ENVOYER"}
+</button>
                 </div>
 
               </form>

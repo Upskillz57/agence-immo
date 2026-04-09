@@ -8,10 +8,15 @@ const config = {
       colors: {
         primary: "#2e3040",
         secondary: "#122e53",
+
+        
       },
     },
   },
   plugins: [],
+  
 };
+
+
 
 export default config;

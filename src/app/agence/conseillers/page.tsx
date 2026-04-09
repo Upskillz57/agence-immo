@@ -137,7 +137,7 @@ export default function ConseillersPage() {
 
                   <button
   onClick={() => setSelectedAdvisor(advisor)}
-  className="block w-full mt-3 py-2 border border-[#122e53] text-[#122e53] text-sm uppercase tracking-wide rounded-full hover:bg-[#122e53] hover:text-white transition duration-300"
+  className="block w-full mt-3 py-1.5 md:py-2 border border-[#122e53] text-[#122e53] text-xs md:text-sm uppercase tracking-wide rounded-full hover:bg-[#122e53] hover:text-white transition duration-300"
 >
   Envoyer un e-mail
 </button>
