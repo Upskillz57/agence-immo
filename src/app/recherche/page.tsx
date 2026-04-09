@@ -819,14 +819,15 @@ Map
 <button 
   onClick={() => {
     setFilters({
-        amenities: [],
-        type: "Tous",
-        transaction: "vente",
-        priceMax: "",
-        bedrooms: "",
-        bathrooms: "",
-        surface: "",
-      });
+      amenities: [],
+      type: "Tous",
+      transaction: "vente",
+      priceMax: "",
+      bedrooms: "",
+      bathrooms: "",
+      surface: "",
+      location: "",
+    });
   }}
   className="text-gray-500 hover:text-black"
 >
