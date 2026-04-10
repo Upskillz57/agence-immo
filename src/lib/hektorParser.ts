@@ -1,3 +1,4 @@
+//src/lib/hektorParser.ts
 import fs from "fs";
 
 export function parseHektorCSV() {
@@ -5,7 +6,7 @@ export function parseHektorCSV() {
     process.env.NODE_ENV === "production"
       ? "/home/hektorftp/export/Annonces.csv"
       : "data/Annonces.csv";
-      
+
   console.log("CHECK FILE:", filePath);
   console.log("EXISTS:", fs.existsSync(filePath));
 
