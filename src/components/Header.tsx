@@ -218,7 +218,6 @@ export default function Header({ transparent = false, forceScrollBackground = fa
         Vendre
       </Link>
 
-
       <Link href="/agence/conseillers" onClick={() => setMenuOpen(false)}>
         Nos Conseillers
       </Link>

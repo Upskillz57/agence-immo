@@ -9,7 +9,10 @@ import { LayoutGrid, Map } from "lucide-react";
 import { SlidersHorizontal, Home, BedDouble, Maximize } from "lucide-react";
 import { useEffect } from "react";
 
+
 import { Suspense } from "react";
+
+export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
@@ -30,38 +33,16 @@ const price = params.get("price");
 
 const [hoveredId,setHoveredId] = useState<string | null>(null);
 
+const [properties, setProperties] = useState<any[]>([]);
 
-
-const properties = [
-    {
-    id:"1",
-    title:"Villa contemporaine",
-    city:"Metz",
-    price:950000,
-    type:"Maison",
-    bathrooms: 2,
-    bedrooms: 4,
-    surface: 160,
-    amenities:["Piscine","Jardin"],
-    image:"/villa2.jpg",
-    lat:49.119,
-    lng:6.176
-    },
-    {
-    id:"2",
-    title:"Maison moderne",
-    city:"Montigny",
-    price:620000,
-    type:"Maison",
-    bathrooms: 1,
-    bedrooms: 2,
-    surface: 90,
-    amenities:["Garage"],
-    image:"/villa3.jpg",
-    lat:49.107,
-    lng:6.152
-    }
-    ];
+useEffect(() => {
+  fetch("/api/properties")
+    .then(res => res.json())
+    .then(data => {
+      console.log("DATA FRONT:", data); // 👈 AJOUT
+      setProperties(data);
+    });
+}, []);
 
 const [filters, setFilters] = useState({
     amenities: [] as string[],
@@ -82,7 +63,8 @@ const [filters, setFilters] = useState({
     setOpenDropdown(null);
   };
 
-  const filteredProperties = properties.filter((property) => {
+  const filteredProperties = Array.isArray(properties)
+  ? properties.filter((property) => {
 
     if (filters.amenities.length > 0) {
       const hasAmenity = filters.amenities.every((a) =>
@@ -125,8 +107,9 @@ if (filters.location) {
     }
   }
   
-    return true;
-  });
+  return true;
+})
+: [];
   
 const [view, setView] = useState<"list" | "map">("list");
 const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -176,6 +159,8 @@ const [openDropdown, setOpenDropdown] = useState<string | null>(null);
       priceMax: price || "",
     }));
   }, [location, transaction, price]);
+
+  
 
 return (
     <>
