@@ -1,14 +1,10 @@
-//src/lib/hektorParser.ts
 import fs from "fs";
 
 export function parseHektorCSV() {
-    const filePath =
+  const filePath =
     process.env.NODE_ENV === "production"
       ? "/home/hektorftp/export/Annonces.csv"
       : "data/Annonces.csv";
-
-  console.log("CHECK FILE:", filePath);
-  console.log("EXISTS:", fs.existsSync(filePath));
 
   if (!fs.existsSync(filePath)) {
     throw new Error("CSV file not found");
@@ -19,20 +15,33 @@ export function parseHektorCSV() {
   const lines = file.split("\n").filter(Boolean);
 
   return lines.map((line, index) => {
-    const cols = line.split('"!#"'); // ✅ BON SEPARATEUR
+    const cols = line.split('"!#"');
+
+    const clean = (val: string) =>
+      val?.replace(/"/g, "").trim() || "";
 
     return {
-      id: cols[1]?.replace(/"/g, "") || index.toString(),
-      title: cols[20]?.replace(/"/g, "") || "Bien",
-      city: cols[5]?.replace(/"/g, ""),
-      price: Number(cols[10]?.replace(/"/g, "")) || 0,
-      type: cols[3]?.replace(/"/g, ""),
-      surface: Number(cols[16]) || 0,
-      bedrooms: Number(cols[19]) || 0,
-      bathrooms: Number(cols[18]) || 0,
+      id: clean(cols[1]) || index.toString(),
+
+      title: clean(cols[20]),
+
+      city: clean(cols[5]),
+
+      price: Number(clean(cols[10])) || 0,
+
+      type: clean(cols[3]),
+
+      // 🔥 CORRECTIONS ICI
+      surface: Number(clean(cols[16])) || 0,
+      bedrooms: Number(clean(cols[19])) || 0,
+      bathrooms: Number(clean(cols[18])) || 0,
+
+      // 🔥 CLEAN HTML
+      description: clean(cols[21]).replace(/<[^>]*>/g, ""),
 
       image:
-        cols.find((c) => c.includes("http"))?.replace(/"/g, "") || "",
+        cols.find((c) => c.includes("http"))?.replace(/"/g, "") ||
+        "/placeholder.jpg",
 
       lat: 49.119,
       lng: 6.176,
