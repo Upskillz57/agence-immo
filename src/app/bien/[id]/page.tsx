@@ -2,10 +2,9 @@ import { notFound } from "next/navigation";
 import { getPropertyById } from "@/lib/getProperties";
 import Header from "@/components/Header";
 
-export default async function PropertyPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function PropertyPage({ params }: { params: { id: string } }) {
 
-
-    const { id } = await params;
+  const { id } = params;
   
     const property = await getPropertyById(id);
 
