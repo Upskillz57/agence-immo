@@ -15,33 +15,45 @@ export function parseHektorCSV() {
   const lines = file.split("\n").filter(Boolean);
 
   return lines.map((line, index) => {
-    const cols = line.split('"!#"');
+    const cols = line.split("!#").map((c) => c.replace(/"/g, "").trim());
 
-    const clean = (val: string) =>
-      val?.replace(/"/g, "").trim() || "";
+    const get = (i: number) => cols[i] || "";
+
+    // 🔥 RÉCUP IMAGES AUTO
+    const images = cols.filter((c) => c.includes("http"));
 
     return {
-      id: clean(cols[1]) || index.toString(),
+      id: get(1) || index.toString(),
 
-      title: clean(cols[20]),
+      // ✅ TITRE COURT
+      title: get(19),
 
-      city: clean(cols[5]),
+      // ✅ TYPE
+      type: get(3),
 
-      price: Number(clean(cols[10])) || 0,
+      // ✅ LOCALISATION
+      city: get(5),
 
-      type: clean(cols[3]),
+      // ✅ PRIX FIX
+      price: Number(get(10)) || 0,
 
-      // 🔥 CORRECTIONS ICI
-      surface: Number(clean(cols[16])) || 0,
-      bedrooms: Number(clean(cols[19])) || 0,
-      bathrooms: Number(clean(cols[18])) || 0,
+      // ✅ SURFACE FIX
+      surface: Number(get(15)) || 0,
 
-      // 🔥 CLEAN HTML
-      description: clean(cols[21]).replace(/<[^>]*>/g, ""),
+      // ✅ PIÈCES
+      bedrooms: Number(get(17)) || 0,
 
-      image:
-        cols.find((c) => c.includes("http"))?.replace(/"/g, "") ||
-        "/placeholder.jpg",
+      // ✅ CHAMBRES
+      rooms: Number(get(18)) || 0,
+
+      // ✅ DESCRIPTION CLEAN
+      description: get(20).replace(/<[^>]*>/g, ""),
+
+      // 🔥 IMAGE RÉELLE (FINI LE 404)
+      image: images[0] || "/placeholder.jpg",
+
+      // 🔥 GALERIE
+      images: images,
 
       lat: 49.119,
       lng: 6.176,

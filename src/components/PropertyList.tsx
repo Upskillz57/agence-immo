@@ -56,18 +56,18 @@ export default function PropertyList({
   
                 {/* INFOS */}
                 <div className="flex gap-4 text-sm text-gray-600 mt-3">
-  
-                  <span>120 m²</span>
-                  <span>•</span>
-                  <span>3 ch.</span>
-                  <span>•</span>
-                  <span>2 sdb</span>
-  
-                </div>
+
+                <span>{property.surface || 0} m²</span>
+<span>•</span>
+<span>{property.rooms || 0} ch.</span>
+<span>•</span>
+<span>{property.bedrooms || 0} pièces</span>
+
+</div>
   
                 {/* DESCRIPTION FAKE */}
                 <p className="text-sm text-gray-500 mt-3 line-clamp-2">
-                  Superbe bien situé à {property.city}, idéal pour un projet immobilier haut de gamme.
+                {property.description?.slice(0, 120)}, idéal pour un projet immobilier haut de gamme.
                 </p>
   
               </div>
