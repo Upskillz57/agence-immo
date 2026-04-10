@@ -198,7 +198,7 @@ export default function HomePage() {
       </p>
 
       <a
-        href="/biens-a-vendre"
+        href="/recherche?transaction=vente"
         className="inline-block px-7 py-3 bg-[#2e3040] text-white uppercase tracking-wider text-sm rounded-full hover:bg-black transition-all duration-300"
       >
         Voir nos biens
