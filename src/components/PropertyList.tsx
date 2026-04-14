@@ -57,13 +57,19 @@ export default function PropertyList({
                 {/* INFOS */}
                 <div className="flex gap-4 text-sm text-gray-600 mt-3">
 
-                <span>{property.surface || 0} m²</span>
+<span>{property.surface || 0} m²</span>
 <span>•</span>
-<span>{property.rooms || 0} ch.</span>
+<span>{property.rooms || 0} pièces</span>
 <span>•</span>
-<span>{property.bedrooms || 0} pièces</span>
+<span>{property.bedrooms || 0} ch.</span>
 
 </div>
+
+<p className="text-sm text-gray-500 mt-3 line-clamp-2">
+{property.description
+  ? `${property.description.slice(0, 120)}...`
+  : `Bien situé à ${property.city}`}
+</p>
   
                 {/* DESCRIPTION FAKE */}
                 <p className="text-sm text-gray-500 mt-3 line-clamp-2">
