@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { getPropertyById } from "@/lib/getProperties";
 
 export default async function PropertyPage({ params }: any) {
-  const { id } = params;
+  const { id } = await params;
 
   const property = await getPropertyById(id);
 
