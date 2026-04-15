@@ -1,27 +1,38 @@
 "use client";
-import { notFound } from "next/navigation";
-import { getPropertyById } from "@/lib/getProperties";
 
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getPropertyById } from "@/lib/getProperties";
 
-export default async function PropertyPage({ params }: any) {
-  const { id } = await params;
-
-  const property = await getPropertyById(id);
+export default function PropertyPage({ params }: any) {
+  const { id } = params;
 
   const router = useRouter();
+  const [property, setProperty] = useState<any>(null);
 
-<button
-  onClick={() => router.back()}
-  className="fixed top-4 left-4 z-50 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-sm shadow hover:bg-white transition"
->
-  ← Retour
-</button>
+  useEffect(() => {
+    getPropertyById(id).then(setProperty);
+  }, [id]);
 
-  if (!property) return notFound();
+  // ⏳ Loading
+  if (!property) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        Chargement...
+      </div>
+    );
+  }
 
   return (
     <main className="pt-[80px] bg-[#f7f7f7] min-h-screen">
+
+      {/* ✅ BOUTON RETOUR */}
+      <button
+        onClick={() => router.back()}
+        className="fixed top-4 left-4 z-50 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-sm shadow hover:bg-white transition"
+      >
+        ← Retour
+      </button>
 
 
 
