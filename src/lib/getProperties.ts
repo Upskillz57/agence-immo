@@ -1,14 +1,15 @@
-import { mockProperties } from "@/data/mockProperties";
-import { Property } from "@/types/property";
+import { parseHektorCSV } from "./hektorParser";
 
-// 🔥 aujourd’hui : mock
-// 🔥 demain : Supabase / Hektor
-
-export async function getProperties(): Promise<Property[]> {
-  return mockProperties;
+// 🔥 LISTE DES BIENS
+export async function getProperties() {
+  return parseHektorCSV();
 }
 
-export async function getPropertyById(id: string): Promise<Property | undefined> {
-  const properties = await getProperties();
-  return properties.find((p) => p.id === id);
+// 🔥 DETAIL D’UN BIEN
+export async function getPropertyById(id: string) {
+  const properties = parseHektorCSV();
+
+  return properties.find(
+    (p) => p.id?.toString().trim() === id.toString().trim()
+  );
 }
