@@ -20,6 +20,14 @@ export default async function PropertyPage({ params }: any) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 h-[260px] md:h-[480px] overflow-hidden rounded-2xl">
           {/* IMAGE PRINCIPALE */}
           <div className="md:col-span-2 relative group">
+  
+  <Link
+    href="/"
+    className="absolute top-4 left-4 z-30 text-blue-600 text-2xl font-bold bg-white/80 backdrop-blur px-2 py-1 rounded-full hover:bg-white transition"
+  >
+    ←
+  </Link>
+
             <img
               src={property.images?.[0] || "/placeholder.jpg"}
              className="w-full h-full object-cover"
@@ -33,13 +41,6 @@ export default async function PropertyPage({ params }: any) {
             </div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent rounded-2xl" />
           </div>
-
-          <Link
-  href="/"
-  className="absolute top-4 left-4 z-20 text-blue-600 text-2xl font-bold bg-white/80 backdrop-blur px-2 py-1 rounded-full hover:bg-white transition"
->
-  ←
-</Link>
 
           {/* IMAGES SECONDAIRES */}
           <div className="grid grid-cols-2 gap-3">
