@@ -68,11 +68,7 @@ export default function PropertyList({
 <p className="text-sm text-gray-500 mt-3 line-clamp-2">
   {property.description || `Bien situé à ${property.city}`}
 </p>
-  
-                {/* DESCRIPTION FAKE */}
-                <p className="text-sm text-gray-500 mt-3 line-clamp-2">
-                {property.description?.slice(0, 120)}, idéal pour un projet immobilier haut de gamme.
-                </p>
+
   
               </div>
   
