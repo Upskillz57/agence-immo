@@ -128,13 +128,12 @@ export default async function PropertyPage({ params }: any) {
 
                 <input
   placeholder="Nom"
-  className="w-full border p-3 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black"
-/>
+  className="w-full border border-gray-300 p-3 rounded-lg text-black placeholder-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-black"/>
+
 
 <input
   placeholder="Email"
-  className="w-full border p-3 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black"
-/>
+  className="w-full border border-gray-300 p-3 rounded-lg text-black placeholder-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-black"/>
 
 <input
   placeholder="Téléphone"
