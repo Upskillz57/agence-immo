@@ -22,12 +22,6 @@ export default async function PropertyPage({ params }: any) {
           {/* IMAGE PRINCIPALE */}
           <div className="md:col-span-2 relative group">
           <BackArrow />
-  <Link
-    href="/"
-    className="absolute top-4 left-4 z-30 text-blue-600 text-2xl font-bold bg-white/80 backdrop-blur px-2 py-1 rounded-full hover:bg-white transition"
-  >
-    ←
-  </Link>
 
             <img
               src={property.images?.[0] || "/placeholder.jpg"}
