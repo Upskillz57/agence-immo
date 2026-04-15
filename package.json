@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "NEXT_TELEMETRY_DISABLED=1 next build --no-turbo",
     "start": "next start",
     "lint": "eslint"
   },
@@ -13,7 +13,7 @@
     "framer-motion": "^12.34.0",
     "lucide-react": "^0.564.0",
     "mapbox-gl": "^3.19.1",
-    "next": "16.1.6",
+    "next": "15.2.0",
     "nodemailer": "^8.0.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
