@@ -14,7 +14,7 @@ export default async function PropertyPage({ params }: any) {
 
 <Link
   href="/"
-  className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-sm shadow hover:bg-white transition"
+  className="fixed top-4 left-4 z-50 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-sm shadow hover:bg-white transition"
 >
   ← Retour
 </Link>
