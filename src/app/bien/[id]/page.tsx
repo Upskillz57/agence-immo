@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getPropertyById } from "@/lib/getProperties";
 import Link from "next/link";
+import BackArrow from "@/components/BackArrow";
 
 export default async function PropertyPage({ params }: any) {
   const { id } = await params;
@@ -20,7 +21,7 @@ export default async function PropertyPage({ params }: any) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 h-[260px] md:h-[480px] overflow-hidden rounded-2xl">
           {/* IMAGE PRINCIPALE */}
           <div className="md:col-span-2 relative group">
-  
+          <BackArrow />
   <Link
     href="/"
     className="absolute top-4 left-4 z-30 text-blue-600 text-2xl font-bold bg-white/80 backdrop-blur px-2 py-1 rounded-full hover:bg-white transition"
