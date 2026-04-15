@@ -9,7 +9,11 @@ export async function getProperties() {
 export async function getPropertyById(id: string) {
   const properties = parseHektorCSV();
 
-  return properties.find(
-    (p) => p.id?.toString().trim() === id.toString().trim()
-  );
+  if (!id) return undefined;
+
+return properties.find(
+  (p) =>
+    p?.id &&
+    p.id.toString().trim() === id.toString().trim()
+);
 }
