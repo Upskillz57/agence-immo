@@ -12,13 +12,6 @@ export default async function PropertyPage({ params }: any) {
   return (
     <main className="pt-[80px] bg-[#f7f7f7] min-h-screen">
 
-<Link
-  href="/"
-  className="fixed top-4 left-4 z-50 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-sm shadow hover:bg-white transition"
->
-  ← Retour
-</Link>
-
       {/* ===================== */}
       {/* GALERIE LUXURY */}
       {/* ===================== */}
@@ -40,6 +33,13 @@ export default async function PropertyPage({ params }: any) {
             </div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent rounded-2xl" />
           </div>
+
+          <Link
+  href="/"
+  className="absolute top-4 left-4 z-20 text-blue-600 text-2xl font-bold bg-white/80 backdrop-blur px-2 py-1 rounded-full hover:bg-white transition"
+>
+  ←
+</Link>
 
           {/* IMAGES SECONDAIRES */}
           <div className="grid grid-cols-2 gap-3">
