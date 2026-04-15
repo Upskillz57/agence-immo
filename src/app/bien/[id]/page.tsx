@@ -1,40 +1,23 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { notFound } from "next/navigation";
 import { getPropertyById } from "@/lib/getProperties";
+import Link from "next/link";
 
-export default function PropertyPage({ params }: any) {
-  const { id } = params;
+export default async function PropertyPage({ params }: any) {
+  const { id } = await params;
 
-  const router = useRouter();
-  const [property, setProperty] = useState<any>(null);
+  const property = await getPropertyById(id);
 
-  useEffect(() => {
-    getPropertyById(id).then(setProperty);
-  }, [id]);
-
-  // ⏳ Loading
-  if (!property) {
-    return (
-      <div className="h-screen flex items-center justify-center">
-        Chargement...
-      </div>
-    );
-  }
+  if (!property) return notFound();
 
   return (
     <main className="pt-[80px] bg-[#f7f7f7] min-h-screen">
 
-      {/* ✅ BOUTON RETOUR */}
-      <button
-        onClick={() => router.back()}
-        className="fixed top-4 left-4 z-50 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-sm shadow hover:bg-white transition"
-      >
-        ← Retour
-      </button>
-
-
+<Link
+  href="/"
+  className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-sm shadow hover:bg-white transition"
+>
+  ← Retour
+</Link>
 
       {/* ===================== */}
       {/* GALERIE LUXURY */}
@@ -145,7 +128,7 @@ export default function PropertyPage({ params }: any) {
 
                 <input
   placeholder="Nom"
-  className="w-full border border-gray-300 p-3 rounded-lg text-black placeholder-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-black"/>
+    className="w-full border border-gray-300 p-3 rounded-lg text-black placeholder-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-black"/>
 
 
 <input
