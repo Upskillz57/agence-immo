@@ -66,9 +66,7 @@ export default function PropertyList({
 </div>
 
 <p className="text-sm text-gray-500 mt-3 line-clamp-2">
-{property.description
-  ? `${property.description.slice(0, 120)}...`
-  : `Bien situé à ${property.city}`}
+  {property.description || `Bien situé à ${property.city}`}
 </p>
   
                 {/* DESCRIPTION FAKE */}
