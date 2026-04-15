@@ -1,6 +1,17 @@
 import fs from "fs";
 
+let cache: any[] = [];
+let lastLoad = 0;
+
 export function parseHektorCSV() {
+  const now = Date.now();
+
+  // ⚡ CACHE (30 secondes)
+  if (cache.length > 0 && now - lastLoad < 30000) {
+    console.log("⚡ CACHE USED");
+    return cache;
+  }
+
   const filePath = "/home/hektorftp/export/data/Annonces.csv";
 
   console.log("📁 PATH:", filePath);
@@ -18,21 +29,24 @@ export function parseHektorCSV() {
 
   console.log("📊 NB LIGNES:", lines.length);
 
-  return lines
+  const data = lines
     .map((line, index) => {
       try {
         const cols = line
           .split("!#")
           .map((c) => c.replace(/"/g, "").trim());
 
-        // ⚠️ ignore lignes trop courtes
-        if (cols.length < 5) {
-          console.log("⚠️ Ligne ignorée:", cols);
-          return null;
-        }
+        if (cols.length < 5) return null;
 
         const get = (i: number) => cols[i] || "";
-        const images = cols.filter((c) => c.includes("http"));
+
+        const images = cols.filter(
+          (c) =>
+            c.includes("http") &&
+            (c.endsWith(".jpg") ||
+              c.endsWith(".png") ||
+              c.endsWith(".jpeg"))
+        );
 
         return {
           id: get(1) || index.toString(),
@@ -41,11 +55,15 @@ export function parseHektorCSV() {
           city: get(5),
           price: Number(get(10)) || 0,
           surface: Number(get(15)) || 0,
-          bedrooms: Number(get(17)) || 0,
-          rooms: Number(get(18)) || 0,
+
+          // ✅ FIX IMPORTANT
+          rooms: Number(get(17)) || 0,
+          bedrooms: Number(get(18)) || 0,
+
           description: (get(20) || "").replace(/<[^>]*>/g, ""),
           image: images[0] || "/placeholder.jpg",
-          images: images,
+          images,
+
           lat: 49.119,
           lng: 6.176,
           amenities: [],
@@ -56,4 +74,11 @@ export function parseHektorCSV() {
       }
     })
     .filter(Boolean);
+
+  cache = data;
+  lastLoad = now;
+
+  console.log("✅ DATA LOADED & CACHED");
+
+  return data;
 }
