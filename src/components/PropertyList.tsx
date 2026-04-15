@@ -12,7 +12,13 @@ export default function PropertyList({
   
   {properties?.map((property: any) => (
 
-<Link key={property.id} href={`/bien/${property.id}`}>
+<Link
+  key={property.id}
+  href={`/bien/${property.id}`}
+  onClick={() => {
+    sessionStorage.setItem("searchUrl", window.location.href);
+  }}
+>
   
   <div
     className={`
