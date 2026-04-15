@@ -1,7 +1,7 @@
 import fs from "fs";
 
 export function parseHektorCSV() {
-  const filePath = "/home/hektorftp/export/data/Annonces.csv";
+  const filePath = process.cwd() + "/test.csv";
 
   console.log("📁 PATH:", filePath);
   console.log("📁 EXISTS:", fs.existsSync(filePath));
