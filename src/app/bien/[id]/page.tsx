@@ -2,125 +2,156 @@ import { notFound } from "next/navigation";
 import { getPropertyById } from "@/lib/getProperties";
 
 export default async function PropertyPage({ params }: any) {
-  const { id } = await params;
+  const { id } = params;
 
   const property = await getPropertyById(id);
 
   if (!property) return notFound();
 
   return (
-    <main className="pt-[80px] bg-[#f5f5f5] min-h-screen">
+    <main className="pt-[80px] bg-[#f7f7f7] min-h-screen">
 
-      {/* GALERIE */}
-      <div className="max-w-7xl mx-auto px-4 mt-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 h-[500px]">
+      {/* ===================== */}
+      {/* GALERIE LUXURY */}
+      {/* ===================== */}
+      <div className="max-w-7xl mx-auto px-4 mt-6">
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 h-[320px] md:h-[520px]">
 
           {/* IMAGE PRINCIPALE */}
-          <div className="md:col-span-2 h-full">
+          <div className="md:col-span-2 relative group">
             <img
               src={property.images?.[0] || "/placeholder.jpg"}
-              className="w-full h-full object-cover rounded-lg"
+              className="w-full h-full object-cover rounded-xl"
             />
+
+            {/* OVERLAY */}
+            <div className="absolute bottom-4 left-4 flex gap-3">
+              <div className="bg-white/90 backdrop-blur px-4 py-2 rounded-full text-sm shadow">
+                📷 {property.images?.length || 0} photos
+              </div>
+            </div>
           </div>
 
           {/* IMAGES SECONDAIRES */}
-          <div className="grid grid-cols-2 gap-2 h-full">
+          <div className="grid grid-cols-2 gap-3">
             {property.images?.slice(1, 5).map((img: string, i: number) => (
               <img
                 key={i}
                 src={img}
-                className="w-full h-full object-cover rounded-lg"
+                className="w-full h-full object-cover rounded-xl"
               />
             ))}
           </div>
-
         </div>
       </div>
 
-      {/* CONTENT */}
-      <div className="max-w-7xl mx-auto px-4 mt-10 grid grid-cols-1 lg:grid-cols-3 gap-12">
+      {/* ===================== */}
+      {/* TITRE + INFOS */}
+      {/* ===================== */}
+      <div className="max-w-7xl mx-auto px-4 mt-8">
 
-        {/* LEFT */}
-        <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
 
-          {/* LOCALISATION */}
-          <div className="flex items-center gap-2 text-gray-500 text-sm mb-2">
-            📍 {property.city}
-          </div>
+          {/* LEFT CONTENT */}
+          <div className="lg:col-span-2">
 
-          {/* TITRE */}
-          <h1 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-4 leading-tight">
-            {property.title}
-          </h1>
-
-          {/* PRIX */}
-          <div className="text-2xl font-bold text-black mb-6">
-            {property.price.toLocaleString("fr-FR")} €
-          </div>
-
-          {/* INFOS */}
-          <div className="flex gap-8 text-gray-600 text-sm border-b pb-6 mb-6">
-            <span>{property.surface} m²</span>
-            <span>{property.rooms} pièces</span>
-            <span>{property.bedrooms} chambres</span>
-          </div>
-
-          {/* DESCRIPTION */}
-          <div>
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Description
-            </h2>
-
-            <p className="text-gray-600 leading-relaxed whitespace-pre-line">
-              {property.description}
-            </p>
-          </div>
-
-        </div>
-
-        {/* RIGHT SIDEBAR */}
-        <div className="sticky top-[100px] h-fit bg-white border rounded-xl p-6 shadow-sm">
-
-          {/* AGENCE */}
-          <div className="mb-6">
-            <div className="font-semibold text-gray-800 text-lg">
-              Marchal Immobilier
+            {/* LOCALISATION */}
+            <div className="flex items-center gap-2 text-gray-500 text-sm mb-3">
+              📍 {property.city}
             </div>
-            <div className="text-sm text-gray-500">
-              Moselle, France
+
+            {/* TITRE */}
+            <h1 className="text-3xl md:text-4xl font-semibold text-gray-900 leading-tight mb-4">
+              {property.title}
+            </h1>
+
+            {/* PRIX */}
+            <div className="text-3xl font-bold text-black mb-6">
+              {property.price.toLocaleString("fr-FR")} €
             </div>
+
+            {/* INFOS */}
+            <div className="flex gap-10 text-gray-600 text-sm border-y py-6 mb-8">
+              <span>{property.surface} m²</span>
+              <span>{property.rooms} pièces</span>
+              <span>{property.bedrooms} chambres</span>
+            </div>
+
+            {/* DESCRIPTION */}
+            <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                Description
+              </h2>
+
+              <p className="text-gray-600 leading-relaxed whitespace-pre-line">
+                {property.description}
+              </p>
+            </div>
+
           </div>
 
-          {/* MESSAGE AUTO */}
-          <div className="bg-gray-100 text-sm text-gray-600 p-3 rounded-lg mb-4">
-            Je suis intéressé par ce bien.
-          </div>
+          {/* ===================== */}
+          {/* SIDEBAR PREMIUM */}
+          {/* ===================== */}
+          <div className="relative">
 
-          {/* FORM */}
-          <input
-            placeholder="Nom"
-            className="w-full border p-3 mb-3 text-gray-600 rounded-lg"
-          />
-          <input
-            placeholder="Email"
-            className="w-full border p-3 mb-3 text-gray-600 rounded-lg"
-          />
-          <input
-            placeholder="Téléphone"
-            className="w-full border p-3 mb-3 text-gray-600 rounded-lg"
-          />
+            <div className="lg:sticky lg:top-[100px]">
 
-          {/* CTA */}
-          <button className="w-full bg-black text-white py-3 rounded-lg mt-2 font-medium hover:bg-gray-800 transition">
-            Contacter
-          </button>
+              <div className="bg-white rounded-2xl shadow-md border p-6">
 
-          {/* LEGAL */}
-          <div className="flex items-start gap-2 mt-4 text-xs text-gray-500">
-            <input type="checkbox" />
-            <span>
-              J'accepte les conditions et la politique de confidentialité
-            </span>
+                {/* AGENCE */}
+                <div className="mb-6 border-b pb-4">
+                  <div className="text-lg font-semibold text-gray-900">
+                    Marchal Immobilier
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    Moselle, France
+                  </div>
+                </div>
+
+                {/* MESSAGE */}
+                <div className="bg-gray-100 text-sm text-gray-600 p-3 rounded-lg mb-4">
+                  Je suis intéressé par ce bien.
+                </div>
+
+                {/* FORM */}
+                <div className="space-y-3">
+
+                  <input
+                    placeholder="Nom"
+                    className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                  />
+
+                  <input
+                    placeholder="Email"
+                    className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                  />
+
+                  <input
+                    placeholder="Téléphone"
+                    className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                  />
+
+                  {/* CTA */}
+                  <button className="w-full bg-black text-white py-3 rounded-lg mt-2 font-medium hover:bg-gray-800 transition">
+                    Contacter
+                  </button>
+
+                </div>
+
+                {/* LEGAL */}
+                <div className="flex items-start gap-2 mt-4 text-xs text-gray-500">
+                  <input type="checkbox" />
+                  <span>
+                    J'accepte les conditions et la politique de confidentialité
+                  </span>
+                </div>
+
+              </div>
+
+            </div>
+
           </div>
 
         </div>
