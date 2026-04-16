@@ -13,10 +13,18 @@ const map = useRef<mapboxgl.Map | null>(null);
 
 useEffect(() => {
 
-if (!map.current) {
+  console.log("TOKEN MAPBOX:", process.env.NEXT_PUBLIC_MAPBOX_TOKEN);
+  console.log("MAP CONTAINER:", mapContainer.current);
 
-map.current = new mapboxgl.Map({
-container: mapContainer.current!,
+  if (!mapContainer.current) {
+    console.log("❌ container null → la map ne peut pas s'initialiser");
+    return;
+  }
+
+  if (!map.current) {
+
+    map.current = new mapboxgl.Map({
+      container: mapContainer.current,
 style: "mapbox://styles/mapbox/light-v11",
 center: [6.175, 49.119],
 zoom: 11
@@ -28,10 +36,20 @@ map.current.addControl(new mapboxgl.NavigationControl());
 
 const currentMap = map.current;
 
+if (!currentMap) {
+  console.log("❌ map non initialisée");
+  return;
+}
+
 // supprimer anciens pins
 document.querySelectorAll(".property-pin").forEach(p => p.remove());
 
 properties?.forEach((property:any)=>{
+
+  if (!property.lng || !property.lat) {
+    console.log("❌ BAD PROPERTY:", property);
+    return;
+  }
 
 const el = document.createElement("div");
 
