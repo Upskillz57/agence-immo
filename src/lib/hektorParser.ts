@@ -33,8 +33,13 @@ export function parseHektorCSV() {
     .map((line, index) => {
       try {
         const cols = line
-          .split("!#")
-          .map((c) => c.replace(/"/g, "").trim());
+  .split("!#")
+  .map((c) => c.replace(/"/g, "").trim());
+
+// 🔥 DEBUG : afficher UNE seule ligne
+if (index === 0) {
+  console.log("COLS:", cols);
+}
 
         if (cols.length < 5) return null;
 
