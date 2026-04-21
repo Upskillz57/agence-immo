@@ -472,7 +472,7 @@ Map
 
 </div>
 
-<div className="flex flex-1 bg-[#f5f5f5]">
+<div className="flex h-[calc(100vh-140px)] bg-[#f5f5f5]">
 
 {/* ========================= */}
 {/* 🟢 MODE LISTE (PLEIN LARGE) */}
@@ -509,7 +509,7 @@ Map
 {view === "map" && (
   <>
     {/* LISTE GAUCHE */}
-    <div className="w-[40%] overflow-y-auto border-r bg-white">
+    <div className="w-[35%] h-[calc(100vh-140px)] overflow-y-auto border-r bg-white">
       <PropertyList
         properties={filteredProperties}
         hoveredId={hoveredId}
@@ -517,13 +517,13 @@ Map
       />
     </div>
 
-    {/* CARTE DROITE */}
-    <div className="w-[60%] h-[calc(100vh-120px)]">
-      <PropertyMap
-        properties={filteredProperties}
-        hoveredId={hoveredId}
-      />
-    </div>
+    {/* CARTE DROITE FULL */}
+    <div className="w-[65%] h-[calc(100vh-140px)] sticky top-[140px] overflow-hidden">
+  <PropertyMap
+    properties={filteredProperties}
+    hoveredId={hoveredId}
+  />
+</div>
   </>
 )}
 
