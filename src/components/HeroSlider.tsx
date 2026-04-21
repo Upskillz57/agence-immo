@@ -42,21 +42,23 @@ const [transaction, setTransaction] = useState("vente");
 const [location, setLocation] = useState("");
 const [price, setPrice] = useState("");
 
+const nextSlide = () => {
+  setIndex((prev) => (prev + 1) % slides.length);
+};
+
+const prevSlide = () => {
+  setIndex((prev) => (prev - 1 + slides.length) % slides.length);
+};
+
   useEffect(() => {
     const interval = setInterval(() => {
       nextSlide();
     }, 8000); // 8 secondes
     return () => clearInterval(interval);
-  }, [index]);
+  }, []);
   
 
-  const nextSlide = () => {
-    setIndex((prev) => (prev + 1) % slides.length);
-  };
-
-  const prevSlide = () => {
-    setIndex((prev) => (prev - 1 + slides.length) % slides.length);
-  };
+  
 
   const handleSearch = () => {
 
