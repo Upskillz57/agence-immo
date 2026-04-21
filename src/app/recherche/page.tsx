@@ -518,7 +518,7 @@ Map
     </div>
 
     {/* CARTE DROITE */}
-    <div className="w-[60%]">
+    <div className="w-[60%] h-[calc(100vh-120px)]">
       <PropertyMap
         properties={filteredProperties}
         hoveredId={hoveredId}
