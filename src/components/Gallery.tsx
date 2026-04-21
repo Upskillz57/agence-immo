@@ -6,12 +6,26 @@ import BackArrow from "@/components/BackArrow";
 export default function Gallery({ images }: { images: string[] }) {
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState(0);
+const [touchEnd, setTouchEnd] = useState(0);
+
+const handleSwipe = () => {
+    if (touchStart - touchEnd > 50) {
+      // swipe gauche
+      setIndex(index === images.length - 1 ? 0 : index + 1);
+    }
+  
+    if (touchStart - touchEnd < -50) {
+      // swipe droite
+      setIndex(index === 0 ? images.length - 1 : index - 1);
+    }
+  };
 
   if (!images || images.length === 0) return null;
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 aspect-[16/7] overflow-hidden rounded-2xl">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 aspect-auto md:aspect-[16/7] overflow-hidden rounded-2xl">
 
         {/* IMAGE PRINCIPALE */}
         <div className="md:col-span-2 relative">
@@ -24,7 +38,7 @@ export default function Gallery({ images }: { images: string[] }) {
               setIndex(0);
               setOpen(true);
             }}
-            className="w-full h-full object-cover cursor-pointer"
+            className="w-full h-full object-contain md:object-cover cursor-pointer bg-black"
           />
 
           <div className="absolute bottom-4 left-4">
@@ -47,7 +61,7 @@ export default function Gallery({ images }: { images: string[] }) {
                 setIndex(i + 1);
                 setOpen(true);
               }}
-              className="w-full h-full object-cover cursor-pointer"
+              className="w-full h-full object-contain md:object-cover cursor-pointer bg-black"
             />
           ))}
         </div>
@@ -65,9 +79,12 @@ export default function Gallery({ images }: { images: string[] }) {
           </button>
 
           <img
-            src={images[index]}
-            className="max-h-[90%] max-w-[90%] object-contain"
-          />
+  src={images[index]}
+  className="max-h-[90%] max-w-[90%] object-contain"
+  onTouchStart={(e) => setTouchStart(e.targetTouches[0].clientX)}
+  onTouchMove={(e) => setTouchEnd(e.targetTouches[0].clientX)}
+  onTouchEnd={handleSwipe}
+/>
 
           <button
             onClick={() =>
