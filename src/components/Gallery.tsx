@@ -11,7 +11,7 @@ export default function Gallery({ images }: { images: string[] }) {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 aspect-[16/10] overflow-hidden rounded-2xl">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 aspect-[16/7] overflow-hidden rounded-2xl">
 
         {/* IMAGE PRINCIPALE */}
         <div className="md:col-span-2 relative">
