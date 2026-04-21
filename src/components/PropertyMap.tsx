@@ -4,6 +4,8 @@
 import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 
+
+
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
 export default function PropertyMap({ properties, hoveredId }: any) {
@@ -51,32 +53,54 @@ properties?.forEach((property:any)=>{
     return;
   }
 
-const el = document.createElement("div");
+  const el = document.createElement("div");
 
-el.className = "property-pin";
-
-el.style.background = "#c79b4b";
-el.style.color = "white";
-el.style.padding = "6px 10px";
-el.style.borderRadius = "20px";
-el.style.fontSize = "13px";
-el.style.fontWeight = "600";
-el.style.boxShadow = "0 2px 8px rgba(0,0,0,0.25)";
-el.style.cursor = "pointer";
-el.style.whiteSpace = "nowrap";
-
-el.innerHTML = property.price.toLocaleString()+" €";
-
-if(property.id === hoveredId){
-el.style.transform = "scale(1.15)";
-el.style.background = "#122e53";
-}
-
-new mapboxgl.Marker(el)
-.setLngLat([property.lng, property.lat])
-.addTo(currentMap);
+  el.className = "property-pin";
+  
+  el.style.background = "#c79b4b";
+  el.style.color = "white";
+  el.style.padding = "6px 10px";
+  el.style.borderRadius = "20px";
+  el.style.fontSize = "13px";
+  el.style.fontWeight = "600";
+  el.style.boxShadow = "0 2px 8px rgba(0,0,0,0.25)";
+  el.style.cursor = "pointer";
+  el.style.whiteSpace = "nowrap";
+  
+  el.innerHTML = property.price.toLocaleString() + " €";
+  
+  // ✅ CLICK REDIRECTION
+  el.addEventListener("click", () => {
+    window.location.href = `/bien/${property.id}`;
+  });
+  
+  if (property.id === hoveredId) {
+    el.style.transform = "scale(1.15)";
+    el.style.background = "#122e53";
+  }
+  
+  new mapboxgl.Marker(el)
+    .setLngLat([property.lng, property.lat])
+    .addTo(currentMap);
 
 });
+
+const bounds = new mapboxgl.LngLatBounds();
+
+properties?.forEach((property: any) => {
+  if (property.lng && property.lat) {
+    bounds.extend([property.lng, property.lat]);
+  }
+});
+
+// ✅ recentrer la carte
+if (!bounds.isEmpty()) {
+  currentMap.fitBounds(bounds, {
+    padding: 80,
+    maxZoom: 14,
+    duration: 1000,
+  });
+}
 
 // chargement dynamique futur
 const handleMove = () => {
