@@ -14,36 +14,34 @@ const mapContainer = useRef<HTMLDivElement | null>(null);
 const map = useRef<mapboxgl.Map | null>(null);
 
 useEffect(() => {
-
   if (!mapContainer.current) return;
 
-  // 🔥 INIT MAP
+  // 🔥 INIT UNE SEULE FOIS
   if (!map.current) {
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/mapbox/light-v11",
       center: [6.175, 49.119],
-      zoom: 11
+      zoom: 11,
     });
 
     map.current.addControl(new mapboxgl.NavigationControl());
+
+    // 🔥 CRUCIAL → attendre que la map soit prête
+    map.current.on("load", () => {
+      map.current?.resize();
+    });
   }
 
   const currentMap = map.current;
   if (!currentMap) return;
 
-  // 🔥 FIX RENDER (OBLIGATOIRE)
-  setTimeout(() => {
-    currentMap.resize();
-  }, 300);
-
-  // 🔥 supprimer anciens pins
-  document.querySelectorAll(".property-pin").forEach(p => p.remove());
+  // 🔥 nettoyage markers
+  document.querySelectorAll(".property-pin").forEach((p) => p.remove());
 
   const bounds = new mapboxgl.LngLatBounds();
 
   properties?.forEach((property: any) => {
-
     if (!property.lng || !property.lat) return;
 
     bounds.extend([property.lng, property.lat]);
@@ -77,20 +75,17 @@ useEffect(() => {
       .addTo(currentMap);
   });
 
-  // 🔥 FIT BOUNDS APRÈS RENDER
-  setTimeout(() => {
-    if (properties?.length > 0 && !bounds.isEmpty()) {
-      currentMap.fitBounds(bounds, {
-        padding: 80,
-        maxZoom: 14,
-        duration: 1000,
-      });
-    } else {
-      currentMap.setCenter([6.175, 49.119]);
-      currentMap.setZoom(11);
-    }
-  }, 400);
-
+  // 🔥 FIT BOUNDS (APRÈS RENDER)
+  if (properties?.length > 0 && !bounds.isEmpty()) {
+    currentMap.fitBounds(bounds, {
+      padding: 80,
+      maxZoom: 14,
+      duration: 800,
+    });
+  } else {
+    currentMap.setCenter([6.175, 49.119]);
+    currentMap.setZoom(11);
+  }
 }, [properties, hoveredId]);
 
 return (
