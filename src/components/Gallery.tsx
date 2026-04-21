@@ -7,17 +7,21 @@ export default function Gallery({ images }: { images: string[] }) {
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
 
+  if (!images || images.length === 0) return null;
+
   return (
     <>
+      {/* ===================== */}
       {/* GALERIE */}
+      {/* ===================== */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 aspect-[16/10] overflow-hidden rounded-2xl">
-        
+
         {/* IMAGE PRINCIPALE */}
         <div className="md:col-span-2 relative group">
           <BackArrow />
 
           <img
-            src={images?.[0] || "/placeholder.jpg"}
+            src={images[0]}
             onClick={() => {
               setIndex(0);
               setOpen(true);
@@ -27,7 +31,7 @@ export default function Gallery({ images }: { images: string[] }) {
 
           <div className="absolute bottom-4 left-4">
             <div className="bg-black/70 text-white px-4 py-2 rounded-full text-sm">
-              📷 {images?.length || 0} photos
+              📷 {images.length} photos
             </div>
           </div>
 
@@ -36,7 +40,7 @@ export default function Gallery({ images }: { images: string[] }) {
 
         {/* IMAGES SECONDAIRES */}
         <div className="grid grid-cols-2 gap-3">
-          {images?.slice(1, 5).map((img, i) => (
+          {images.slice(1, 5).map((img, i) => (
             <img
               key={i}
               src={img}
@@ -50,14 +54,16 @@ export default function Gallery({ images }: { images: string[] }) {
         </div>
       </div>
 
+      {/* ===================== */}
       {/* POPUP */}
+      {/* ===================== */}
       {open && (
         <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center">
 
           {/* CLOSE */}
           <button
             onClick={() => setOpen(false)}
-            className="absolute top-6 right-6 text-white text-3xl"
+            className="absolute top-6 right-6 text-white text-3xl z-50"
           >
             ✕
           </button>
@@ -73,7 +79,7 @@ export default function Gallery({ images }: { images: string[] }) {
             onClick={() =>
               setIndex(index === 0 ? images.length - 1 : index - 1)
             }
-            className="absolute left-6 text-white text-4xl"
+            className="absolute left-6 text-white text-5xl z-50"
           >
             ‹
           </button>
@@ -83,7 +89,7 @@ export default function Gallery({ images }: { images: string[] }) {
             onClick={() =>
               setIndex(index === images.length - 1 ? 0 : index + 1)
             }
-            className="absolute right-6 text-white text-4xl"
+            className="absolute right-6 text-white text-5xl z-50"
           >
             ›
           </button>
