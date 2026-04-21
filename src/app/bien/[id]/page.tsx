@@ -1,12 +1,16 @@
+
 import { notFound } from "next/navigation";
 import { getPropertyById } from "@/lib/getProperties";
 import Link from "next/link";
-import BackArrow from "@/components/BackArrow";
+
+import Gallery from "@/components/Gallery";
+
 
 export default async function PropertyPage({ params }: any) {
   const { id } = await params;
 
   const property = await getPropertyById(id);
+
 
   if (!property) return notFound();
 
@@ -17,38 +21,8 @@ export default async function PropertyPage({ params }: any) {
       {/* GALERIE LUXURY */}
       {/* ===================== */}
       <div className="max-w-7xl mx-auto px-4 mt-6">
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 h-[260px] md:h-[480px] overflow-hidden rounded-2xl">
-          {/* IMAGE PRINCIPALE */}
-          <div className="md:col-span-2 relative group">
-          <BackArrow />
-
-            <img
-              src={property.images?.[0] || "/placeholder.jpg"}
-             className="w-full h-full object-cover"
-            />
-
-            {/* OVERLAY */}
-            <div className="absolute bottom-4 left-4 flex gap-3">
-            <div className="bg-black/70 text-white backdrop-blur px-4 py-2 rounded-full text-sm shadow">
-                📷 {property.images?.length || 0} photos
-              </div>
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent rounded-2xl" />
-          </div>
-
-          {/* IMAGES SECONDAIRES */}
-          <div className="grid grid-cols-2 gap-3">
-            {property.images?.slice(1, 5).map((img: string, i: number) => (
-              <img
-                key={i}
-                src={img}
-                className="w-full h-full object-cover"
-              />
-            ))}
-          </div>
-        </div>
-      </div>
+  <Gallery images={property.images || []} />
+</div>
 
       {/* ===================== */}
       {/* TITRE + INFOS */}
