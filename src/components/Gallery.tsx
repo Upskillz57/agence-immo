@@ -35,23 +35,24 @@ export default function Gallery({ images }: { images: string[] }) {
             </div>
           </div>
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent rounded-2xl" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent rounded-2xl pointer-events-none" />
         </div>
 
         {/* IMAGES SECONDAIRES */}
-        <div className="grid grid-cols-2 gap-3">
-          {images.slice(1, 5).map((img, i) => (
-            <img
-              key={i}
-              src={img}
-              onClick={() => {
-                setIndex(i + 1);
-                setOpen(true);
-              }}
-              className="w-full h-full object-cover cursor-pointer"
-            />
-          ))}
-        </div>
+        <div className="grid grid-cols-2 gap-3 h-full">
+  {images.slice(1, 5).map((img, i) => (
+    <div key={i} className="relative w-full h-full">
+      <img
+        src={img}
+        onClick={() => {
+          setIndex(i + 1);
+          setOpen(true);
+        }}
+        className="w-full h-full object-cover rounded-xl cursor-pointer"
+      />
+    </div>
+  ))}
+</div>
       </div>
 
       {/* ===================== */}
