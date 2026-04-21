@@ -160,12 +160,13 @@ const [price, setPrice] = useState("");
 <div className="
   bg-white/95
   backdrop-blur-md
-  rounded-full
+  rounded-2xl md:rounded-full
   px-4
-  py-3
+  py-4
   flex
-  items-center
-  gap-4
+  flex-col md:flex-row
+  items-stretch md:items-center
+  gap-3
   shadow-2xl
   w-full
   max-w-4xl
@@ -189,7 +190,7 @@ const [price, setPrice] = useState("");
   placeholder="Ville ou code postal"
   value={location}
   onChange={(e)=>setLocation(e.target.value)}
-  className="flex-1 bg-transparent outline-none text-gray-800"
+  className="w-full md:flex-1 bg-transparent outline-none text-gray-800"
 />
   
 
@@ -203,23 +204,22 @@ const [price, setPrice] = useState("");
 
   {/* Mobile */}
   <button
-    onClick={handleSearch}
-    className="md:hidden w-12 h-12 rounded-full bg-[#122e53] flex items-center justify-center shrink-0"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="white"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="w-5 h-5"
-    >
-      <circle cx="11" cy="11" r="7" />
-      <line x1="16.65" y1="16.65" x2="21" y2="21" />
-    </svg>
-  </button>
+  onClick={handleSearch}
+  className="
+    md:hidden
+    w-full
+    h-12
+    rounded-full
+    bg-[#122e53]
+    flex
+    items-center
+    justify-center
+    text-white
+    font-medium
+  "
+>
+  Rechercher
+</button>
 
   </div>
 </div>
