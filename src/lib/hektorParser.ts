@@ -3,7 +3,7 @@ import fs from "fs";
 let cache: any[] = [];
 let lastLoad = 0;
 
-// 🔥 cache géocodage (évite spam API)
+// 🔥 cache géocodage
 const geoCache: Record<string, { lat: number; lng: number }> = {};
 
 async function geocode(city: string) {
@@ -13,7 +13,9 @@ async function geocode(city: string) {
 
   try {
     const res = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(city)}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+        city
+      )}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`
     );
 
     const data = await res.json();
@@ -30,7 +32,7 @@ async function geocode(city: string) {
       return result;
     }
   } catch (e) {
-    console.log("❌ GEO ERROR:", e);
+    console.log("❌ GEO ERROR:", city);
   }
 
   // fallback Metz
@@ -48,76 +50,64 @@ export async function parseHektorCSV() {
 
   const filePath = "/home/hektorftp/export/data/Annonces.csv";
 
-  console.log("📁 PATH:", filePath);
-  console.log("📁 EXISTS:", fs.existsSync(filePath));
-
   if (!fs.existsSync(filePath)) {
     throw new Error("CSV file not found");
   }
 
   const file = fs.readFileSync(filePath, "latin1");
-
   const lines = file.split("\n").filter(Boolean);
 
   console.log("📊 NB LIGNES:", lines.length);
 
-  // 🔥 IMPORTANT : Promise.all pour async
-  const data = await Promise.all(
-    lines.map(async (line, index) => {
-      try {
-        const cols = line
-          .split("!#")
-          .map((c) => c.replace(/"/g, "").trim());
+  const data: any[] = [];
 
-        if (cols.length < 5) return null;
+  for (let i = 0; i < lines.length; i++) {
+    try {
+      const cols = lines[i]
+        .split("!#")
+        .map((c) => c.replace(/"/g, "").trim());
 
-        const get = (i: number) => cols[i] || "";
+      if (cols.length < 5) continue;
 
-        const images = cols.filter(
-          (c) =>
-            c.includes("http") &&
-            (c.endsWith(".jpg") ||
-              c.endsWith(".png") ||
-              c.endsWith(".jpeg"))
-        );
+      const get = (i: number) => cols[i] || "";
 
-        const city = get(5);
+      const images = cols.filter(
+        (c) =>
+          c.includes("http") &&
+          (c.endsWith(".jpg") ||
+            c.endsWith(".png") ||
+            c.endsWith(".jpeg"))
+      );
 
-        // 🔥 géocodage
-        const geo = await geocode(city);
+      const city = get(5);
 
-        return {
-          id: get(1) || index.toString(),
-          title: get(19) || "Sans titre",
-          type: get(3),
-          city,
-          price: Number(get(10)) || 0,
-          surface: Number(get(15)) || 0,
-          rooms: Number(get(17)) || 0,
-          bedrooms: Number(get(18)) || 0,
-          description: (get(20) || "").replace(/<[^>]*>/g, ""),
-          image: images[0] || "/placeholder.jpg",
-          images,
+      const geo = await geocode(city);
 
-          // ✅ coordonnées dynamiques
-          lat: geo.lat,
-          lng: geo.lng,
+      data.push({
+        id: get(1) || i.toString(),
+        title: get(19) || "Sans titre",
+        type: get(3),
+        city,
+        price: Number(get(10)) || 0,
+        surface: Number(get(15)) || 0,
+        rooms: Number(get(17)) || 0,
+        bedrooms: Number(get(18)) || 0,
+        description: (get(20) || "").replace(/<[^>]*>/g, ""),
+        image: images[0] || "/placeholder.jpg",
+        images,
+        lat: geo.lat,
+        lng: geo.lng,
+        amenities: [],
+      });
+    } catch (err) {
+      console.log("❌ Erreur ligne:", i, err);
+    }
+  }
 
-          amenities: [],
-        };
-      } catch (err) {
-        console.log("❌ Erreur ligne:", index, err);
-        return null;
-      }
-    })
-  );
-
-  const cleanData = data.filter(Boolean);
-
-  cache = cleanData;
+  cache = data;
   lastLoad = now;
 
   console.log("✅ DATA LOADED & CACHED");
 
-  return cleanData;
+  return data;
 }
