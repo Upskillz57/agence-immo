@@ -17,17 +17,18 @@ export default function Gallery({ images }: { images: string[] }) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 aspect-[16/10] overflow-hidden rounded-2xl">
 
         {/* IMAGE PRINCIPALE */}
-        <div className="md:col-span-2 relative group">
+        <div className="md:col-span-2 relative group z-0">
           <BackArrow />
 
           <img
             src={images[0]}
             onClick={() => {
-              setIndex(0);
-              setOpen(true);
-            }}
-            className="w-full h-full object-cover object-center cursor-pointer"
-          />
+                console.log("CLICK MINI"); // DEBUG
+                setIndex(i + 1);
+                setOpen(true);
+              }}
+              className="w-full h-full object-cover rounded-xl cursor-pointer relative z-10"
+            />
 
           <div className="absolute bottom-4 left-4">
             <div className="bg-black/70 text-white px-4 py-2 rounded-full text-sm">
@@ -42,14 +43,15 @@ export default function Gallery({ images }: { images: string[] }) {
         <div className="grid grid-cols-2 gap-3 h-full">
   {images.slice(1, 5).map((img, i) => (
     <div key={i} className="relative w-full h-full">
-      <img
-        src={img}
-        onClick={() => {
-          setIndex(i + 1);
-          setOpen(true);
-        }}
-        className="w-full h-full object-cover rounded-xl cursor-pointer"
-      />
+     <img
+  src={images[0]}
+  onClick={() => {
+    console.log("CLICK OK"); // DEBUG
+    setIndex(0);
+    setOpen(true);
+  }}
+  className="w-full h-full object-cover object-center cursor-pointer relative z-10"
+/>
     </div>
   ))}
 </div>
