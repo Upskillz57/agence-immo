@@ -39,6 +39,7 @@ export function parseHektorCSV() {
 // 🔥 DEBUG : afficher UNE seule ligne
 if (index === 0) {
   console.log("COLS:", cols);
+  console.log("GPS TEST 45-50:", cols[45], cols[46], cols[47], cols[48], cols[49]);
 }
 
         if (cols.length < 5) return null;
