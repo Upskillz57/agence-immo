@@ -7,19 +7,17 @@ let lastLoad = 0;
 const geoCache: Record<string, { lat: number; lng: number }> = {};
 
 async function geocode(city: string, postal?: string) {
-  if (!city && !postal) return { lat: 49.119, lng: 6.176 };
+  if (!city) return { lat: 49.119, lng: 6.176 };
 
-  const key = `${city}-${postal}`;
+  const key = `${city}-${postal || ""}`;
   if (geoCache[key]) return geoCache[key];
 
   try {
-    // 🔥 clé du fix : code postal PRIORITAIRE
-    const query = postal
-      ? `${postal} France`
-      : `${city} France`;
+    // 🔥 IMPORTANT : on force FRANCE
+    const query = `${city} ${postal || ""} France`;
 
     const res = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}&country=fr&limit=1&types=postcode,place`
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}&country=fr&limit=1`
     );
 
     const data = await res.json();
@@ -36,9 +34,10 @@ async function geocode(city: string, postal?: string) {
       return result;
     }
   } catch (e) {
-    console.log("❌ GEO ERROR:", city, postal);
+    console.log("❌ GEO ERROR:", city);
   }
 
+  // fallback Metz
   return { lat: 49.119, lng: 6.176 };
 }
 
