@@ -6,16 +6,18 @@ let lastLoad = 0;
 // 🔥 cache géocodage
 const geoCache: Record<string, { lat: number; lng: number }> = {};
 
-async function geocode(city: string) {
+async function geocode(city: string, postal?: string) {
   if (!city) return { lat: 49.119, lng: 6.176 };
 
-  if (geoCache[city]) return geoCache[city];
+  const key = `${city}-${postal || ""}`;
+  if (geoCache[key]) return geoCache[key];
 
   try {
+    // 🔥 IMPORTANT : on force FRANCE
+    const query = `${city} ${postal || ""} France`;
+
     const res = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-        city
-      )}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}&country=fr&limit=1`
     );
 
     const data = await res.json();
@@ -28,7 +30,7 @@ async function geocode(city: string) {
         lat: coords[1],
       };
 
-      geoCache[city] = result;
+      geoCache[key] = result;
       return result;
     }
   } catch (e) {
@@ -80,8 +82,10 @@ export async function parseHektorCSV() {
       );
 
       const city = get(5);
+      const postal = get(6); // ⚠️ souvent code postal Hektor
 
-      const geo = await geocode(city);
+      // 🔥 géocodage sécurisé
+      const geo = await geocode(city, postal);
 
       data.push({
         id: get(1) || i.toString(),
