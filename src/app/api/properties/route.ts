@@ -5,7 +5,7 @@ export async function GET() {
   try {
     console.log("📡 API PROPERTIES CALLED");
 
-    const data = parseHektorCSV();
+    const data = await parseHektorCSV();
 
     return NextResponse.json(data);
   } catch (error: any) {
