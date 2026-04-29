@@ -494,7 +494,7 @@ Map
 
 </div>
 
-<div className="flex min-h-[calc(100vh-140px)] bg-[#f5f5f5]">
+<div className="flex min-h-[calc(100vh-140px)] bg-[#f5f5f5] pb-24">
 
 {/* ========================= */}
 {/* 🟢 MODE LISTE (PLEIN LARGE) */}
@@ -867,6 +867,31 @@ Map
 
   </div>
 )}
+
+{/* BOUTON FILTRES MOBILE FLOTTANT */}
+<button
+  onClick={() => setIsFilterOpen(true)}
+  className="
+    md:hidden
+    fixed
+    bottom-6
+    left-1/2
+    -translate-x-1/2
+    z-50
+    bg-[#122e53]
+    text-white
+    px-6
+    py-3
+    rounded-full
+    shadow-xl
+    flex
+    items-center
+    gap-2
+  "
+>
+  <SlidersHorizontal size={18} />
+  Filtres {activeFiltersCount > 0 && `(${activeFiltersCount})`}
+</button>
 
 </>
 );
