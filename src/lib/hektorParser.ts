@@ -85,10 +85,15 @@ export async function parseHektorCSV() {
         .split("!#")
         .map((c) => c.replace(/"/g, "").trim());
 
+        if (i < 5) {
+          console.log("LIGNE:", i);
+          console.log(cols);
+        }
+  
       if (cols.length < 5) continue;
-
+  
       const get = (i: number) => cols[i] || "";
-
+  
       const images = cols.filter(
         (c) =>
           c.includes("http") &&
@@ -96,20 +101,26 @@ export async function parseHektorCSV() {
             c.endsWith(".png") ||
             c.endsWith(".jpeg"))
       );
-
+  
       const city = get(5);
-      const postal = get(6); // ⚠️ souvent code postal Hektor
-
-      // 🔥 géocodage sécurisé
+      const postal = get(6);
+  
+      // ✅ TRANSACTION (ICI 👇)
+      const rawTransaction = get(2); // à vérifier
+      const transaction =
+        rawTransaction?.toLowerCase().includes("loc")
+          ? "location"
+          : "vente";
+  
       const geo = await geocode(city, postal);
-
+  
       const description = (get(20) || "").replace(/<[^>]*>/g, "");
-
+  
       data.push({
         id: get(1) || i.toString(),
         title: get(19) || "Sans titre",
         type: get(3),
-        transaction: Math.random() > 0.5 ? "vente" : "location", // temporaire
+        transaction, // ✅ propre ici
         city,
         price: Number(get(10)) || 0,
         surface: Number(get(15)) || 0,
@@ -121,8 +132,7 @@ export async function parseHektorCSV() {
         images,
         lat: geo.lat,
         lng: geo.lng,
-        amenities: extractAmenities(description), // ✅ ICI
-       
+        amenities: extractAmenities(description),
       });
   
     } catch (err) {
