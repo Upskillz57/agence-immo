@@ -6,6 +6,22 @@ let lastLoad = 0;
 // 🔥 cache géocodage
 const geoCache: Record<string, { lat: number; lng: number }> = {};
 
+function extractAmenities(description: string) {
+  const text = description.toLowerCase();
+
+  const amenities: string[] = [];
+
+  if (text.includes("piscine")) amenities.push("Piscine");
+  if (text.includes("terrasse")) amenities.push("Terrasse");
+  if (text.includes("jardin")) amenities.push("Jardin");
+  if (text.includes("garage")) amenities.push("Garage");
+  if (text.includes("parking")) amenities.push("Parking");
+  if (text.includes("clim")) amenities.push("Clim");
+  if (text.includes("ascenseur")) amenities.push("Ascenseur");
+
+  return amenities;
+}
+
 async function geocode(city: string, postal?: string) {
   if (!city) return { lat: 49.119, lng: 6.176 };
 
@@ -87,6 +103,8 @@ export async function parseHektorCSV() {
       // 🔥 géocodage sécurisé
       const geo = await geocode(city, postal);
 
+      const description = (get(20) || "").replace(/<[^>]*>/g, "");
+
       data.push({
         id: get(1) || i.toString(),
         title: get(19) || "Sans titre",
@@ -96,13 +114,14 @@ export async function parseHektorCSV() {
         surface: Number(get(15)) || 0,
         rooms: Number(get(17)) || 0,
         bedrooms: Number(get(18)) || 0,
-        description: (get(20) || "").replace(/<[^>]*>/g, ""),
+        description,
         image: images[0] || "/placeholder.jpg",
         images,
         lat: geo.lat,
         lng: geo.lng,
-        amenities: [],
+        amenities: extractAmenities(description), // ✅ ICI
       });
+  
     } catch (err) {
       console.log("❌ Erreur ligne:", i, err);
     }
