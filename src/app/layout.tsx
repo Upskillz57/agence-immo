@@ -29,6 +29,9 @@ const sourceSerif = Source_Serif_4({
 export const metadata: Metadata = {
   title: "Marchal Immobilier",
   description: "Agence immobilière à Metz",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({

@@ -877,13 +877,13 @@ Map
     bottom-6
     left-1/2
     -translate-x-1/2
-    z-50
+    z-[999]
     bg-[#122e53]
     text-white
     px-6
     py-3
     rounded-full
-    shadow-xl
+    shadow-2xl
     flex
     items-center
     gap-2
