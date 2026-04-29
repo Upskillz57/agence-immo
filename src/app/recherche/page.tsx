@@ -472,7 +472,7 @@ Map
 
 </div>
 
-<div className="flex h-[calc(100vh-140px)] bg-[#f5f5f5]">
+<div className="flex min-h-[calc(100vh-140px)] bg-[#f5f5f5]">
 
 {/* ========================= */}
 {/* 🟢 MODE LISTE (PLEIN LARGE) */}
