@@ -109,17 +109,20 @@ export async function parseHektorCSV() {
         id: get(1) || i.toString(),
         title: get(19) || "Sans titre",
         type: get(3),
+        transaction: Math.random() > 0.5 ? "vente" : "location", // temporaire
         city,
         price: Number(get(10)) || 0,
         surface: Number(get(15)) || 0,
         rooms: Number(get(17)) || 0,
         bedrooms: Number(get(18)) || 0,
+        bathrooms: Number(get(16)) || 0,
         description,
         image: images[0] || "/placeholder.jpg",
         images,
         lat: geo.lat,
         lng: geo.lng,
         amenities: extractAmenities(description), // ✅ ICI
+       
       });
   
     } catch (err) {

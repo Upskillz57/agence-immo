@@ -35,6 +35,8 @@ const [hoveredId,setHoveredId] = useState<string | null>(null);
 
 const [properties, setProperties] = useState<any[]>([]);
 
+const parseMin = (val: string) => parseInt(val.replace("+", ""));
+
 useEffect(() => {
   fetch("/api/properties")
     .then(res => res.json())
@@ -66,50 +68,58 @@ const [filters, setFilters] = useState({
   const filteredProperties = Array.isArray(properties)
   ? properties.filter((property) => {
 
-    if (filters.amenities.length > 0) {
-      const hasAmenity = filters.amenities.every((a) =>
-        property.amenities?.includes(a)
-      );
-      if (!hasAmenity) return false;
-    }
-  
-    if (filters.type !== "Tous" && property.type !== filters.type) {
-      return false;
-    }
-  
-    if (filters.priceMax && property.price > Number(filters.priceMax)) {
-      return false;
-    }
+      // amenities (STRICT)
+      if (filters.amenities.length > 0) {
+        const hasAmenity = filters.amenities.every((a) =>
+          property.amenities?.includes(a)
+        );
+        if (!hasAmenity) return false;
+      }
 
-    // bathrooms
-if (filters.bathrooms) {
-    const min = parseInt(filters.bathrooms);
-    if ((property.bathrooms || 0) < min) return false;
-  }
-  
-  // bedrooms
-  if (filters.bedrooms) {
-    const min = parseInt(filters.bedrooms);
-    if ((property.bedrooms || 0) < min) return false;
-  }
-  
-  // surface
-  if (filters.surface) {
-    const min = parseInt(filters.surface);
-    if ((property.surface || 0) < min) return false;
-  }
+      // type (robuste)
+      if (
+        filters.type !== "Tous" &&
+        !property.type?.toLowerCase().includes(filters.type.toLowerCase())
+      ) {
+        return false;
+      }
 
-  // location
-if (filters.location) {
-    const search = filters.location.toLowerCase();
-    if (!property.city.toLowerCase().includes(search)) {
-      return false;
-    }
-  }
-  
-  return true;
-})
-: [];
+      // transaction
+      if (filters.transaction && property.transaction !== filters.transaction) {
+        return false;
+      }
+
+      // price
+      if (filters.priceMax && property.price > Number(filters.priceMax)) {
+        return false;
+      }
+
+      // bedrooms
+      if (filters.bedrooms) {
+        const min = parseMin(filters.bedrooms);
+        if ((property.bedrooms || 0) < min) return false;
+      }
+
+      // surface
+      if (filters.surface) {
+        const min = parseMin(filters.surface);
+        if ((property.surface || 0) < min) return false;
+      }
+
+      // location
+      if (filters.location) {
+        const search = filters.location.toLowerCase();
+
+        const match =
+          property.city?.toLowerCase().includes(search) ||
+          property.title?.toLowerCase().includes(search);
+
+        if (!match) return false;
+      }
+
+      return true;
+    })
+  : [];
   
 const [view, setView] = useState<"list" | "map">("list");
 const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -149,7 +159,15 @@ const [openDropdown, setOpenDropdown] = useState<string | null>(null);
     setOpenDropdown(openDropdown === name ? null : name);
   };
 
-  const activeFiltersCount = filters.amenities.length;
+  const activeFiltersCount =
+  filters.amenities.length +
+  (filters.type !== "Tous" ? 1 : 0) +
+  (filters.transaction ? 1 : 0) +
+  (filters.priceMax ? 1 : 0) +
+  (filters.bedrooms ? 1 : 0) +
+  (filters.bathrooms ? 1 : 0) +
+  (filters.surface ? 1 : 0) +
+  (filters.location ? 1 : 0);
 
   useEffect(() => {
     setFilters((prev) => ({
@@ -205,8 +223,11 @@ className="flex-1 border border-gray-300 bg-white rounded-full px-4 py-2 text-sm
   <option value="1000000">1 000 000 €</option>
 </select>
 
-<button className="w-full md:w-auto bg-[#122e53] text-white px-6 py-2 rounded-full">
-Rechercher
+<button
+  onClick={() => window.scrollTo({ top: 200, behavior: "smooth" })}
+  className="w-full md:w-auto bg-[#122e53] text-white px-6 py-2 rounded-full"
+>
+  Rechercher
 </button>
 
 </div>
