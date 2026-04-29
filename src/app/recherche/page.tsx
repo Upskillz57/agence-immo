@@ -235,11 +235,12 @@ className="flex-1 border border-gray-300 bg-white rounded-full px-4 py-2 text-sm
 {/* FILTRES + TOGGLE */}
 <div className="flex justify-between items-center">
 
-<div className="flex flex-wrap gap-3">
+{/* 👇 FILTRES MASQUÉS SUR MOBILE */}
+<div className="hidden md:flex flex-wrap gap-3">
 
 <button 
 onClick={() => setIsFilterOpen(true)}
-className="flex items-center gap-2 border px-4 py-2 rounded-full text-sm bg-white text-gray-900 hover:border-black"
+className="hidden md:flex items-center gap-2 border px-4 py-2 rounded-full text-sm bg-white text-gray-900 hover:border-black"
 >
   <SlidersHorizontal size={16} />
   Tous les filtres {activeFiltersCount > 0 && `(${activeFiltersCount})`}
