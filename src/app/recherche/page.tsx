@@ -595,6 +595,7 @@ Map
   {openDropdown === "transaction" && (
     <div className="absolute right-0 mt-2 w-[220px] bg-white border shadow-xl z-50 animate-[fadeIn_.2s_ease]">
 
+
 <div onClick={() => setTransaction("vente")} className="px-4 py-3 hover:bg-gray-100 cursor-pointer">
   À vendre
 </div>

@@ -144,10 +144,11 @@ export default function Header({ transparent = false, forceScrollBackground = fa
   Estimer un bien
 </Link>
 
+{/* NAV DESKTOP 
 <Link href="/recherche?transaction=vente" className="relative group text-white text-[14px] font-semibold">
   Vendre
   <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
-</Link>
+</Link>*/}
 
 <div className="relative group">
   <span
