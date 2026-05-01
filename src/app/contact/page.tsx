@@ -8,13 +8,14 @@ export default function ContactPage() {
 
       {/* HERO (PAS plein écran) */}
       <section className="relative h-[350px] w-full overflow-hidden">
-        <Image
-          src="/contact.jpg"
-          alt="Contact Marchal Immobilier"
-          fill
-          className="object-cover"
-          priority
-        />
+      <Image
+  src="/contact.jpg"
+  alt="Contact Marchal Immobilier"
+  fill
+  sizes="100vw"
+  className="object-cover"
+  priority
+/>
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
           <div className="text-center text-white">
             <p className="uppercase tracking-widest text-sm mb-2">
@@ -47,6 +48,7 @@ export default function ContactPage() {
   alt="Marchal Immobilier"
   width={280}
   height={120}
+  sizes="(max-width: 768px) 220px, 200px"
   className="w-[220px] md:w-[200px] h-auto mb-10"
 />
 
