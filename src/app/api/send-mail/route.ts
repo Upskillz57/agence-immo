@@ -1,4 +1,3 @@
-//src/app/api/send-mail/route.ts
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
@@ -19,69 +18,97 @@ export async function POST(req: Request) {
       formStart
     } = await req.json();
 
+    // 🛑 Anti-spam (champ caché)
     if (company) {
       return NextResponse.json({ success: true });
     }
 
+    // 🛑 Anti-bot (remplissage trop rapide)
     const now = Date.now();
     const timeSpent = formStart ? now - formStart : 9999;
 
-if (timeSpent < 2000) {
-  return NextResponse.json({ success: true });
-}
-
-    if (!email || !message) {
-      return NextResponse.json({ success: false, error: "Missing fields" }, { status: 400 });
+    if (timeSpent < 2000) {
+      return NextResponse.json({ success: true });
     }
+
+    // 🛑 Vérification champs
+    if (!email || !message) {
+      return NextResponse.json(
+        { success: false, error: "Missing fields" },
+        { status: 400 }
+      );
+    }
+
+    // 📧 SMTP Microsoft 365
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
-      port: 465,
-      secure: true,
+      port: 587,
+      secure: false,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
       },
     });
 
+    // 📩 Envoi du mail
     await transporter.sendMail({
       from: `"Marchal Immobilier" <${process.env.SMTP_USER}>`,
-      to: advisorEmail || "contact@marchalimmo.fr",
-cc: "contact@marchalimmo.fr",
-replyTo: email,
-subject: `Nouveau message pour ${advisorName || "l'agence"}`,
 
-html: `
-<h3>Nouveau message depuis le site Marchal Immobilier</h3>
+      // destinataire principal
+      to: advisorEmail || "admin.marchal@marchalimmobilier.com",
 
-<p><strong>Date :</strong> ${new Date().toLocaleString()}</p>
+      // copie agence
+      cc: "admin.marchal@marchalimmobilier.com",
 
-<p><strong>Nom :</strong> ${firstName || ""} ${lastName || ""}</p>
-<p><strong>Email :</strong> ${email}</p>
-<p><strong>Téléphone :</strong> ${phone || "Non renseigné"}</p>
+      // réponse directe au client
+      replyTo: email,
 
-${propertyTitle ? `
-<hr/>
-<p><strong>Bien concerné :</strong> ${propertyTitle}</p>
-<p><strong>Référence :</strong> ${propertyRef}</p>
-<p><strong>Lien :</strong> ${
-  propertyUrl
-    ? `<a href="${propertyUrl}">${propertyUrl}</a>`
-    : "Non disponible"
-}</p>
-<hr/>
-` : ""}
+      subject: `🔥 Nouveau lead - ${propertyTitle || "Site web"}`,
 
-<p><strong>Message :</strong></p>
-<p>${message}</p>
-`,
+      html: `
+        <h2 style="color:#000;">Nouveau contact site</h2>
+
+        <p><b>Date :</b> ${new Date().toLocaleString()}</p>
+
+        <hr/>
+
+        <p><b>Nom :</b> ${firstName || ""} ${lastName || ""}</p>
+        <p><b>Email :</b> ${email}</p>
+        <p><b>Téléphone :</b> ${phone || "Non renseigné"}</p>
+
+        ${
+          propertyTitle
+            ? `
+          <hr/>
+          <h3>Bien concerné</h3>
+          <p><b>${propertyTitle}</b></p>
+          <p><b>Référence :</b> ${propertyRef || "Non renseignée"}</p>
+          <p>
+            ${
+              propertyUrl
+                ? `<a href="${propertyUrl}">Voir le bien</a>`
+                : "Lien non disponible"
+            }
+          </p>
+          `
+            : ""
+        }
+
+        <hr/>
+
+        <p><b>Message :</b></p>
+        <p>${message}</p>
+      `,
     });
 
     return NextResponse.json({ success: true });
-  } catch (error) {
 
+  } catch (error) {
     console.error("Erreur envoi email :", error);
-  
-    return NextResponse.json({ success: false }, { status: 500 });
-  
+
+    return NextResponse.json(
+      { success: false },
+      { status: 500 }
+    );
   }
-  }
+}

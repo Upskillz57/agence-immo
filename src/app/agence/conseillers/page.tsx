@@ -80,12 +80,13 @@ export default function ConseillersPage() {
       {/* HERO */}
       <section className="relative h-[320px] md:h-[420px] w-full flex items-center justify-center">
       <Image
-          src="/conseillers.jpg"
-          alt="Nos conseillers"
-          fill
-          className="object-cover"
-          priority
-        />
+  src="/conseillers.jpg"
+  alt="Nos conseillers"
+  fill
+  sizes="100vw"
+  className="object-cover"
+  priority
+/>
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative text-center text-white">
         <h1 className="text-3xl md:text-5xl font-semibold tracking-wide">
@@ -110,12 +111,14 @@ export default function ConseillersPage() {
               className="group bg-white shadow-sm md:hover:shadow-xl transition duration-500 rounded-lg overflow-hidden"
               >
 <div className="relative w-full h-[210px] md:h-[320px] overflow-hidden">
-  <Image
-    src={advisor.image}
-    alt={advisor.name}
-    fill
-    className="object-cover object-top transition duration-700 md:group-hover:scale-105"
-  />
+<Image
+  src={advisor.image}
+  alt={advisor.name}
+  fill
+  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 25vw"
+  priority={index < 4}
+  className="object-cover object-top transition duration-700 md:group-hover:scale-105"
+/>
 </div>
 
 
