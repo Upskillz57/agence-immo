@@ -39,6 +39,13 @@ export async function POST(req: Request) {
       );
     }
 
+    if (!email.includes("@")) {
+      return NextResponse.json(
+        { success: false, error: "Invalid email" },
+        { status: 400 }
+      );
+    }
+
     // 📧 SMTP Microsoft 365
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
@@ -47,6 +54,9 @@ export async function POST(req: Request) {
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false,
       },
     });
 
