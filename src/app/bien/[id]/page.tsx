@@ -2,6 +2,7 @@
 import { notFound } from "next/navigation";
 import { getPropertyById } from "@/lib/getProperties";
 import Link from "next/link";
+import PropertyContactForm from "@/components/PropertyContactForm";
 
 import Gallery from "@/components/Gallery";
 
@@ -94,35 +95,15 @@ export default async function PropertyPage({ params }: any) {
                 </div>
 
                 {/* FORM */}
-                <div className="space-y-3">
+<PropertyContactForm property={property} />
 
-                <input
-  placeholder="Nom"
-    className="w-full border border-gray-300 p-3 rounded-lg text-black placeholder-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-black"/>
-
-
-<input
-  placeholder="Email"
-  className="w-full border border-gray-300 p-3 rounded-lg text-black placeholder-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-black"/>
-
-<input
-  placeholder="Téléphone"
-  className="w-full border border-gray-300 p-3 rounded-lg text-black placeholder-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-black"/>
-
-                  {/* CTA */}
-                  <button className="w-full bg-black text-white py-3 rounded-lg mt-2 font-medium hover:bg-gray-800 transition">
-                    Contacter
-                  </button>
-
-                </div>
-
-                {/* LEGAL */}
-                <div className="flex items-start gap-2 mt-4 text-xs text-gray-500">
-                  <input type="checkbox" />
-                  <span>
-                    J'accepte les conditions et la politique de confidentialité
-                  </span>
-                </div>
+{/* LEGAL */}
+<div className="flex items-start gap-2 mt-4 text-xs text-gray-500">
+  <input type="checkbox" />
+  <span>
+    J'accepte les conditions et la politique de confidentialité
+  </span>
+</div>
 
               </div>
 
