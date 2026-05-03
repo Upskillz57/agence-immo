@@ -1,14 +1,10 @@
-import fs from "fs";
-
 let cache: any[] = [];
 let lastLoad = 0;
 
-// 🔥 cache géocodage
 const geoCache: Record<string, { lat: number; lng: number }> = {};
 
 function extractAmenities(description: string) {
   const text = description.toLowerCase();
-
   const amenities: string[] = [];
 
   if (text.includes("piscine")) amenities.push("Piscine");
@@ -29,15 +25,15 @@ async function geocode(city: string, postal?: string) {
   if (geoCache[key]) return geoCache[key];
 
   try {
-    // 🔥 IMPORTANT : on force FRANCE
     const query = `${city} ${postal || ""} France`;
 
     const res = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}&country=fr&limit=1`
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+        query
+      )}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}&country=fr&limit=1`
     );
 
     const data = await res.json();
-
     const coords = data?.features?.[0]?.center;
 
     if (coords) {
@@ -53,26 +49,30 @@ async function geocode(city: string, postal?: string) {
     console.log("❌ GEO ERROR:", city);
   }
 
-  // fallback Metz
   return { lat: 49.119, lng: 6.176 };
 }
 
 export async function parseHektorCSV() {
   const now = Date.now();
 
-  // ⚡ CACHE GLOBAL (30s)
   if (cache.length > 0 && now - lastLoad < 30000) {
     console.log("⚡ CACHE USED");
     return cache;
   }
 
-  const filePath = "/home/hektorftp/export/data/Annonces.csv";
+  const csvUrl = "http://91.134.141.44/hektor/Annonces.csv";
 
-  if (!fs.existsSync(filePath)) {
-    throw new Error("CSV file not found");
+  const res = await fetch(csvUrl, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error(`CSV file not found: ${res.status}`);
   }
 
-  const file = fs.readFileSync(filePath, "latin1");
+  const buffer = await res.arrayBuffer();
+  const file = Buffer.from(buffer).toString("latin1");
+
   const lines = file.split("\n").filter(Boolean);
 
   console.log("📊 NB LIGNES:", lines.length);
@@ -85,15 +85,10 @@ export async function parseHektorCSV() {
         .split("!#")
         .map((c) => c.replace(/"/g, "").trim());
 
-        if (i < 5) {
-          console.log("LIGNE:", i);
-          console.log(cols);
-        }
-  
       if (cols.length < 5) continue;
-  
+
       const get = (i: number) => cols[i] || "";
-  
+
       const images = cols.filter(
         (c) =>
           c.includes("http") &&
@@ -101,26 +96,22 @@ export async function parseHektorCSV() {
             c.endsWith(".png") ||
             c.endsWith(".jpeg"))
       );
-  
+
       const city = get(5);
       const postal = get(6);
-  
-      // ✅ TRANSACTION (ICI 👇)
-      const rawTransaction = get(2); // à vérifier
+
+      const rawTransaction = get(2);
       const transaction =
-        rawTransaction?.toLowerCase().includes("loc")
-          ? "location"
-          : "vente";
-  
+        rawTransaction?.toLowerCase().includes("loc") ? "location" : "vente";
+
       const geo = await geocode(city, postal);
-  
       const description = (get(20) || "").replace(/<[^>]*>/g, "");
-  
+
       data.push({
         id: get(1) || i.toString(),
         title: get(19) || "Sans titre",
         type: get(3),
-        transaction, // ✅ propre ici
+        transaction,
         city,
         price: Number(get(10)) || 0,
         surface: Number(get(15)) || 0,
@@ -134,7 +125,6 @@ export async function parseHektorCSV() {
         lng: geo.lng,
         amenities: extractAmenities(description),
       });
-  
     } catch (err) {
       console.log("❌ Erreur ligne:", i, err);
     }

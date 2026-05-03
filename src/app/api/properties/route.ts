@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { parseHektorCSV } from "@/lib/hektorParser";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     console.log("📡 API PROPERTIES CALLED");
@@ -14,7 +17,6 @@ export async function GET() {
     return NextResponse.json(
       {
         error: error.message,
-        stack: error.stack,
       },
       { status: 500 }
     );
