@@ -4,6 +4,7 @@ import nodemailer from "nodemailer";
 export async function POST(req: Request) {
   try {
     const {
+      source,
       firstName,
       lastName,
       email,
@@ -46,8 +47,17 @@ export async function POST(req: Request) {
       );
     }
 
-    // 📧 SMTP Microsoft 365
-    const transporter = nodemailer.createTransport({
+    const subject =
+    source === "conseiller"
+      ? `Nouveau message pour ${advisorName || "un conseiller"}`
+      : source === "annonce"
+      ? `Nouveau lead annonce - ${propertyTitle || "Bien immobilier"}`
+      : source === "estimation"
+      ? "Nouvelle demande d’estimation"
+      : "Nouveau message de contact";
+  
+  // 📧 SMTP Microsoft 365
+  const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: 587,
       secure: false,
@@ -73,8 +83,8 @@ export async function POST(req: Request) {
       // réponse directe au client
       replyTo: email,
 
-      subject: `🔥 Nouveau lead - ${propertyTitle || "Site web"}`,
-
+      subject,
+      
       html: `
         <h2 style="color:#000;">Nouveau contact site</h2>
 

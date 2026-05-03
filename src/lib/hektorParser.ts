@@ -55,7 +55,7 @@ async function geocode(city: string, postal?: string) {
 export async function parseHektorCSV() {
   const now = Date.now();
 
-  if (cache.length > 0 && now - lastLoad < 30000) {
+  if (cache.length > 0 && now - lastLoad < 600000)  {
     console.log("⚡ CACHE USED");
     return cache;
   }
