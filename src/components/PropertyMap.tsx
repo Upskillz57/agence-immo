@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 
 
-
+console.log("TOKEN MAPBOX:", process.env.NEXT_PUBLIC_MAPBOX_TOKEN);
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
 export default function PropertyMap({ properties, hoveredId }: any) {
