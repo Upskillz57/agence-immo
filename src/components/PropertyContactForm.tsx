@@ -41,9 +41,23 @@ export default function PropertyContactForm({ property }: any) {
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
 
-      <input name="name" placeholder="Nom" className="input" required />
-      <input name="email" placeholder="Email" className="input" required />
-      <input name="phone" placeholder="Téléphone" className="input" />
+<input
+  name="name"
+  placeholder="Nom"
+  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black"
+/>
+
+<input
+  name="email"
+  placeholder="Email"
+  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black"
+/>
+
+<input
+  name="phone"
+  placeholder="Téléphone"
+  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black"
+/>
 
       <button
         type="submit"
