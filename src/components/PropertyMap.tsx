@@ -6,7 +6,11 @@ import mapboxgl from "mapbox-gl";
 
 
 console.log("TOKEN MAPBOX:", process.env.NEXT_PUBLIC_MAPBOX_TOKEN);
-mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
+const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || "";
+
+console.log("TOKEN MAPBOX:", MAPBOX_TOKEN);
+
+mapboxgl.accessToken = MAPBOX_TOKEN;
 
 export default function PropertyMap({ properties, hoveredId }: any) {
 
