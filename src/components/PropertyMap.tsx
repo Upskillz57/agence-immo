@@ -68,12 +68,67 @@ useEffect(() => {
     el.addEventListener("click", () => {
       window.location.href = `/bien/${property.id}`;
     });
-
+    
     if (property.id === hoveredId) {
       el.style.transform = "scale(1.15)";
       el.style.background = "#122e53";
     }
-
+    
+    // ✅ POPUP AU SURVOL
+    const popup = new mapboxgl.Popup({
+      closeButton: false,
+      closeOnClick: false,
+      offset: 25,
+    }).setHTML(`
+      <div style="width:220px;font-family:sans-serif;">
+        
+        ${
+          property.images?.[0]
+            ? `
+          <img 
+            src="${property.images[0]}" 
+            style="
+              width:100%;
+              height:140px;
+              object-fit:cover;
+              border-radius:10px;
+              margin-bottom:10px;
+            "
+          />
+        `
+            : ""
+        }
+    
+        <div style="font-weight:700;font-size:15px;color:#122e53;">
+          ${property.title || ""}
+        </div>
+    
+        <div style="margin-top:4px;font-size:13px;color:#666;">
+          ${property.city || ""}
+        </div>
+    
+        <div style="
+          margin-top:8px;
+          font-size:16px;
+          font-weight:700;
+          color:#c79b4b;
+        ">
+          ${property.price?.toLocaleString()} €
+        </div>
+    
+      </div>
+    `);
+    
+    el.addEventListener("mouseenter", () => {
+      popup
+        .setLngLat([property.lng, property.lat])
+        .addTo(currentMap);
+    });
+    
+    el.addEventListener("mouseleave", () => {
+      popup.remove();
+    });
+    
     new mapboxgl.Marker(el)
       .setLngLat([property.lng, property.lat])
       .addTo(currentMap);
