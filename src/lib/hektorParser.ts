@@ -90,7 +90,7 @@ export async function parseHektorCSV() {
       const get = (i: number) => cols[i] || "";
 
 console.log("TITLE:", get(19));
-console.log("STATUS COL 0-15:", cols.slice(0, 15));
+console.log("ALL COLS:", cols);
 
       const images = cols.filter(
         (c) =>
