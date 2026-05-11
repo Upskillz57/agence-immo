@@ -111,6 +111,13 @@ const description = (get(20) || "").replace(/<[^>]*>/g, "");
 const lowerTitle = (get(19) || "").toLowerCase();
 const lowerDescription = description.toLowerCase();
 
+if (
+  lowerTitle.includes("compromis") ||
+  lowerDescription.includes("compromis")
+) {
+  console.log("🟡 COMPROMIS DETECTÉ :", get(19));
+}
+
 let status = "";
 
 if (
