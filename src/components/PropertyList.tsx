@@ -75,9 +75,9 @@ export default function PropertyList({
               {/* BAS */}
               <div className="flex items-center justify-between mt-4">
   
-                <p className="text-sm text-gray-500">
-                  {property.city}
-                </p>
+              <p className="text-sm text-gray-500">
+  {property.postalCode} {property.city}
+</p>
   
                 <div className="flex gap-3 text-gray-400 text-lg">
   

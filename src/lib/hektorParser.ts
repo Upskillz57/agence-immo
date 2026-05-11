@@ -97,8 +97,8 @@ export async function parseHektorCSV() {
             c.endsWith(".jpeg"))
       );
 
-      const city = get(5);
-      const postal = get(6);
+      const postal = get(4);
+const city = get(5);
 
       const rawTransaction = get(2);
       const transaction =
@@ -113,6 +113,7 @@ export async function parseHektorCSV() {
         type: get(3),
         transaction,
         city,
+        postalCode: postal,
         price: Number(get(10)) || 0,
         surface: Number(get(15)) || 0,
         rooms: Number(get(17)) || 0,

@@ -111,8 +111,11 @@ const [filters, setFilters] = useState({
         const search = filters.location.toLowerCase();
 
         const match =
-          property.city?.toLowerCase().includes(search) ||
-          property.title?.toLowerCase().includes(search);
+  property.city?.toLowerCase().includes(search) ||
+
+  property.postalCode?.toLowerCase().includes(search) ||
+
+  property.title?.toLowerCase().includes(search);
 
         if (!match) return false;
       }
