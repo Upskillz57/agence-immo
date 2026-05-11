@@ -14,14 +14,32 @@ export default function PropertyList({
 
 <Link key={property.id} href={`/bien/${property.id}`}>
   
-  <div
-    className={`
-      flex flex-col md:flex-row bg-white overflow-hidden transition cursor-pointer border border-gray-200
-      ${hoveredId === property.id
-        ? "border-black"
-        : "hover:border-gray-400"}
-    `}
-  >
+<div
+  onMouseEnter={() => setHoveredId(property.id)}
+  onMouseLeave={() => setHoveredId(null)}
+  className={`
+    group
+    flex
+    flex-col
+    xl:flex-row
+    bg-white
+    rounded-2xl
+    overflow-hidden
+    transition-all
+    duration-300
+    cursor-pointer
+    border
+    shadow-sm
+    hover:shadow-2xl
+    hover:-translate-y-1
+
+    ${
+      hoveredId === property.id
+        ? "border-[#122e53] shadow-xl"
+        : "border-gray-100"
+    }
+  `}
+>
   
             {/* IMAGE GAUCHE */}
             <div className="relative w-full md:w-[260px] md:min-w-[260px] h-[220px] md:h-[200px]">

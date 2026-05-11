@@ -532,24 +532,54 @@ Map
 )}
 
 {view === "map" && (
-  <>
-    {/* LISTE GAUCHE */}
-    <div className="w-[35%] h-[calc(100vh-140px)] overflow-y-auto border-r bg-white">
-      <PropertyList
-        properties={filteredProperties}
-        hoveredId={hoveredId}
-        setHoveredId={setHoveredId}
-      />
+  <div className="flex w-full h-[calc(100vh-140px)] overflow-hidden">
+
+    {/* ========================= */}
+    {/* LISTE */}
+    {/* ========================= */}
+    <div className="
+      w-[420px]
+      min-w-[420px]
+      xl:w-[480px]
+      bg-white
+      border-r
+      overflow-y-auto
+      scrollbar-thin
+    ">
+      <div className="px-5 py-4 border-b bg-white sticky top-0 z-20">
+        <h2 className="text-xl font-semibold text-[#122e53]">
+          {filteredProperties.length} biens disponibles
+        </h2>
+
+        <p className="text-sm text-gray-500 mt-1">
+          Découvrez notre sélection immobilière
+        </p>
+      </div>
+
+      <div className="p-4">
+        <PropertyList
+          properties={filteredProperties}
+          hoveredId={hoveredId}
+          setHoveredId={setHoveredId}
+        />
+      </div>
     </div>
 
-    {/* CARTE DROITE FULL */}
-    <div className="w-[65%] h-[calc(100vh-140px)] sticky top-[140px] overflow-hidden">
-  <PropertyMap
-    properties={filteredProperties}
-    hoveredId={hoveredId}
-  />
-</div>
-  </>
+    {/* ========================= */}
+    {/* MAP */}
+    {/* ========================= */}
+    <div className="flex-1 relative">
+
+      <div className="absolute inset-0">
+        <PropertyMap
+          properties={filteredProperties}
+          hoveredId={hoveredId}
+        />
+      </div>
+
+    </div>
+
+  </div>
 )}
 
 
