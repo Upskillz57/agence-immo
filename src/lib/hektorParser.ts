@@ -153,12 +153,6 @@ if (
   status = "SOUS COMPROMIS";
 }
 
-if (
-  fullText.includes("vendu")
-) {
-  status = "VENDU";
-}
-
 data.push({
   id: get(1) || i.toString(),
   title: get(19) || "Sans titre",
