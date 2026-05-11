@@ -82,10 +82,18 @@ export async function parseHektorCSV() {
   for (let i = 0; i < lines.length; i++) {
     try {
       const cols = lines[i]
-        .split("!#")
-        .map((c) => c.replace(/"/g, "").trim());
+  .split("!#")
+  .map((c) => c.replace(/"/g, "").trim());
 
-      if (cols.length < 5) continue;
+if (i === 1) {
+  console.log("🟢 COLONNES CSV :");
+
+  cols.forEach((col, index) => {
+    console.log(index, col);
+  });
+}
+
+if (cols.length < 5) continue;
 
       const get = (i: number) => cols[i] || "";
 
@@ -134,18 +142,19 @@ if (
   console.log("🟡 COMPROMIS DETECTÉ :", get(19));
 }
 
+const fullText = cols.join(" ").toLowerCase();
+
 let status = "";
 
 if (
-  lowerTitle.includes("sous compromis") ||
-  lowerDescription.includes("sous compromis")
+  fullText.includes("sous compromis") ||
+  fullText.includes("compromis")
 ) {
   status = "SOUS COMPROMIS";
 }
 
 if (
-  lowerTitle.includes("vendu") ||
-  lowerDescription.includes("vendu")
+  fullText.includes("vendu")
 ) {
   status = "VENDU";
 }
