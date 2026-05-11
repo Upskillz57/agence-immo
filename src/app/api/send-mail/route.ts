@@ -9,6 +9,8 @@ export async function POST(req: Request) {
       lastName,
       email,
       phone,
+      commune,
+      requestType,
       message,
       advisorEmail,
       advisorName,
@@ -58,27 +60,24 @@ export async function POST(req: Request) {
   
   // 📧 SMTP Microsoft 365
   const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-      tls: {
-        rejectUnauthorized: false,
-      },
-    });
+    host: process.env.SMTP_HOST,
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
 
     // 📩 Envoi du mail
     await transporter.sendMail({
       from: `"Marchal Immobilier" <${process.env.SMTP_USER}>`,
 
       // destinataire principal
-      to: advisorEmail || "admin.marchal@marchalimmobilier.com",
+      to: advisorEmail || "verna.gio57@gmail.com",
 
       // copie agence
-      cc: "admin.marchal@marchalimmobilier.com",
+      cc: "verna.gio57@gmail.com",
 
       // réponse directe au client
       replyTo: email,
@@ -95,6 +94,8 @@ export async function POST(req: Request) {
         <p><b>Nom :</b> ${firstName || ""} ${lastName || ""}</p>
         <p><b>Email :</b> ${email}</p>
         <p><b>Téléphone :</b> ${phone || "Non renseigné"}</p>
+        <p><b>Commune :</b> ${commune || "Non renseignée"}</p>
+<p><b>Projet :</b> ${requestType || "Non renseigné"}</p>
 
         ${
           propertyTitle
