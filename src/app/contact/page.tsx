@@ -158,12 +158,12 @@ export default function ContactPage() {
             />
           </div>
 
-          <select
-            name="commune"
-            className="border border-neutral-300 p-4 w-full focus:outline-none focus:border-black"
-          >
-            <option value="">Votre commune</option>
-          </select>
+          <input
+  name="commune"
+  type="text"
+  placeholder="Votre commune"
+  className="border border-neutral-300 p-4 w-full focus:outline-none focus:border-black"
+/>
 
           <select
             name="requestType"
