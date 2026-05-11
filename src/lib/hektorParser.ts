@@ -89,8 +89,21 @@ export async function parseHektorCSV() {
 
       const get = (i: number) => cols[i] || "";
 
-console.log("TITLE:", get(19));
-console.log("ALL COLS:", cols);
+      console.log("TITLE:", get(19));
+
+      cols.forEach((col, index) => {
+        if (
+          String(col).toLowerCase().includes("compromis") ||
+          String(col).toLowerCase().includes("offre") ||
+          String(col).toLowerCase().includes("vendu")
+        ) {
+          console.log("🟡 STATUS FOUND:", {
+            index,
+            value: col,
+            title: get(19),
+          });
+        }
+      });
 
       const images = cols.filter(
         (c) =>
