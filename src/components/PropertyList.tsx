@@ -32,9 +32,22 @@ export default function PropertyList({
               />
   
               {/* BADGE */}
-              <div className="absolute top-3 left-3 bg-[#c79b4b] text-white text-xs px-3 py-1 rounded-full">
-                EXCLUSIF
-              </div>
+              {property.status && (
+  <div
+    className={`
+      absolute top-3 left-3
+      text-white text-xs px-3 py-1 rounded-full font-medium
+
+      ${
+        property.status === "VENDU"
+          ? "bg-red-600"
+          : "bg-[#c79b4b]"
+      }
+    `}
+  >
+    {property.status}
+  </div>
+)}
   
             </div>
   

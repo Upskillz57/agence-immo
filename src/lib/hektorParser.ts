@@ -104,28 +104,57 @@ const city = get(5);
       const transaction =
         rawTransaction?.toLowerCase().includes("loc") ? "location" : "vente";
 
-      const geo = await geocode(city, postal);
-      const description = (get(20) || "").replace(/<[^>]*>/g, "");
+      
+        const geo = await geocode(city, postal);
+const description = (get(20) || "").replace(/<[^>]*>/g, "");
 
-      data.push({
-        id: get(1) || i.toString(),
-        title: get(19) || "Sans titre",
-        type: get(3),
-        transaction,
-        city,
-        postalCode: postal,
-        price: Number(get(10)) || 0,
-        surface: Number(get(15)) || 0,
-        rooms: Number(get(17)) || 0,
-        bedrooms: Number(get(18)) || 0,
-        bathrooms: Number(get(16)) || 0,
-        description,
-        image: images[0] || "/placeholder.jpg",
-        images,
-        lat: geo.lat,
-        lng: geo.lng,
-        amenities: extractAmenities(description),
-      });
+const lowerTitle = (get(19) || "").toLowerCase();
+const lowerDescription = description.toLowerCase();
+
+let status = "";
+
+if (
+  lowerTitle.includes("sous compromis") ||
+  lowerDescription.includes("sous compromis")
+) {
+  status = "SOUS COMPROMIS";
+}
+
+if (
+  lowerTitle.includes("vendu") ||
+  lowerDescription.includes("vendu")
+) {
+  status = "VENDU";
+}
+
+data.push({
+  id: get(1) || i.toString(),
+  title: get(19) || "Sans titre",
+  type: get(3),
+  transaction,
+
+  city,
+  postalCode: postal,
+
+  status,
+
+  price: Number(get(10)) || 0,
+  surface: Number(get(15)) || 0,
+  rooms: Number(get(17)) || 0,
+  bedrooms: Number(get(18)) || 0,
+  bathrooms: Number(get(16)) || 0,
+
+  description,
+
+  image: images[0] || "/placeholder.jpg",
+  images,
+
+  lat: geo.lat,
+  lng: geo.lng,
+
+  amenities: extractAmenities(description),
+});
+
     } catch (err) {
       console.log("❌ Erreur ligne:", i, err);
     }
