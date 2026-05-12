@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { X, Phone, Mail } from "lucide-react";
 
-const WHATSAPP_NUMBER = "33788188000"; // 07 88 18 80 00
+const WHATSAPP_NUMBER = "33633067523"; // 07 88 18 80 00
 
 interface WhatsAppButtonProps {
   propertyTitle: string;
@@ -75,7 +75,7 @@ export default function WhatsAppButton({ propertyTitle, propertyId, onEmailClick
 
             {/* TÉLÉPHONE */}
             <a
-             href="tel:+33788188000"
+             href="tel:+33633067523"
              onClick={(e) => {
                e.stopPropagation();
                setOpen(false);
@@ -87,7 +87,7 @@ export default function WhatsAppButton({ propertyTitle, propertyId, onEmailClick
               </div>
               <div>
                 <p className="text-[13px] font-semibold text-gray-900">Appeler</p>
-                <p className="text-[11px] text-gray-400">07 88 18 80 00</p>
+                <p className="text-[11px] text-gray-400">06 33 06 75 23</p>
               </div>
             </a>
 
