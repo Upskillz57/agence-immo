@@ -53,12 +53,14 @@ export default function WhatsAppButton({ propertyTitle, propertyId, onEmailClick
 
             {/* WHATSAPP */}
             <a
-              href={waUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#25D366]/10 hover:bg-[#25D366]/20 transition group"
-            >
+             href={waUrl}
+             onClick={(e) => {
+               e.stopPropagation();
+               setOpen(false);
+               window.location.href = waUrl;
+             }}
+             className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#25D366]/10 hover:bg-[#25D366]/20 transition group"
+           >
               {/* Icône WhatsApp SVG */}
               <div className="w-9 h-9 rounded-full bg-[#25D366] flex items-center justify-center flex-shrink-0">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
@@ -73,8 +75,11 @@ export default function WhatsAppButton({ propertyTitle, propertyId, onEmailClick
 
             {/* TÉLÉPHONE */}
             <a
-              href="tel:+33788188000"
-              onClick={() => setOpen(false)}
+             href="tel:+33788188000"
+             onClick={(e) => {
+               e.stopPropagation();
+               setOpen(false);
+             }}
               className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition group"
             >
               <div className="w-9 h-9 rounded-full bg-[#122e53] flex items-center justify-center flex-shrink-0">
