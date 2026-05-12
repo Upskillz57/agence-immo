@@ -63,7 +63,7 @@ useEffect(() => {
     el.style.cursor = "pointer";
     el.style.whiteSpace = "nowrap";
 
-    el.innerHTML = property.price.toLocaleString() + " €";
+    el.innerHTML = (property.price || 0).toLocaleString() + " €";
 
     el.addEventListener("click", () => {
       window.location.href = `/bien/${property.id}`;

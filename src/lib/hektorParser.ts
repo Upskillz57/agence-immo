@@ -18,6 +18,40 @@ function extractAmenities(description: string) {
   return amenities;
 }
 
+/**
+ * Détecte le statut du bien à partir du titre ET de la description.
+ *
+ * ⚠️  Règles strictes pour éviter les faux positifs :
+ *  - "vendu"              → VENDU        (ex: "VENDU LOUÉ", "maison vendue")
+ *  - "sous compromis"     → SOUS COMPROMIS  (PAS "compromis" seul — ex: "sans compromis")
+ *  - "sous offre"         → SOUS OFFRE
+ *  - "vente interactive"  → SOUS OFFRE   (système d'enchères Hektor/Squarimo)
+ *
+ * Priorité : VENDU > SOUS COMPROMIS > SOUS OFFRE
+ */
+function detectStatus(title: string, description: string): string {
+  const text = (title + " " + description).toLowerCase();
+
+  if (text.includes("vendu")) return "VENDU";
+  if (text.includes("sous compromis")) return "SOUS COMPROMIS";
+  if (text.includes("sous offre") || text.includes("vente interactive")) return "SOUS OFFRE";
+
+  return "";
+}
+
+function extractAgent(description: string): string {
+  const patterns = [
+    /([A-ZÀ-Ü][a-zà-ü]+)\s+[A-Z]{2,}\s+(?:vous propose|de l'agence)/,
+    /([A-ZÀ-Ü][a-zà-ü]+)\s+(?:BON|SCHLECHT|KREMPT|CALLIZOT)\b/,
+  ];
+  
+  for (const pattern of patterns) {
+    const match = description.match(pattern);
+    if (match) return match[1]; // retourne le prénom
+  }
+  return "";
+}
+
 async function geocode(city: string, postal?: string) {
   if (!city) return { lat: 49.119, lng: 6.176 };
 
@@ -25,7 +59,9 @@ async function geocode(city: string, postal?: string) {
   if (geoCache[key]) return geoCache[key];
 
   try {
-    const query = `${city} ${postal || ""} France`;
+    const query = postal?.startsWith("57")
+      ? `${city} ${postal} Moselle France`
+      : `${city} ${postal || ""} France`;
 
     const res = await fetch(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
@@ -37,11 +73,19 @@ async function geocode(city: string, postal?: string) {
     const coords = data?.features?.[0]?.center;
 
     if (coords) {
-      const result = {
-        lng: coords[0],
-        lat: coords[1],
-      };
+      const lng = coords[0];
+      const lat = coords[1];
 
+      const inZone =
+        lat > 48.5 && lat < 49.7 &&
+        lng > 5.5 && lng < 7.5;
+
+      if (!inZone) {
+        console.log("❌ COORDS HORS ZONE:", city, lat, lng);
+        return { lat: 49.119, lng: 6.176 };
+      }
+
+      const result = { lng, lat };
       geoCache[key] = result;
       return result;
     }
@@ -55,16 +99,14 @@ async function geocode(city: string, postal?: string) {
 export async function parseHektorCSV() {
   const now = Date.now();
 
-  if (cache.length > 0 && now - lastLoad < 600000)  {
+  if (cache.length > 0 && now - lastLoad < 600000) {
     console.log("⚡ CACHE USED");
     return cache;
   }
 
   const csvUrl = "http://91.134.141.44/hektor/Annonces.csv";
 
-  const res = await fetch(csvUrl, {
-    cache: "no-store",
-  });
+  const res = await fetch(csvUrl, { cache: "no-store" });
 
   if (!res.ok) {
     throw new Error(`CSV file not found: ${res.status}`);
@@ -74,7 +116,6 @@ export async function parseHektorCSV() {
   const file = Buffer.from(buffer).toString("latin1");
 
   const lines = file.split("\n").filter(Boolean);
-
   console.log("📊 NB LIGNES:", lines.length);
 
   const data: any[] = [];
@@ -82,105 +123,68 @@ export async function parseHektorCSV() {
   for (let i = 0; i < lines.length; i++) {
     try {
       const cols = lines[i]
-  .split("!#")
-  .map((c) => c.replace(/"/g, "").trim());
+        .split("!#")
+        .map((c) => c.replace(/"/g, "").trim());
 
-if (i === 1) {
-  console.log("🟢 COLONNES CSV :");
+      if (cols.length < 5) continue;
 
-  cols.forEach((col, index) => {
-    console.log(index, col);
-  });
-}
-
-if (cols.length < 5) continue;
-
-      const get = (i: number) => cols[i] || "";
-
-      console.log("TITLE:", get(19));
-
-      cols.forEach((col, index) => {
-        if (
-          String(col).toLowerCase().includes("compromis") ||
-          String(col).toLowerCase().includes("offre") ||
-          String(col).toLowerCase().includes("vendu")
-        ) {
-          console.log("🟡 STATUS FOUND:", {
-            index,
-            value: col,
-            title: get(19),
-          });
-        }
-      });
+      const get = (idx: number) => cols[idx] || "";
 
       const images = cols.filter(
         (c) =>
           c.includes("http") &&
-          (c.endsWith(".jpg") ||
-            c.endsWith(".png") ||
-            c.endsWith(".jpeg"))
+          (c.endsWith(".jpg") || c.endsWith(".png") || c.endsWith(".jpeg"))
       );
 
       const postal = get(4);
-const city = get(5);
+      const city = get(5);
 
       const rawTransaction = get(2);
       const transaction =
         rawTransaction?.toLowerCase().includes("loc") ? "location" : "vente";
 
-      
-        const geo = await geocode(city, postal);
-const description = (get(20) || "").replace(/<[^>]*>/g, "");
+      const geo = await geocode(city, postal);
 
-const lowerTitle = (get(19) || "").toLowerCase();
-const lowerDescription = description.toLowerCase();
+      const description = (get(20) || "").replace(/<[^>]*>/g, "");
+      const title = get(19) || "Sans titre";
 
-if (
-  lowerTitle.includes("compromis") ||
-  lowerDescription.includes("compromis")
-) {
-  console.log("🟡 COMPROMIS DETECTÉ :", get(19));
-}
+      const status = detectStatus(title, description);
 
-const fullText = cols.join(" ").toLowerCase();
+      if (status) {
+        console.log(`🏷️  [${status}] ${title}`);
+      }
 
-let status = "";
+      data.push({
+        id: get(1) || i.toString(),
+        title,
+        type: get(3),
+        transaction,
 
-if (
-  fullText.includes("sous compromis") ||
-  fullText.includes("compromis")
-) {
-  status = "SOUS COMPROMIS";
-}
+        city,
+        postalCode: postal,
 
-data.push({
-  id: get(1) || i.toString(),
-  title: get(19) || "Sans titre",
-  type: get(3),
-  transaction,
+        status, // "" | "SOUS OFFRE" | "SOUS COMPROMIS" | "VENDU"
 
-  city,
-  postalCode: postal,
+        price: Number(get(10)) || 0,
 
-  status,
+        surface: Number(get(15)) || 0,
+        terrain: Number(get(16)) || 0,
+        rooms: Number(get(17)) || 0,
+        bedrooms: Number(get(18)) || 0,
+        bathrooms: 0,
 
-  price: Number(get(10)) || 0,
-  surface: Number(get(15)) || 0,
-  rooms: Number(get(17)) || 0,
-  bedrooms: Number(get(18)) || 0,
-  bathrooms: Number(get(16)) || 0,
+        description,
 
-  description,
+        image: images[0] || "/placeholder.jpg",
+        images,
+        imageCount: images.length,
 
-  image: images[0] || "/placeholder.jpg",
-  images,
+        lat: geo.lat,
+        lng: geo.lng,
 
-  lat: geo.lat,
-  lng: geo.lng,
-
-  amenities: extractAmenities(description),
-});
-
+        amenities: extractAmenities(description), 
+        agent: extractAgent(description),
+      });
     } catch (err) {
       console.log("❌ Erreur ligne:", i, err);
     }
@@ -190,6 +194,5 @@ data.push({
   lastLoad = now;
 
   console.log("✅ DATA LOADED & CACHED");
-
   return data;
 }

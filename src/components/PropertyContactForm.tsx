@@ -62,7 +62,7 @@ export default function PropertyContactForm({ property }: any) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-black text-white py-3 rounded-lg"
+        className="w-full bg-[#122e53] text-white py-3 rounded-lg"
       >
         {loading ? "Envoi..." : "Contacter"}
       </button>

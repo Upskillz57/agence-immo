@@ -3,113 +3,207 @@ import { notFound } from "next/navigation";
 import { getPropertyById } from "@/lib/getProperties";
 import Link from "next/link";
 import PropertyContactForm from "@/components/PropertyContactForm";
-
 import Gallery from "@/components/Gallery";
+import { BedDouble, Bath, Maximize, MapPin, Share2, Trash2, Heart } from "lucide-react";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 
 export default async function PropertyPage({ params }: any) {
   const { id } = await params;
-
   const property = await getPropertyById(id);
-
-
   if (!property) return notFound();
 
   return (
-    <main className="pt-[80px] bg-[#f7f7f7] min-h-screen">
+    <main className="pt-[80px] bg-white min-h-screen">
 
-      {/* ===================== */}
-      {/* GALERIE LUXURY */}
-      {/* ===================== */}
-      <div className="max-w-7xl mx-auto px-4 mt-6">
-  <Gallery images={property.images || []} />
-</div>
+      {/* ← RETOUR */}
+      <div className="max-w-7xl mx-auto px-4 pt-4">
+        <Link href="/recherche" className="inline-flex items-center gap-2 text-sm text-gray-600 bg-white border border-gray-200 px-4 py-2 rounded hover:bg-gray-50 transition">
+          ← Résultats de recherche
+        </Link>
+      </div>
 
-      {/* ===================== */}
-      {/* TITRE + INFOS */}
-      {/* ===================== */}
-      <div className="max-w-7xl mx-auto px-4 mt-8">
+      {/* GALERIE */}
+      <div className="max-w-7xl mx-auto px-4 mt-4">
+        <Gallery images={property.images || []} />
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+      {/* CONTENU PRINCIPAL */}
+      <div className="max-w-7xl mx-auto px-4 mt-8 pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
-          {/* LEFT CONTENT */}
+          {/* COLONNE GAUCHE */}
           <div className="lg:col-span-2">
 
-            {/* LOCALISATION */}
-            <div className="flex items-center gap-2 text-gray-500 text-sm mb-3">
-              📍 {property.city}
-            </div>
+            {/* MINIMAP + TITRE + ACTIONS */}
+            <div className="flex items-start justify-between gap-4 mb-6">
 
-            {/* TITRE */}
-            <h1 className="text-3xl md:text-4xl font-semibold text-gray-900 leading-tight mb-4">
-              {property.title}
-            </h1>
-
-            {/* PRIX */}
-            <div className="text-3xl font-bold text-black mb-6">
-              {property.price.toLocaleString("fr-FR")} €
-            </div>
-
-            {/* INFOS */}
-            <div className="flex gap-10 text-gray-600 text-sm border-y py-6 mb-8">
-              <span>{property.surface} m²</span>
-              <span>{property.rooms} pièces</span>
-              <span>{property.bedrooms} chambres</span>
-            </div>
-
-            {/* DESCRIPTION */}
-            <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                Description
-              </h2>
-
-              <p className="text-gray-600 leading-relaxed whitespace-pre-line">
-                {property.description}
-              </p>
-            </div>
-
-          </div>
-
-          {/* ===================== */}
-          {/* SIDEBAR PREMIUM */}
-          {/* ===================== */}
-          <div className="relative">
-
-            <div className="lg:sticky lg:top-[100px]">
-
-              <div className="bg-white rounded-2xl shadow-md border p-6">
-
-                {/* AGENCE */}
-                <div className="mb-6 border-b pb-4">
-                  <div className="text-lg font-semibold text-gray-900">
-                    Marchal Immobilier
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    Moselle, France
-                  </div>
-                </div>
-
-                {/* MESSAGE */}
-                <div className="bg-gray-100 text-sm text-gray-600 p-3 rounded-lg mb-4">
-                  Je suis intéressé par ce bien.
-                </div>
-
-                {/* FORM */}
-<PropertyContactForm property={property} />
-
-{/* LEGAL */}
-<div className="flex items-start gap-2 mt-4 text-xs text-gray-500">
-  <input type="checkbox" />
-  <span>
-    J'accepte les conditions et la politique de confidentialité
-  </span>
+              <div className="flex items-start gap-4">
+                {/* MINIMAP PLACEHOLDER */}
+                <div className="w-[80px] h-[80px] overflow-hidden shrink-0 flex items-center justify-center">
+  <img
+    src="/mi_noirok.png"
+    className="w-full h-full object-contain"
+  />
 </div>
 
+                <div>
+                  <h1 className="text-2xl md:text-3xl font-semibold text-gray-900 leading-tight">
+                    {property.title}
+                  </h1>
+                  <p className="text-gray-500 text-sm mt-1">
+                    {property.postalCode} {property.city}
+                  </p>
+                </div>
               </div>
+
+              {/* ACTIONS */}
+<div className="flex items-center gap-2 shrink-0">
+  <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:border-gray-400">
+    <Share2 size={16} />
+  </button>
+  
+  <button className="flex items-center gap-2 border border-gray-200 rounded-full px-4 py-2 text-sm text-rose-500 hover:border-rose-300">
+    <Heart size={15} /> Sauvegarder
+  </button>
+
+  <WhatsAppButton
+    propertyTitle={property.title}
+    propertyId={property.id}
+  />
+</div>
 
             </div>
 
+            {/* PRIX + STATS */}
+<div className="border-t border-b py-5 mb-8">
+  <div className="text-4xl font-bold text-gray-900">
+    {(property.price || 0).toLocaleString("fr-FR")} €
+  </div>
+
+  <div className="flex gap-8 mt-4 text-sm text-gray-600">
+    <span className="flex items-center gap-2">
+      <Maximize size={16} className="text-gray-400" />
+      {property.surface} m²
+    </span>
+    <span className="flex items-center gap-2">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-400">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+      </svg>
+      {property.rooms || "—"} pièces
+    </span>
+    <span className="flex items-center gap-2">
+      <BedDouble size={16} className="text-gray-400" />
+      {property.bedrooms} ch.
+    </span>
+  </div>
+</div>
+
+
+
+            {/* DESCRIPTION */}
+            <div className="mb-10">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Description</h2>
+              <p className="text-gray-600 leading-relaxed line-clamp-6">
+                {property.description}
+              </p>
+              <button className="mt-3 text-sm font-medium text-gray-900 flex items-center gap-1 hover:underline">
+                lire plus ▾
+              </button>
+            </div>
+
+            
+
+            {/* AGENT INLINE */}
+            <div className="border rounded-xl p-4 flex items-center justify-between mb-10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-[#122e53] flex items-center justify-center text-white text-xs font-bold rounded">
+                  MI
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400">Si vous voulez en savoir plus, contactez</p>
+                  <p className="text-sm font-semibold text-gray-800">Marchal Immobilier</p>
+                </div>
+              </div>
+              <button className="text-sm font-semibold text-gray-900 border border-gray-300 px-4 py-2 rounded-full hover:bg-gray-50">
+                Poser une question
+              </button>
+            </div>
+
+               
+
+            {/* DETAILS */}
+            <div className="mb-10">
+              <h2 className="text-xl font-semibold text-gray-900 mb-6">Détails</h2>
+              <div className="grid grid-cols-2 gap-y-5 text-sm text-gray-700">
+                <div className="flex items-center gap-3">
+                  <BedDouble size={18} className="text-gray-400" />
+                  <span>Chambres : <strong>{property.bedrooms}</strong></span>
+                </div>
+                <div className="flex items-center gap-3">
+                  
+                  <span className="flex items-center gap-2">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-400">
+    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+  </svg>
+  {property.rooms || "—"} pièces
+</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Maximize size={18} className="text-gray-400" />
+                  <span>Surface : <strong>{property.surface} m²</strong></span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <MapPin size={18} className="text-gray-400" />
+                  <span>Référence : <strong>{property.id?.slice(0, 6).toUpperCase()}</strong></span>
+                </div>
+              </div>
+
+              <button className="mt-5 border border-gray-300 text-gray-500 px-5 py-2 rounded-full hover:bg-gray-100">
+                Demander plus d'infos
+              </button>
+            </div>
+
+            {/* GALLERY SECTION */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Galerie</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {(property.images || []).slice(0, 6).map((img: string, i: number) => (
+                  <img key={i} src={img} className="w-full h-[160px] object-cover rounded-lg" />
+                ))}
+              </div>
+            </div>
+
           </div>
+
+          {/* SIDEBAR */}
+<div className="relative">
+  <div className="lg:sticky lg:top-[100px]">
+    <div className="border rounded-xl shadow-sm overflow-hidden">
+
+      {/* LOGO AGENCE */}
+      <div className="p-5 border-b">
+        <div className="w-full h-[80px] bg-[#122e53] flex items-center justify-center rounded mb-3">
+          <span className="text-white font-bold text-lg tracking-wide">Renseignements</span>
+        </div>
+        <p className="font-semibold text-gray-900 text-sm">Marchal Immobilier</p>
+        <p className="text-xs text-gray-400 mt-0.5">Moselle, France</p>
+      </div>
+
+   
+
+      {/* FORMULAIRE */}
+      <div className="p-5">
+        <PropertyContactForm property={property} />
+        <div className="flex items-start gap-2 mt-4 text-xs text-gray-400">
+          <input type="checkbox" className="mt-0.5 shrink-0" />
+          <span>J'ai plus de 18 ans, j'ai lu et j'accepte les <span className="underline cursor-pointer">CGU</span> et la <span className="underline cursor-pointer">politique de confidentialité</span></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
         </div>
       </div>

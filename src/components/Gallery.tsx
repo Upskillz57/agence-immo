@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import BackArrow from "@/components/BackArrow";
+//import BackArrow from "@/components/BackArrow";
 
 export default function Gallery({ images }: { images: string[] }) {
   const [open, setOpen] = useState(false);
@@ -29,7 +29,7 @@ const handleSwipe = () => {
 
         {/* IMAGE PRINCIPALE */}
         <div className="md:col-span-2 relative">
-          <BackArrow />
+       
 
           <img
             src={images[0]}
