@@ -75,13 +75,17 @@ export default function ReelsPage() {
         </Link>
       </div>
 
-      {/* BOUTON SON */}
-      <button
-        onClick={() => setMuted(!muted)}
-        className="fixed top-5 right-4 z-50 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20 text-white hover:bg-black/70 transition"
-      >
-        {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-      </button>
+      {/* BOUTON SON — coin haut droit de la vidéo */}
+<button
+  onClick={() => setMuted(!muted)}
+  className="absolute z-20 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20 text-white hover:bg-black/70 transition
+    /* MOBILE : coin haut droit de l'écran */
+    top-5 right-4
+    /* DESKTOP : coin haut droit de la vidéo — ajusté selon la largeur vidéo */
+    md:top-4 md:right-[calc(50%-theme(spacing.48))]"
+>
+  {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+</button>
 
       {properties.map((property, i) => (
         <div
