@@ -6,12 +6,14 @@ import PropertyContactForm from "@/components/PropertyContactForm";
 import Gallery from "@/components/Gallery";
 import { BedDouble, Bath, Maximize, MapPin, Share2, Trash2, Heart } from "lucide-react";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import { getPropertyVideo } from "@/lib/getPropertyVideo";
 
 
 export default async function PropertyPage({ params }: any) {
   const { id } = await params;
   const property = await getPropertyById(id);
   if (!property) return notFound();
+  const videoUrl = getPropertyVideo(property.id);
 
   return (
     <main className="pt-[80px] bg-white min-h-screen">
@@ -27,6 +29,22 @@ export default async function PropertyPage({ params }: any) {
       <div className="max-w-7xl mx-auto px-4 mt-4">
         <Gallery images={property.images || []} />
       </div>
+
+      {/* VIDÉO */}
+{videoUrl && (
+  <div className="max-w-7xl mx-auto px-4 mt-4 flex justify-center">
+    <video
+      src={videoUrl}
+      controls
+      playsInline
+      preload="metadata"
+      className="rounded-xl bg-black h-[500px] w-auto"
+      poster={property.images?.[0]}
+    >
+      Votre navigateur ne supporte pas la lecture vidéo.
+    </video>
+  </div>
+)}
 
       {/* CONTENU PRINCIPAL */}
       <div className="max-w-7xl mx-auto px-4 mt-8 pb-20">

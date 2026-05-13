@@ -2,11 +2,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Video } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
 
 
 interface HeaderProps {
@@ -123,6 +124,13 @@ export default function Header({ transparent = false, forceScrollBackground = fa
     </button>
   </div>
 
+  {/* ICÔNE VIDÉO MOBILE */}
+<div className="md:hidden absolute right-6">
+  <Link href="/reels" className="text-white">
+    <Video size={24} />
+  </Link>
+</div>
+
   {/* LOGO CENTRÉ MOBILE / GAUCHE DESKTOP */}
   <Link
     href="/"
@@ -177,6 +185,10 @@ export default function Header({ transparent = false, forceScrollBackground = fa
 <Link href="/contact" className="relative group text-white text-[14px] font-semibold">
   Contact
   <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
+</Link>
+
+<Link href="/reels" onClick={() => setMenuOpen(false)}>
+  🎬 Biens en vidéo
 </Link>
 
         </nav>
