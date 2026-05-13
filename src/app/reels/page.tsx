@@ -82,7 +82,7 @@ export default function ReelsPage() {
     /* MOBILE : coin haut droit de l'écran */
     top-5 right-4
     /* DESKTOP : coin haut droit de la vidéo — ajusté selon la largeur vidéo */
-    md:top-4 md:right-[calc(50%-theme(spacing.48))]"
+    md:top-17 md:right-[calc(50%-theme(spacing.10))]"
 >
   {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
 </button>
