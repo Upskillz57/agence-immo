@@ -148,11 +148,7 @@ export async function parseHektorCSV() {
       const description = (get(20) || "").replace(/<[^>]*>/g, "");
       const title = get(19) || "Sans titre";
 
-      const status = detectStatus(title, description);
-
-      if (status) {
-        console.log(`🏷️  [${status}] ${title}`);
-      }
+      const status = "";
 
       data.push({
         id: get(1) || i.toString(),

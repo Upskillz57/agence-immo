@@ -7,7 +7,7 @@ import { createClient } from "@supabase/supabase-js";
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 
-const GIOVANNI_WHATSAPP = "33633067523"; // Numéro Giovanni
+const GIOVANNI_WHATSAPP = "33788188000"; // Numéro Giovanni
 
 // 👇 Remplacez par vos vraies valeurs Supabase (Settings > API)
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;

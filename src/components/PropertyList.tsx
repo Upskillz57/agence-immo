@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Mail, Heart } from "lucide-react";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
-// ─── Badge statut ──────────────────────────────────────────────────────────────
+ // ─── Badge statut ──────────────────────────────────────────────────────────────
 const STATUS_CONFIG: Record<string, { label: string; bg: string; dot: string }> = {
   "VENDU": {
     label: "Vendu",
@@ -27,7 +27,7 @@ function StatusBadge({ status, small = false }: { status: string; small?: boolea
   if (!config) return null;
 
   return (
-    <div
+    <div 
       className={`
         absolute top-3 left-3 z-10
         flex items-center gap-1.5
