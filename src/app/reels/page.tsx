@@ -75,29 +75,12 @@ export default function ReelsPage() {
         </Link>
       </div>
 
-      {/* BOUTON SON — coin haut droit de la vidéo */}
-<button
-  onClick={() => setMuted(!muted)}
-  className="absolute z-20 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20 text-white hover:bg-black/70 transition
-    /* MOBILE : coin haut droit de l'écran */
-    top-5 right-4
-    /* DESKTOP : coin haut droit de la vidéo — ajusté selon la largeur vidéo */
-    md:top-17 md:right-[calc(50%-theme(spacing.10))]"
->
-  {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-</button>
-
       {properties.map((property, i) => (
         <div
           key={property.id}
-          className="relative w-full snap-start snap-always flex-shrink-0
-            /* MOBILE : plein écran */
-            flex items-end
-            /* DESKTOP : centré avec vidéo contenue */
-            md:flex-row md:items-center md:justify-center md:gap-12 md:px-16"
+          className="relative w-full snap-start snap-always flex-shrink-0 flex items-end md:flex-row md:items-center md:justify-center md:gap-12 md:px-16"
           style={{ height: "100dvh" }}
         >
-
           {/* VIDÉO */}
           <video
             ref={(el) => { videoRefs.current[i] = el; }}
@@ -106,22 +89,14 @@ export default function ReelsPage() {
             muted
             playsInline
             preload="metadata"
-            className="
-              /* MOBILE : fond plein écran */
-              absolute inset-0 h-full w-full object-cover
-              /* DESKTOP : vidéo centrée, taille contenue */
-              md:static md:inset-auto md:h-[80dvh] md:w-auto md:rounded-2xl md:shadow-2xl md:flex-shrink-0
-            "
+            className="absolute inset-0 h-full w-full object-cover md:static md:inset-auto md:h-[80dvh] md:w-auto md:rounded-2xl md:shadow-2xl md:flex-shrink-0"
           />
 
           {/* OVERLAY GRADIENT — mobile seulement */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent md:hidden" />
 
           {/* INFOS */}
-          <div className="
-            relative z-10 p-6 pb-10 text-white w-full
-            md:static md:w-[320px] md:p-0 md:text-white
-          ">
+          <div className="relative z-10 p-6 pb-10 text-white w-full md:static md:w-[320px] md:p-0 md:text-white">
             <p className="text-xs uppercase tracking-widest text-white/60 mb-1">
               {property.postalCode} {property.city}
             </p>
@@ -143,6 +118,16 @@ export default function ReelsPage() {
               Voir le bien →
             </Link>
           </div>
+
+          {/* BOUTON SON — unique, dans la slide */}
+          <button
+            onClick={() => setMuted(!muted)}
+            className="absolute z-20 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20 text-white hover:bg-black/70 transition
+              bottom-[220px] right-4
+              md:bottom-auto md:top-[10%] md:right-4"
+          >
+            {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+          </button>
 
           {/* COMPTEUR */}
           <div className="absolute top-5 right-16 text-white/50 text-xs z-10">
