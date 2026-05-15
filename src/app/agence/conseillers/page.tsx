@@ -81,7 +81,7 @@ export default function ConseillersPage() {
       <section className="relative h-[320px] md:h-[420px] w-full flex items-center justify-center">
       <Image
   src="/conseillers.jpg"
-  alt="Nos conseillers"
+  alt="Notre équipe"
   fill
   sizes="100vw"
   className="object-cover"
@@ -90,7 +90,7 @@ export default function ConseillersPage() {
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative text-center text-white">
         <h1 className="text-3xl md:text-5xl font-semibold tracking-wide">
-        Nos Conseillers
+        Notre équipe
           </h1>
           <p className="mt-3 text-xs md:text-base tracking-[2px] uppercase text-[#d4af37]">
           L'excellence au service de vos projets

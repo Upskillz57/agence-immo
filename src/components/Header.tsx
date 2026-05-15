@@ -172,7 +172,7 @@ export default function Header({ transparent = false, forceScrollBackground = fa
       href="/agence/conseillers"
       className="block px-6 py-3 text-[13px] text-[#122e53] hover:text-[#d4af37] transition"
     >
-      Nos Conseillers
+      Notre équipe
     </Link>
 
   </div>
@@ -232,7 +232,7 @@ export default function Header({ transparent = false, forceScrollBackground = fa
       </Link>
 
       <Link href="/agence/conseillers" onClick={() => setMenuOpen(false)}>
-        Nos Conseillers
+        Notre équipe
       </Link>
 
       <Link href="/contact" onClick={() => setMenuOpen(false)}>
