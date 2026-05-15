@@ -75,7 +75,7 @@ export default function HomePage() {
 
       <div className="space-y-3 text-sm sm:text-base text-gray-700 leading-relaxed">
         <p>
-        Implantée à Metz, notre agence accompagne vendeurs, acquéreurs et investisseurs avec une approche moderne, humaine et exigeante de l’immobilier.
+        Implantée à Metz, notre agence accompagne depuis 2015, vendeurs, acquéreurs et investisseurs avec une approche moderne, humaine et exigeante de l’immobilier.
         
         </p>
         <p>
