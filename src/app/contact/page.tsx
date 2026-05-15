@@ -102,8 +102,8 @@ export default function ContactPage() {
               <h3 className="text-sm font-semibold tracking-[0.2em] text-[#122e53] uppercase mb-2">
                 Adresse
               </h3>
-              <p className="text-base text-gray-700">2 rue du stade</p>
-              <p className="text-base text-gray-700">57580 Lemud</p>
+              <p className="text-base text-gray-700">2 rue du XXeme corps américain</p>
+              <p className="text-base text-gray-700">57000 Metz</p>
             </div>
 
             <div>
@@ -111,7 +111,8 @@ export default function ContactPage() {
                 Horaires
               </h3>
               <p className="text-base text-gray-700">
-                Uniquement sur rendez-vous
+                Lun - Ven : 8h - 12h3O et 13h30 - 19H
+                Le samedi : 9h - 12h30 et 13h30 - 18H
               </p>
             </div>
           </div>
