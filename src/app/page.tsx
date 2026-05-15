@@ -75,14 +75,13 @@ export default function HomePage() {
 
       <div className="space-y-3 text-sm sm:text-base text-gray-700 leading-relaxed">
         <p>
-          Bienvenue chez Marchal Immobilier, votre agence immobilière à Metz et dans tout le secteur Mosellan.
+        Implantée à Metz, notre agence accompagne vendeurs, acquéreurs et investisseurs avec une approche moderne, humaine et exigeante de l’immobilier.
+        
         </p>
         <p>
-          Fondée en 2015, l’agence a su évoluer avec rigueur, bienveillance et efficacité.
+        Grâce à une commercialisation premium, des outils innovants et une forte présence digitale, nous mettons chaque bien en valeur afin d’obtenir les meilleures conditions de vente.
         </p>
-        <p>
-          Transaction, location, gestion locative et syndic.
-        </p>
+       
       </div>
 
       <motion.button

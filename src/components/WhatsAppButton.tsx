@@ -75,7 +75,7 @@ export default function WhatsAppButton({ propertyTitle, propertyId, onEmailClick
 
             {/* TÉLÉPHONE */}
             <a
-             href="tel:+33633067523"
+             href="tel:+33672356375"
              onClick={(e) => {
                e.stopPropagation();
                setOpen(false);
@@ -87,7 +87,7 @@ export default function WhatsAppButton({ propertyTitle, propertyId, onEmailClick
               </div>
               <div>
                 <p className="text-[13px] font-semibold text-gray-900">Appeler</p>
-                <p className="text-[11px] text-gray-400">06 33 06 75 23</p>
+                <p className="text-[11px] text-gray-400">03 87 74 44 73</p>
               </div>
             </a>
 
