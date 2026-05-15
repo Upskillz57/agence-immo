@@ -179,6 +179,11 @@ export default function ContactPage() {
             <option value="Acheter">Acheter</option>
             <option value="Faire estimer">Faire estimer</option>
             <option value="Louer">Louer</option>
+            <option value="Louer">Effectuer des diagnostiques</option>
+            <option value="Louer">Financer un projet</option>
+            <option value="Louer">Construire ou rénover</option>
+            <option value="Louer">Aménagement ou décorer</option>
+            
           </select>
 
           <textarea
