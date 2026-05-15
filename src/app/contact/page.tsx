@@ -112,7 +112,11 @@ export default function ContactPage() {
               </h3>
               <p className="text-base text-gray-700">
                 Lun - Ven : 8h - 12h3O et 13h30 - 19H
-                Le samedi : 9h - 12h30 et 13h30 - 18H
+                
+              </p>
+              <p className="text-base text-gray-700">
+                
+                Samedi : 9h - 12h30 et 13h30 - 18H
               </p>
             </div>
           </div>
