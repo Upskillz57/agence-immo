@@ -47,7 +47,7 @@ function extractAgent(description: string): string {
   
   for (const pattern of patterns) {
     const match = description.match(pattern);
-    if (match) return match[1]; // retourne le prénom
+    if (match) return match[1];
   }
   return "";
 }
@@ -136,36 +136,41 @@ export async function parseHektorCSV() {
           (c.endsWith(".jpg") || c.endsWith(".png") || c.endsWith(".jpeg"))
       );
 
-      const postal = get(4);
-      const city = get(5);
-
+      const postal         = get(4);
+      const city           = get(5);
       const rawTransaction = get(2);
-      const transaction =
-        rawTransaction?.toLowerCase().includes("loc") ? "location" : "vente";
+      const rawType        = get(3); // "maison", "appartement", "terrain", "local"
+
+      // ── SEUL CHANGEMENT : "local*" → professionnels ───────────────────────
+      const transaction = rawType?.toLowerCase().trim().startsWith("local")
+        ? "professionnels"
+        : rawTransaction?.toLowerCase().includes("loc")
+        ? "location"
+        : "vente";
 
       const geo = await geocode(city, postal);
 
       const description = (get(20) || "").replace(/<[^>]*>/g, "");
       const title = get(19) || "Sans titre";
 
-      const status = "";
+      const status = ""; // inchangé — vos badges sont gérés séparément
 
       data.push({
         id: get(1) || i.toString(),
         title,
-        type: get(3),
+        type: rawType,
         transaction,
 
         city,
         postalCode: postal,
 
-        status, // "" | "SOUS OFFRE" | "SOUS COMPROMIS" | "VENDU"
+        status,
 
         price: Number(get(10)) || 0,
 
         surface: Number(get(15)) || 0,
         terrain: Number(get(16)) || 0,
-        rooms: Number(get(17)) || 0,
+        rooms:   Number(get(17)) || 0,
         bedrooms: Number(get(18)) || 0,
         bathrooms: 0,
 
@@ -178,7 +183,7 @@ export async function parseHektorCSV() {
         lat: geo.lat,
         lng: geo.lng,
 
-        amenities: extractAmenities(description), 
+        amenities: extractAmenities(description),
         agent: extractAgent(description),
       });
     } catch (err) {

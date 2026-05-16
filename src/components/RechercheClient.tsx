@@ -104,20 +104,23 @@ export default function RechercheClient() {
   const [filters, setFilters] = useState({
     amenities:   [] as string[],
     type:        "Tous",
-    transaction: "vente",
-    priceMax:    "",
+    transaction: urlTx       || "vente",
+    priceMax:    urlPrice    || "",
     bedrooms:    "",
     bathrooms:   "",
     surface:     "",
-    location:    "",
-    radius:      "5",
+    location:    urlLocation || "",
+    radius:      urlRadius   || "5",
   });
+
+  const [loading, setLoading] = useState(true);
 
   // Chargement des biens
   useEffect(() => {
     fetch("/api/properties")
       .then(res => res.json())
-      .then(data => setProperties(data));
+      .then(data => { setProperties(data); setLoading(false); })
+      .catch(() => setLoading(false));
   }, []);
 
   // Sync depuis URL au premier chargement
@@ -436,7 +439,30 @@ export default function RechercheClient() {
           <div className="flex justify-center w-full bg-[#f5f5f5] py-6">
             <div className="w-full max-w-[1200px] flex gap-6">
               <div className="flex-1">
-                <PropertyList properties={sortedProperties} hoveredId={hoveredId} setHoveredId={setHoveredId} />
+                {loading ? (
+                  <div className="flex flex-col items-center justify-center py-32 gap-6">
+                    <img
+                      src="/logo.png"
+                      alt="Marchal Immobilier"
+                      className="h-16 object-contain opacity-20 animate-pulse"
+                    />
+                    <div className="w-32 h-[2px] bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-full bg-[#c79b4b] rounded-full animate-loading-bar" />
+                    </div>
+                    <style>{`
+                      @keyframes loading-bar {
+                        0%   { width: 0%;  margin-left: 0%; }
+                        50%  { width: 60%; margin-left: 20%; }
+                        100% { width: 0%;  margin-left: 100%; }
+                      }
+                      .animate-loading-bar {
+                        animation: loading-bar 1.4s ease-in-out infinite;
+                      }
+                    `}</style>
+                  </div>
+                ) : (
+                  <PropertyList properties={sortedProperties} hoveredId={hoveredId} setHoveredId={setHoveredId} />
+                )}
               </div>
               <div className="hidden lg:block w-[300px]">
                 <div className="sticky top-[110px]">
