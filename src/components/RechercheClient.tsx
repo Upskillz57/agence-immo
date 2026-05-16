@@ -442,7 +442,7 @@ export default function RechercheClient() {
                 {loading ? (
                   <div className="flex flex-col items-center justify-center py-32 gap-6">
                     <img
-                      src="/logo.png"
+                      src="/mi_noirok.png"
                       alt="Marchal Immobilier"
                       className="h-16 object-contain opacity-20 animate-pulse"
                     />
