@@ -7,6 +7,8 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import GoogleReviewsBadge from "./GoogleReviewsBadge";
+import ReelsNavLink from "./ReelsNavLink";
 
 
 
@@ -53,7 +55,7 @@ export default function Header({ transparent = false, forceScrollBackground = fa
         const viewportHeight = window.innerHeight;
         const currentSection = Math.round(scrollTop / viewportHeight);
   
-        setActive(currentSection === 1 || currentSection >= 3);
+        setActive(currentSection !== 0);
       };
   
       main.addEventListener("scroll", handleScroll);
@@ -126,8 +128,34 @@ export default function Header({ transparent = false, forceScrollBackground = fa
 
   {/* ICÔNE VIDÉO MOBILE */}
 <div className="md:hidden absolute right-6">
-  <Link href="/reels" className="text-white">
-    <Video size={24} />
+  <Link href="/reels" className="relative flex items-center justify-center w-10 h-10">
+
+    {/* Anneau externe qui pulse */}
+    <motion.span
+      className="absolute inset-0 rounded-full bg-[#d4af37]/35"
+      animate={{ scale: [1, 1.55, 1], opacity: [0.6, 0, 0.6] }}
+      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+    />
+
+    {/* Anneau interne décalé */}
+    <motion.span
+      className="absolute inset-0 rounded-full bg-[#d4af37]/50"
+      animate={{ scale: [1, 1.25, 1], opacity: [0.7, 0, 0.7] }}
+      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+    />
+
+    {/* Fond doré de l'icône */}
+    <span className="relative z-10 flex items-center justify-center w-8 h-8 rounded-full bg-[#d4af37]">
+      {/* Icône caméra avec micro-vibration */}
+      <motion.span
+        animate={{ rotate: [-4, 4, -4] }}
+        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+        className="flex items-center justify-center"
+      >
+        <Video size={16} className="text-[#122e53]" strokeWidth={2.5} />
+      </motion.span>
+    </span>
+
   </Link>
 </div>
 
@@ -148,9 +176,9 @@ export default function Header({ transparent = false, forceScrollBackground = fa
   {/* NAV DESKTOP */}
   <nav className="hidden md:flex gap-12">
 
-  <Link href="/estimation" className="relative group text-white text-[14px] font-bold">
+  {/*<Link href="/estimation" className="relative group text-white text-[14px] font-bold">
   Estimer un bien
-</Link>
+</Link>*/}
 
 {/* NAV DESKTOP 
 <Link href="/recherche?transaction=vente" className="relative group text-white text-[14px] font-semibold">
@@ -168,12 +196,29 @@ export default function Header({ transparent = false, forceScrollBackground = fa
 
   <div className="absolute left-1/2 -translate-x-1/2 top-[100%] mt-4 w-[220px] bg-white shadow-2xl py-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 rounded-sm">
 
+  <Link
+      href="/agence/nos-agences"
+      className="block px-6 py-3 text-[13px] text-[#122e53] hover:text-[#d4af37] transition"
+    >
+      Nos agences
+    </Link>
+
     <Link
       href="/agence/conseillers"
       className="block px-6 py-3 text-[13px] text-[#122e53] hover:text-[#d4af37] transition"
     >
       Notre équipe
     </Link>
+
+    <Link
+      href="/agence/qui-sommes-nous"
+      className="block px-6 py-3 text-[13px] text-[#122e53] hover:text-[#d4af37] transition"
+    >
+      Qui sommes-nous
+    </Link>
+    
+
+    
 
   </div>
 </div>
@@ -182,14 +227,24 @@ export default function Header({ transparent = false, forceScrollBackground = fa
 
 
 
+<Link href="/centre-affaires" className="relative group text-white text-[14px] font-semibold">
+  Centre d&apos;affaires
+  <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
+</Link>
+
+<Link href="/nous-rejoindre" className="relative group text-white text-[14px] font-semibold">
+  Nous rejoindre
+  <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
+</Link>
+
 <Link href="/contact" className="relative group text-white text-[14px] font-semibold">
   Contact
   <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
 </Link>
 
-<Link href="/reels" onClick={() => setMenuOpen(false)}>
-  🎬 Biens en vidéo
-</Link>
+<ReelsNavLink />
+
+<GoogleReviewsBadge />
 
         </nav>
       </div>
@@ -223,21 +278,47 @@ export default function Header({ transparent = false, forceScrollBackground = fa
         <X size={28} />
       </button>
 
-      <Link href="/estimation" onClick={() => setMenuOpen(false)}>
+      {/* <Link href="/estimation" onClick={() => setMenuOpen(false)}>
   Estimer un bien
-</Link>
+</Link>*/}
 
 <Link href="/recherche?transaction=vente" onClick={() => setMenuOpen(false)}>
         Vendre
+      </Link>
+
+      <Link href="/agence/nos-agences" onClick={() => setMenuOpen(false)}>
+        Nos agences
       </Link>
 
       <Link href="/agence/conseillers" onClick={() => setMenuOpen(false)}>
         Notre équipe
       </Link>
 
+      <Link href="/agence/qui-sommes-nous" onClick={() => setMenuOpen(false)}>
+        Qui sommes-nous
+      </Link>
+
+      
+
+      <Link href="/centre-affaires" onClick={() => setMenuOpen(false)}>
+        Centre d&apos;affaires
+      </Link>
+
+      <Link href="/nous-rejoindre" onClick={() => setMenuOpen(false)}>
+        Nous rejoindre
+      </Link>
+
       <Link href="/contact" onClick={() => setMenuOpen(false)}>
         Contact
       </Link>
+
+      <div className="pt-2">
+        <ReelsNavLink onClick={() => setMenuOpen(false)} />
+      </div>
+
+      <div className="mt-auto pt-6 border-t border-white/20">
+        <GoogleReviewsBadge />
+      </div>
 
     </motion.div>
   </>

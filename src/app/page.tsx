@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 
 import OpeningAnimation from "../components/OpeningAnimation";
 import HeroSlider from "../components/HeroSlider";
+import WhatsAppEstimationCard from "../components/WhatsAppEstimationCard";
 import { Montserrat } from "next/font/google";
 
 
@@ -29,6 +30,7 @@ export default function HomePage() {
         <section className="snap-start h-[100dvh] relative">
   <HeroSlider />
   <div className="absolute inset-0 bg-black/40 md:hidden pointer-events-none" />
+  <WhatsAppEstimationCard />
 </section>
 
 
@@ -99,40 +101,81 @@ export default function HomePage() {
 </section>
 
 
-{/* SECTION 3*/}
-
+{/* SECTION 3 - Pourquoi choisir Marchal Immobilier */}
 <section
-  id="estimation"
-  className="relative snap-start min-h-screen flex items-center justify-center px-5 md:px-6 bg-cover bg-center"
-  style={{ backgroundImage: "url('/image-section3.jpg')" }}
+  id="section-3"
+  className={`${montserrat.className} snap-start min-h-screen bg-[#f5f5f5] flex flex-col items-center justify-center py-20 md:py-28 px-5 md:px-8`}
 >
-  <div className="absolute inset-0 bg-black/70 md:bg-black/60"></div>
-
-  <div className="relative z-10 max-w-5xl w-full text-center text-white">
-
-    <h2 className="text-2xl sm:text-3xl md:text-5xl font-light mb-8 md:mb-10">
-      Estimer un bien d'exception
+  {/* EN-TÊTE */}
+  <motion.div
+    initial={{ opacity: 0, y: 25 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.75 }}
+    viewport={{ once: true }}
+    className="text-center mb-14 md:mb-18"
+  >
+    <p className="uppercase text-xs tracking-[0.25em] text-gray-400 mb-3">
+      Notre approche
+    </p>
+    <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-[#2e3040]">
+      Pourquoi choisir Marchal Immobilier ?
     </h2>
+    <div className="mt-5 mx-auto w-10 h-[2px] bg-[#2e3040]" />
+  </motion.div>
 
-    <div className="bg-white/15 backdrop-blur-md border border-white/20 shadow-xl rounded-2xl p-5 md:p-8 flex flex-col md:flex-row gap-4">
-
-      <input
-        type="text"
-        placeholder="Entrez l'adresse du bien"
-        className="w-full px-5 py-4 rounded-xl bg-white text-black focus:outline-none text-base"
-      />
-
-      <button
-        onClick={() => window.location.href = "/estimation"}
-        className="w-full md:w-auto bg-white text-black px-8 py-4 rounded-xl hover:bg-gray-200 transition font-semibold"
+  {/* GRILLE DE BLOCS */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-7 max-w-4xl w-full">
+    {[
+      {
+        number: "01",
+        title: "Commercialisation premium",
+        description:
+          "Photos professionnelles, vidéos, réseaux sociaux, mise en scène des biens.",
+      },
+      {
+        number: "02",
+        title: "Vente interactive",
+        description:
+          "Créer l'émulation pour maximiser le prix de vente.",
+      },
+      {
+        number: "03",
+        title: "Accompagnement global",
+        description:
+          "Courtage, assurances, travaux, architecture, diagnostics…",
+      },
+      {
+        number: "04",
+        title: "Puissance locale",
+        description:
+          "Une connaissance terrain de Metz et de toute la Moselle.",
+      },
+    ].map((item, i) => (
+      <motion.div
+        key={i}
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 0.65,
+          delay: i * 0.15,
+          ease: [0.25, 0.1, 0.25, 1],
+        }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="bg-white rounded-xl p-7 md:p-9 shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 group"
       >
-        Estimer
-      </button>
-
-    </div>
+        <span className="block text-[11px] font-semibold tracking-[0.2em] text-gray-300 mb-4 group-hover:text-[#2e3040] transition-colors duration-300">
+          {item.number}
+        </span>
+        <h3 className="text-base md:text-lg font-semibold text-[#2e3040] mb-3 leading-snug">
+          {item.title}
+        </h3>
+        <p className="text-sm text-gray-500 leading-relaxed">
+          {item.description}
+        </p>
+      </motion.div>
+    ))}
   </div>
 </section>
-
 
 {/* SECTION 4 */}
 <section
