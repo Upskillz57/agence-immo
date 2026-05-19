@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+const FROM = "Marchal Immobilier <ne-pas-repondre@marchalimmobilier.com>";
+const TO_AGENCE = "centredaffaires.marchal@marchalimmobilier.com";
 
 // ─── Templates HTML ────────────────────────────────────────────────────────────
 
@@ -216,13 +220,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, error: "Invalid email" }, { status: 400 });
     }
 
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: 587,
-      secure: false,
-      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-    });
-
     let subject: string;
     let html: string;
 
@@ -240,10 +237,10 @@ export async function POST(req: Request) {
       html = buildContactHtml(body);
     }
 
-    await transporter.sendMail({
-      from: `"Marchal Immobilier" <${process.env.SMTP_USER}>`,
-      to: advisorEmail || "verna.gio57@gmail.com",
-      cc: "verna.gio57@gmail.com",
+    await resend.emails.send({
+      from: FROM,
+      to: advisorEmail || TO_AGENCE,
+      cc: TO_AGENCE,
       replyTo: email,
       subject,
       html,
