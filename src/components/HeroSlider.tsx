@@ -117,44 +117,32 @@ export default function HeroSlider() {
       {/* VOILE */}
       <div className="absolute inset-0 bg-black/45" />
 
-      {/* TEXTE BAS GAUCHE */}
+      {/* ── DESKTOP : texte bas gauche + barre centrée ── */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 0.5 }}
-        className="absolute bottom-32 left-6 right-6 md:bottom-20 md:left-16 md:right-auto text-white z-20 max-w-xl"
+        className="hidden md:block absolute bottom-20 left-16 text-white z-20 max-w-xl"
       >
-        <h2 className={`${sourceSerif.className} text-3xl md:text-5xl font-medium leading-[1.08] tracking-[-0.01em] mb-4`}>
+        <h2 className={`${sourceSerif.className} text-5xl font-medium leading-[1.08] tracking-[-0.01em] mb-4`}>
           L&apos;immobilier autrement,<br />à Metz et en Moselle.
         </h2>
-        <p className="text-base md:text-lg font-normal opacity-80 text-gray-200">
+        <p className="text-lg font-normal opacity-80 text-gray-200">
           Accompagnement humain, moderne et sans compromis.
         </p>
       </motion.div>
 
-      {/* BARRE DE RECHERCHE */}
-      <div className="absolute inset-0 flex items-center justify-center z-20 px-6">
-        <div className="
-          bg-white/95 backdrop-blur-md
-          rounded-2xl md:rounded-full
-          px-4 py-4
-          flex flex-col md:flex-row
-          items-stretch md:items-center
-          gap-3
-          shadow-2xl
-          w-full max-w-4xl
-        ">
+      <div className="hidden md:flex absolute inset-0 items-center justify-center z-20 px-6">
+        <div className="bg-white/95 backdrop-blur-md rounded-full px-4 py-4 flex flex-row items-center gap-3 shadow-2xl w-full max-w-4xl">
           <div className="flex items-center gap-2 flex-shrink-0">
-            <span className="hidden md:inline-flex items-center gap-1.5 text-[#122e53] font-semibold text-sm whitespace-nowrap">
+            <span className="inline-flex items-center gap-1.5 text-[#122e53] font-semibold text-sm whitespace-nowrap">
               <span className="w-2 h-2 rounded-full bg-[#c79b4b] inline-block" />
               Nos biens
             </span>
-            <div className="hidden md:block h-4 w-px bg-gray-300 mx-1" />
+            <div className="h-4 w-px bg-gray-300 mx-1" />
             <Dropdown label="Type de bien" options={TRANSACTION_OPTIONS} value={transaction} onChange={setTransaction} />
           </div>
-
           <Divider />
-
           <div className="flex items-center gap-2 flex-1 min-w-0">
             <MapPin size={15} className="text-[#c79b4b] flex-shrink-0" />
             <input
@@ -166,26 +154,72 @@ export default function HeroSlider() {
               className="w-full bg-transparent outline-none text-gray-800 text-sm placeholder:text-gray-400"
             />
           </div>
-
           <Divider />
-
           <Dropdown label="Rayon" options={RADIUS_OPTIONS} value={radius} onChange={setRadius} />
-
           <button
             onClick={handleSearch}
-            className="hidden md:flex bg-[#122e53] text-white px-6 py-2 rounded-full items-center justify-center font-medium text-sm hover:bg-[#1a3f72] transition-colors"
-          >
-            Rechercher
-          </button>
-
-          <button
-            onClick={handleSearch}
-            className="md:hidden w-full h-12 rounded-full bg-[#122e53] flex items-center justify-center text-white font-medium text-sm"
+            className="bg-[#122e53] text-white px-6 py-2 rounded-full flex items-center justify-center font-medium text-sm hover:bg-[#1a3f72] transition-colors"
           >
             Rechercher
           </button>
         </div>
       </div>
+
+      {/* ── MOBILE : texte + barre en bas ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, delay: 0.4 }}
+        className="md:hidden absolute bottom-0 left-0 right-0 z-20 px-4 pb-8 pt-16 bg-gradient-to-t from-black/75 via-black/30 to-transparent"
+      >
+        {/* Texte */}
+        <h2 className={`${sourceSerif.className} text-[1.75rem] font-medium leading-[1.1] tracking-[-0.01em] text-white mb-2`}>
+          L&apos;immobilier autrement,<br />à Metz et en Moselle.
+        </h2>
+        <p className="text-sm text-white/70 mb-5">
+          Accompagnement humain, moderne et sans compromis.
+        </p>
+
+        {/* Barre de recherche mobile redessinée */}
+        <div className="bg-white rounded-2xl overflow-hidden shadow-2xl">
+
+          {/* Ligne 1 : type + rayon */}
+          <div className="flex items-center gap-2 px-4 pt-4 pb-3 border-b border-gray-100">
+            <span className="flex items-center gap-1.5 text-[#122e53] font-semibold text-sm whitespace-nowrap">
+              <span className="w-2 h-2 rounded-full bg-[#c79b4b] inline-block shrink-0" />
+              Nos biens
+            </span>
+            <div className="h-4 w-px bg-gray-200 mx-1" />
+            <Dropdown label="Type de bien" options={TRANSACTION_OPTIONS} value={transaction} onChange={setTransaction} />
+            <div className="h-4 w-px bg-gray-200 mx-1" />
+            <Dropdown label="Rayon" options={RADIUS_OPTIONS} value={radius} onChange={setRadius} />
+          </div>
+
+          {/* Ligne 2 : localisation */}
+          <div className="flex items-center gap-2 px-4 py-3">
+            <MapPin size={15} className="text-[#c79b4b] shrink-0" />
+            <input
+              type="text"
+              placeholder="Ville ou code postal"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              className="w-full bg-transparent outline-none text-gray-800 text-sm placeholder:text-gray-400"
+            />
+          </div>
+
+          {/* Bouton */}
+          <div className="px-3 pb-3">
+            <button
+              onClick={handleSearch}
+              className="w-full h-11 rounded-xl bg-[#122e53] text-white font-semibold text-sm hover:bg-[#1a3f72] transition-colors"
+            >
+              Rechercher
+            </button>
+          </div>
+
+        </div>
+      </motion.div>
 
     </div>
   );

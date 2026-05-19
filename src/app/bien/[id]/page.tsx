@@ -143,9 +143,9 @@ export default async function PropertyPage({ params }: any) {
                   <p className="text-sm font-semibold text-gray-800">Marchal Immobilier</p>
                 </div>
               </div>
-              <button className="text-sm font-semibold text-gray-900 border border-gray-300 px-4 py-2 rounded-full hover:bg-gray-50">
+              <a href="#contact-form" className="text-sm font-semibold text-gray-900 border border-gray-300 px-4 py-2 rounded-full hover:bg-gray-50 transition">
                 Poser une question
-              </button>
+              </a>
             </div>
 
                
@@ -177,9 +177,9 @@ export default async function PropertyPage({ params }: any) {
                 </div>
               </div>
 
-              <button className="mt-5 border border-gray-300 text-gray-500 px-5 py-2 rounded-full hover:bg-gray-100">
-                Demander plus d'infos
-              </button>
+              <a href="#contact-form" className="mt-5 inline-block border border-gray-300 text-gray-500 px-5 py-2 rounded-full hover:bg-gray-100 transition text-sm">
+                Demander plus d&apos;infos
+              </a>
             </div>
 
             {/* GALLERY SECTION */}
@@ -211,7 +211,7 @@ export default async function PropertyPage({ params }: any) {
    
 
       {/* FORMULAIRE */}
-      <div className="p-5">
+      <div id="contact-form" className="p-5">
         <PropertyContactForm property={property} />
         <div className="flex items-start gap-2 mt-4 text-xs text-gray-400">
           <input type="checkbox" className="mt-0.5 shrink-0" />
