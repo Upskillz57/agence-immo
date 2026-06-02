@@ -6,11 +6,13 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Upload, Trash2, ArrowLeft, CheckCircle, Loader2, Eye, X } from "lucide-react";
 
-
 const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
+
+const MAX_FILE_SIZE = 500 * 1024 * 1024;
+const MAX_STORAGE = 10 * 1024 * 1024 * 1024;
 
 export default function AdminVideos() {
   const router = useRouter();
@@ -26,7 +28,7 @@ export default function AdminVideos() {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
+  const [storageUsed, setStorageUsed] = useState<number>(0);
 
   useEffect(() => {
     fetch("/api/properties")
@@ -36,7 +38,24 @@ export default function AdminVideos() {
     fetch("/api/admin/videos")
       .then(r => r.json())
       .then(data => setVideoMap(data));
+
+    fetch("/api/admin/storage")
+      .then(r => r.json())
+      .then(data => setStorageUsed(data.totalBytes));
   }, []);
+
+  function handleFile(f: File) {
+    if (f.size > MAX_FILE_SIZE) {
+      setError("Fichier trop volumineux (max 500MB)");
+      return;
+    }
+    if (storageUsed + f.size > MAX_STORAGE) {
+      setError("Espace de stockage dépassé (max 10GB)");
+      return;
+    }
+    setError("");
+    setFile(f);
+  }
 
   const filtered = properties.filter(p =>
     `${p.title} ${p.city} ${p.id}`.toLowerCase().includes(search.toLowerCase())
@@ -49,7 +68,6 @@ export default function AdminVideos() {
     setProgress(0);
 
     try {
-      // 1. Obtenir une URL signée
       const ext = file.name.split(".").pop();
       const filename = `${selectedProperty}.${ext}`;
 
@@ -61,7 +79,6 @@ export default function AdminVideos() {
 
       const { uploadUrl, publicUrl } = await res.json();
 
-      // 2. Upload vers R2
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.upload.addEventListener("progress", (e) => {
@@ -74,7 +91,6 @@ export default function AdminVideos() {
         xhr.send(file);
       });
 
-      // 3. Sauvegarder le mapping
       await fetch("/api/admin/videos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -82,6 +98,7 @@ export default function AdminVideos() {
       });
 
       setVideoMap(prev => ({ ...prev, [selectedProperty]: publicUrl }));
+      setStorageUsed(prev => prev + file.size);
       setSuccess(true);
       setFile(null);
       setSelectedProperty("");
@@ -106,7 +123,16 @@ export default function AdminVideos() {
       delete next[propertyId];
       return next;
     });
+    // Refresh storage
+    fetch("/api/admin/storage")
+      .then(r => r.json())
+      .then(data => setStorageUsed(data.totalBytes));
   }
+
+  const storagePercent = Math.min((storageUsed / MAX_STORAGE) * 100, 100);
+  const storageGB = (storageUsed / (1024 * 1024 * 1024)).toFixed(2);
+  const storageColor = storageUsed > 9 * 1024 * 1024 * 1024 ? "text-red-500" : "text-[#122e53]";
+  const barColor = storageUsed > 9 * 1024 * 1024 * 1024 ? "bg-red-500" : "bg-[#122e53]";
 
   return (
     <div className={`${montserrat.className} min-h-screen bg-[#f5f5f5]`}>
@@ -126,7 +152,20 @@ export default function AdminVideos() {
 
         {/* UPLOAD */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 mb-8">
-          <h2 className="text-lg font-semibold text-[#122e53] mb-6">Ajouter une vidéo</h2>
+
+          {/* TITRE + STOCKAGE */}
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-lg font-semibold text-[#122e53]">Ajouter une vidéo</h2>
+            <div className="text-right">
+              <p className="text-xs text-gray-400">
+                <span className={`font-semibold ${storageColor}`}>{storageGB} GB</span>
+                {" / 10 GB utilisés"}
+              </p>
+              <div className="w-32 bg-gray-100 rounded-full h-1.5 mt-1">
+                <div className={`h-1.5 rounded-full transition-all ${barColor}`} style={{ width: `${storagePercent}%` }} />
+              </div>
+            </div>
+          </div>
 
           {/* RECHERCHE BIEN */}
           <div className="mb-4">
@@ -169,42 +208,38 @@ export default function AdminVideos() {
 
           {/* UPLOAD FICHIER */}
           <div
-  onClick={() => fileInputRef.current?.click()}
-  onDragOver={(e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  }}
-  onDragEnter={(e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  }}
-  onDrop={(e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const dropped = e.dataTransfer.files?.[0];
-    if (dropped) setFile(dropped);
-  }}
-  className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center cursor-pointer hover:border-[#122e53] transition mb-4"
->
-  <Upload size={28} className="mx-auto text-gray-300 mb-3" />
-  <p className="text-sm text-gray-400">
-    {file ? (
-      <span className="text-[#122e53] font-medium">{file.name}</span>
-    ) : (
-      "Cliquez ou glissez une vidéo MP4 ici"
-    )}
-  </p>
-  <input
-    ref={fileInputRef}
-    type="file"
-    accept="video/mp4,video/*"
-    className="hidden"
-    onChange={e => {
-      const selected = e.target.files?.[0];
-      if (selected) setFile(selected);
-    }}
-  />
-</div>
+            onClick={() => fileInputRef.current?.click()}
+            onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+            onDragEnter={(e) => { e.preventDefault(); e.stopPropagation(); }}
+            onDrop={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const dropped = e.dataTransfer.files?.[0];
+              if (dropped) handleFile(dropped);
+            }}
+            className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center cursor-pointer hover:border-[#122e53] transition mb-4"
+          >
+            <Upload size={28} className="mx-auto text-gray-300 mb-3" />
+            <p className="text-sm text-gray-400">
+              {file ? (
+                <span className="text-[#122e53] font-medium">
+                  {file.name} — {(file.size / (1024 * 1024)).toFixed(1)} MB
+                </span>
+              ) : (
+                "Cliquez ou glissez une vidéo MP4 ici (max 500MB)"
+              )}
+            </p>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="video/mp4,video/*"
+              className="hidden"
+              onChange={e => {
+                const selected = e.target.files?.[0];
+                if (selected) handleFile(selected);
+              }}
+            />
+          </div>
 
           {/* PROGRESS */}
           {uploading && (
@@ -237,58 +272,58 @@ export default function AdminVideos() {
           </button>
         </div>
 
-      {/* LISTE VIDÉOS EXISTANTES */}
-<div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
-  <h2 className="text-lg font-semibold text-[#122e53] mb-6">Vidéos existantes ({Object.keys(videoMap).length})</h2>
-  {Object.keys(videoMap).length === 0 ? (
-    <p className="text-sm text-gray-400">Aucune vidéo pour l'instant.</p>
-  ) : (
-    <div className="flex flex-col gap-3">
-      {Object.entries(videoMap).map(([id, url]) => {
-        const property = properties.find(p => p.id === id);
-        return (
-          <div key={id} className="flex items-center justify-between p-4 bg-[#f5f5f5] rounded-lg">
-            <div>
-              <p className="text-sm font-medium text-[#122e53]">{property?.title || id}</p>
-              <p className="text-xs text-gray-400 mt-0.5">{property?.city} — {id}</p>
+        {/* LISTE VIDÉOS EXISTANTES */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+          <h2 className="text-lg font-semibold text-[#122e53] mb-6">Vidéos existantes ({Object.keys(videoMap).length})</h2>
+          {Object.keys(videoMap).length === 0 ? (
+            <p className="text-sm text-gray-400">Aucune vidéo pour l'instant.</p>
+          ) : (
+            <div className="flex flex-col gap-3">
+              {Object.entries(videoMap).map(([id, url]) => {
+                const property = properties.find(p => p.id === id);
+                return (
+                  <div key={id} className="flex items-center justify-between p-4 bg-[#f5f5f5] rounded-lg">
+                    <div>
+                      <p className="text-sm font-medium text-[#122e53]">{property?.title || id}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">{property?.city} — {id}</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <button onClick={() => setPreviewUrl(url)} className="text-gray-300 hover:text-[#122e53] transition">
+                        <Eye size={18} />
+                      </button>
+                      <button onClick={() => handleDelete(id)} className="text-gray-300 hover:text-red-500 transition">
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-            <div className="flex items-center gap-3">
-              <button onClick={() => setPreviewUrl(url)} className="text-gray-300 hover:text-[#122e53] transition">
-                <Eye size={18} />
+          )}
+        </div>
+
+        {/* POPUP PREVIEW */}
+        {previewUrl && (
+          <div
+            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+            onClick={() => setPreviewUrl(null)}
+          >
+            <div className="relative max-w-2xl w-full" onClick={e => e.stopPropagation()}>
+              <button
+                onClick={() => setPreviewUrl(null)}
+                className="absolute -top-10 right-0 text-white/70 hover:text-white transition"
+              >
+                <X size={24} />
               </button>
-              <button onClick={() => handleDelete(id)} className="text-gray-300 hover:text-red-500 transition">
-                <Trash2 size={18} />
-              </button>
+              <video
+                src={previewUrl}
+                controls
+                autoPlay
+                className="w-full rounded-xl shadow-2xl max-h-[80vh]"
+              />
             </div>
           </div>
-        );
-      })}
-    </div>
-  )}
-</div>
-
-{/* POPUP PREVIEW */}
-{previewUrl && (
-  <div
-    className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-    onClick={() => setPreviewUrl(null)}
-  >
-    <div className="relative max-w-2xl w-full" onClick={e => e.stopPropagation()}>
-      <button
-        onClick={() => setPreviewUrl(null)}
-        className="absolute -top-10 right-0 text-white/70 hover:text-white transition"
-      >
-        <X size={24} />
-      </button>
-      <video
-        src={previewUrl}
-        controls
-        autoPlay
-        className="w-full rounded-xl shadow-2xl max-h-[80vh]"
-      />
-    </div>
-  </div>
-)}
+        )}
 
       </main>
     </div>
