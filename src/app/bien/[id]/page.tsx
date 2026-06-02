@@ -13,7 +13,7 @@ export default async function PropertyPage({ params }: any) {
   const { id } = await params;
   const property = await getPropertyById(id);
   if (!property) return notFound();
-  const videoUrl = getPropertyVideo(property.id);
+  const videoUrl = await getPropertyVideo(property.id);
 
   return (
     <main className="pt-[80px] bg-white min-h-screen">

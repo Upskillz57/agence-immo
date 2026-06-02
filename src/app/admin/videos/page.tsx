@@ -170,9 +170,17 @@ export default function AdminVideos() {
           {/* UPLOAD FICHIER */}
           <div
   onClick={() => fileInputRef.current?.click()}
-  onDragOver={(e) => e.preventDefault()}
+  onDragOver={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }}
+  onDragEnter={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }}
   onDrop={(e) => {
     e.preventDefault();
+    e.stopPropagation();
     const dropped = e.dataTransfer.files?.[0];
     if (dropped) setFile(dropped);
   }}
@@ -191,7 +199,10 @@ export default function AdminVideos() {
     type="file"
     accept="video/mp4,video/*"
     className="hidden"
-    onChange={e => setFile(e.target.files?.[0] || null)}
+    onChange={e => {
+      const selected = e.target.files?.[0];
+      if (selected) setFile(selected);
+    }}
   />
 </div>
 
