@@ -1,10 +1,7 @@
 {
-  
-    "MVMA10001493": "https://gyqemrjpqabjjibbvepu.supabase.co/storage/v1/object/public/videos/vany.mp4",
-    "MVMA10001453": "https://gyqemrjpqabjjibbvepu.supabase.co/storage/v1/object/public/videos/laque.mp4",
-    "MVMA10001439": "https://gyqemrjpqabjjibbvepu.supabase.co/storage/v1/object/public/videos/jpars.mp4",
-    "BJVAP200001506":"https://gyqemrjpqabjjibbvepu.supabase.co/storage/v1/object/public/videos/bechy.mp4",
-    "MAVPR260001541":"https://gyqemrjpqabjjibbvepu.supabase.co/storage/v1/object/public/videos/sylv.mp4"
-
-
-  }
+  "MVMA10001493": "https://pub-9eb8ef13a7e04341affa18b106c3d6cd.r2.dev/vany.mp4",
+  "MVMA10001453": "https://pub-9eb8ef13a7e04341affa18b106c3d6cd.r2.dev/laque.mp4",
+  "MVMA10001439": "https://pub-9eb8ef13a7e04341affa18b106c3d6cd.r2.dev/jpars.mp4",
+  "BJVAP200001506": "https://pub-9eb8ef13a7e04341affa18b106c3d6cd.r2.dev/bechy.mp4",
+  "MAVPR260001541": "https://pub-9eb8ef13a7e04341affa18b106c3d6cd.r2.dev/sylv.mp4"
+}
