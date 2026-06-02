@@ -91,8 +91,15 @@ export default function AdminLoginPage() {
         </form>
       </div>
 
-      {/* FOOTER */}
-      <p className="text-xs text-gray-300 mt-8">© Marchal Immobilier</p>
+     {/* FOOTER */}
+<p className="text-xs text-gray-300 mt-8">© Marchal Immobilier</p>
+<a
+
+href="/"
+className="mt-4 text-xs text-gray-300 hover:text-gray-500 transition"
+>
+← Retour au site
+</a>
     </div>
   );
 }
