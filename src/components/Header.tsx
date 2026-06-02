@@ -20,6 +20,9 @@ interface HeaderProps {
 
 export default function Header({ transparent = false, forceScrollBackground = false }: HeaderProps) {
   const pathname = usePathname();
+
+  // Cache le header sur les pages admin
+if (pathname.startsWith("/admin")) return null;
   const isRecherche = pathname.startsWith("/recherche");
 
   const isAgence = pathname.startsWith("/agence");

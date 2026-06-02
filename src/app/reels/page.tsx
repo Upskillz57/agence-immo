@@ -3,9 +3,9 @@
 import { useRef, useEffect, useState } from "react";
 import Link from "next/link";
 import { BedDouble, Maximize, Volume2, VolumeX } from "lucide-react";
-import videos from "@/lib/propertyVideos.json";
 
-const videoMap = videos as Record<string, string>;
+
+
 
 export default function ReelsPage() {
   const [properties, setProperties] = useState<any[]>([]);
@@ -21,16 +21,21 @@ export default function ReelsPage() {
     };
   }, []);
 
-  useEffect(() => {
-    fetch("/api/properties")
-      .then((r) => r.json())
-      .then((all) => {
-        const withVideo = all
-          .map((p: any) => ({ ...p, videoUrl: videoMap[p.id] ?? null }))
-          .filter((p: any) => p.videoUrl !== null);
-        setProperties(withVideo);
-      });
-  }, []);
+
+useEffect(() => {
+  fetch("/api/admin/videos")
+    .then(r => r.json())
+    .then((videoMap) => {
+      fetch("/api/properties")
+        .then(r => r.json())
+        .then((all) => {
+          const withVideo = all
+            .map((p: any) => ({ ...p, videoUrl: videoMap[p.id] ?? null }))
+            .filter((p: any) => p.videoUrl !== null);
+          setProperties(withVideo);
+        });
+    });
+}, []);
 
   useEffect(() => {
     const observers = videoRefs.current.map((video) => {

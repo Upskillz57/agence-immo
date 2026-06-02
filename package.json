@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1058.0",
+    "@aws-sdk/s3-request-presigner": "^3.1058.0",
     "@supabase/supabase-js": "^2.105.4",
     "@types/mapbox-gl": "^3.4.1",
     "framer-motion": "^12.34.0",
