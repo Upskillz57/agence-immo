@@ -62,13 +62,6 @@ const advisors = [
     email: "a.szwec@marchal.immo",
     image: "/AxelSzwec.jpg",
   },
-  {
-    name: "Tatiana Hennequin",
-    role: "Agent commercial",
-    phone: "06 69 57 60 98",
-    email: "t.hennequin@marchal.immo",
-    image: "/TatianaHennequin.jpg",
-  },
 ];
 
 export default function ConseillersPage() {

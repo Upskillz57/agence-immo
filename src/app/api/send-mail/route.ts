@@ -201,6 +201,49 @@ function buildConseillerHtml(data: any) {
 </body></html>`;
 }
 
+function buildVendreHtml(data: any) {
+  return `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#f4f6f8;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6f8;padding:30px 0;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:8px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+      ${emailHeader("Nouvelle demande — Vendre un bien")}
+ 
+      <tr><td style="padding:32px 40px;">
+ 
+        <!-- Bandeau projet -->
+        <div style="background:#122e53;border-radius:6px;padding:16px 20px;margin-bottom:28px;">
+          <div style="font-family:Arial,sans-serif;color:#d4af37;font-size:10px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Projet</div>
+          <div style="font-family:Arial,sans-serif;color:white;font-size:16px;font-weight:bold;">Estimation & mise en vente</div>
+          ${data.adresse ? `<div style="font-family:Arial,sans-serif;color:rgba(255,255,255,0.7);font-size:13px;margin-top:6px;">📍 ${data.adresse}</div>` : ""}
+        </div>
+ 
+        <div style="font-family:Arial,sans-serif;color:#122e53;font-size:13px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;">Coordonnées du vendeur</div>
+        <table cellpadding="0" cellspacing="0" width="100%">
+          ${row("Nom", data.name || "")}
+          ${row("Email", data.email)}
+          ${row("Téléphone", data.phone || "—")}
+          ${row("Adresse du bien", data.adresse || "—")}
+        </table>
+ 
+        ${data.message ? `
+        <div style="margin-top:24px;background:#f8f9fb;border-left:3px solid #d4af37;padding:16px 20px;border-radius:0 6px 6px 0;">
+          <div style="font-family:Arial,sans-serif;color:#999;font-size:10px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Message</div>
+          <div style="font-family:Arial,sans-serif;color:#1a1a1a;font-size:14px;line-height:1.6;">${data.message}</div>
+        </div>` : ""}
+ 
+        <div style="margin-top:16px;font-family:Arial,sans-serif;color:#bbb;font-size:11px;">Reçu le ${new Date().toLocaleString("fr-FR")}</div>
+ 
+      </td></tr>
+      ${emailFooter()}
+    </table>
+  </td></tr>
+</table>
+</body></html>`;
+}
+
 // ─── Route ─────────────────────────────────────────────────────────────────────
 
 export async function POST(req: Request) {
@@ -232,6 +275,9 @@ export async function POST(req: Request) {
     } else if (source === "estimation") {
       subject = "Nouvelle demande d'estimation";
       html = buildEstimationHtml(body);
+    } else if (source === "vendre") {
+      subject = "Nouvelle demande de vente";
+      html = buildVendreHtml(body);
     } else {
       subject = "Nouveau message de contact";
       html = buildContactHtml(body);

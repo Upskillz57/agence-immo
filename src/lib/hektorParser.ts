@@ -148,7 +148,10 @@ export async function parseHektorCSV() {
         ? "location"
         : "vente";
 
-      const geo = await geocode(city, postal);
+        const geo = await geocode(city, postal);
+        if (city.toLowerCase() === "aube") {
+          console.log("🔍 AUBE GEO:", geo, "postal:", postal);
+        }
 
       const description = (get(20) || "").replace(/<[^>]*>/g, "");
       const title = get(19) || "Sans titre";

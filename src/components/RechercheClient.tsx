@@ -173,22 +173,26 @@ export default function RechercheClient() {
         if (filters.surface && filters.surface !== "" && (p.surface || 0) < Number(filters.surface)) return false;
 
         // ── Rayon ──────────────────────────────────────────────────────────
-        if (filters.location.trim()) {
-          if (geoCenter && p.lat && p.lng && filters.radius !== "50") {
-            // Filtre distance Haversine (désactivé si "20 km+" = tous les biens)
-            const dist  = haversineKm(geoCenter.lat, geoCenter.lng, p.lat, p.lng);
-            const maxKm = Number(filters.radius);
-            if (dist > maxKm) return false;
-          } else {
-            // Fallback texte le temps que le géocodage arrive
-            const q = filters.location.toLowerCase();
-            if (
-              !p.city?.toLowerCase().includes(q) &&
-              !p.postalCode?.toLowerCase().includes(q) &&
-              !p.title?.toLowerCase().includes(q)
-            ) return false;
-          }
-        }
+       // ── Localisation ───────────────────────────────────────────────────
+if (filters.location.trim()) {
+  const q = filters.location.trim().toLowerCase();
+  const isPostalQuery = /^\d+$/.test(q);
+
+  // Correspondance texte directe sur city ou postalCode
+  const textMatch =
+    p.city?.toLowerCase().includes(q) ||
+    p.postalCode?.toLowerCase().includes(q);
+
+  if (!textMatch) {
+    // Si c'est un CP pur et qu'on a les coords → tenter Haversine
+    if (isPostalQuery && geoCenter && p.lat && p.lng && filters.radius !== "50") {
+      const dist = haversineKm(geoCenter.lat, geoCenter.lng, p.lat, p.lng);
+      if (dist > Number(filters.radius)) return false;
+    } else {
+      return false;
+    }
+  }
+}
 
         return true;
       })

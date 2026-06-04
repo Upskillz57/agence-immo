@@ -100,82 +100,92 @@ export default function HomePage() {
   </div>
 </section>
 
-
-{/* SECTION 3 - Pourquoi choisir Marchal Immobilier */}
+{/* SECTION 6 */}
 <section
-  id="section-3"
-  className={`${montserrat.className} snap-start min-h-screen bg-[#f5f5f5] flex flex-col items-center justify-center py-20 md:py-28 px-5 md:px-8`}
+  id="section-6"
+  className="snap-start bg-[#f5f5f5] py-20 md:py-32 relative"
 >
-  {/* EN-TÊTE */}
-  <motion.div
-    initial={{ opacity: 0, y: 25 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.75 }}
-    viewport={{ once: true }}
-    className="text-center mb-14 md:mb-18"
-  >
-    <p className="uppercase text-xs tracking-[0.25em] text-gray-400 mb-3">
-      Notre approche
-    </p>
-    <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-[#2e3040]">
-      Pourquoi choisir Marchal Immobilier ?
-    </h2>
-    <div className="mt-5 mx-auto w-10 h-[2px] bg-[#2e3040]" />
-  </motion.div>
+  <div className="max-w-6xl mx-auto px-5 md:px-6 relative">
 
-  {/* GRILLE DE BLOCS */}
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-7 max-w-4xl w-full">
-    {[
-      {
-        number: "01",
-        title: "Commercialisation premium",
-        description:
-          "Photos professionnelles, vidéos, réseaux sociaux, mise en scène des biens.",
-      },
-      {
-        number: "02",
-        title: "Vente interactive",
-        description:
-          "Créer l'émulation pour maximiser le prix de vente.",
-      },
-      {
-        number: "03",
-        title: "Accompagnement global",
-        description:
-          "Courtage, assurances, travaux, architecture, diagnostics…",
-      },
-      {
-        number: "04",
-        title: "Puissance locale",
-        description:
-          "Une connaissance terrain de Metz et de toute la Moselle.",
-      },
-    ].map((item, i) => (
-      <motion.div
-        key={i}
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: 0.65,
-          delay: i * 0.15,
-          ease: [0.25, 0.1, 0.25, 1],
-        }}
-        viewport={{ once: true, amount: 0.2 }}
-        className="bg-white rounded-xl p-7 md:p-9 shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 group"
+    {/* IMAGE */}
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+      viewport={{ once: true }}
+      className="relative w-full md:w-[75%] h-[300px] md:h-[520px] overflow-hidden"
+    >
+      <img
+        src="/section4-vendre.jpg"
+        alt="Vendre"
+        className="w-full h-full object-cover"
+      />
+    </motion.div>
+
+     {/* CTA */}
+     <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, delay: 0.4 }}
+      viewport={{ once: true }}
+      className="text-center mt-10"
+    >
+      <a
+        href="/vendre"
+        className="inline-block px-8 py-4 bg-white text-[#2e3040] uppercase tracking-wider text-sm font-semibold rounded-full hover:bg-gray-100 transition-all duration-300"
       >
-        <span className="block text-[11px] font-semibold tracking-[0.2em] text-gray-300 mb-4 group-hover:text-[#2e3040] transition-colors duration-300">
-          {item.number}
-        </span>
-        <h3 className="text-base md:text-lg font-semibold text-[#2e3040] mb-3 leading-snug">
-          {item.title}
-        </h3>
-        <p className="text-sm text-gray-500 leading-relaxed">
-          {item.description}
-        </p>
-      </motion.div>
-    ))}
+        En savoir plus
+      </a>
+    </motion.div>
+
+    {/* CARTE TEXTE */}
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.9 }}
+      viewport={{ once: true }}
+      className="
+        relative
+        md:absolute
+        md:right-0
+        md:top-1/2
+        md:-translate-y-1/2
+        bg-white
+        shadow-2xl
+        p-8 md:p-9
+        w-full
+        md:max-w-xl
+        mt-8 md:mt-0
+      "
+    >
+      <p className="uppercase text-xs tracking-widest text-gray-500 mb-4">
+        VOUS ENVISAGEZ DE
+      </p>
+
+      <h2 className="text-3xl md:text-4xl font-semibold text-[#2e3040] mb-6">
+        Vendre avec nous
+      </h2>
+
+      <p className="text-gray-700 leading-relaxed mb-6">
+        Vous souhaitez vendre un bien immobilier ? Confiez votre projet à Marchal Immobilier.
+      </p>
+
+      <p className="text-gray-700 leading-relaxed mb-6">
+        Grâce à notre parfaite connaissance du marché local et à des outils de communication puissants, nous mettons tout en œuvre pour valoriser votre bien et attirer les bons acquéreurs.
+      </p>
+
+      <p className="text-gray-700 leading-relaxed mb-8">
+        Visuels de qualité, stratégie de diffusion, accompagnement humain : notre objectif est de vendre dans les meilleures conditions, rapidement et sereinement.
+      </p>
+
+      
+    </motion.div>
+
+   
+
   </div>
 </section>
+
 
 {/* SECTION 4 */}
 <section
@@ -327,78 +337,7 @@ export default function HomePage() {
 </section>
 
 
-{/* SECTION 6 */}
-<section
-  id="section-6"
-  className="snap-start bg-[#f5f5f5] py-20 md:py-32 relative"
->
-  <div className="max-w-6xl mx-auto px-5 md:px-6 relative">
 
-    {/* IMAGE */}
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      transition={{ duration: 1 }}
-      viewport={{ once: true }}
-      className="relative w-full md:w-[75%] h-[300px] md:h-[520px] overflow-hidden"
-    >
-      <img
-        src="/section4-vendre.jpg"
-        alt="Vendre"
-        className="w-full h-full object-cover"
-      />
-    </motion.div>
-
-    {/* CARTE TEXTE */}
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.9 }}
-      viewport={{ once: true }}
-      className="
-        relative
-        md:absolute
-        md:right-0
-        md:top-1/2
-        md:-translate-y-1/2
-        bg-white
-        shadow-2xl
-        p-8 md:p-14
-        w-full
-        md:max-w-xl
-        mt-8 md:mt-0
-      "
-    >
-      <p className="uppercase text-xs tracking-widest text-gray-500 mb-4">
-        VOUS ENVISAGEZ DE
-      </p>
-
-      <h2 className="text-3xl md:text-4xl font-semibold text-[#2e3040] mb-6">
-        Vendre avec nous
-      </h2>
-
-      <p className="text-gray-700 leading-relaxed mb-6">
-        Vous souhaitez vendre un bien immobilier ? Confiez votre projet à Marchal Immobilier.
-      </p>
-
-      <p className="text-gray-700 leading-relaxed mb-6">
-        Grâce à notre parfaite connaissance du marché local et à des outils de communication puissants, nous mettons tout en œuvre pour valoriser votre bien et attirer les bons acquéreurs.
-      </p>
-
-      <p className="text-gray-700 leading-relaxed mb-8">
-        Visuels de qualité, stratégie de diffusion, accompagnement humain : notre objectif est de vendre dans les meilleures conditions, rapidement et sereinement.
-      </p>
-
-      <a
-        href="/vendre"
-        className="inline-block px-7 py-3 bg-[#122e53] text-white uppercase tracking-wider text-sm rounded-full hover:bg-black transition-all duration-300"
-      >
-        En savoir +
-      </a>
-    </motion.div>
-
-  </div>
-</section>
 
 
 

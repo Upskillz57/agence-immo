@@ -179,7 +179,8 @@ if (pathname.startsWith("/admin")) return null;
   </Link>
 
   {/* NAV DESKTOP */}
-  <nav className="hidden md:flex gap-12">
+  <nav className="hidden md:flex items-center gap-7">
+
 
   {/*<Link href="/estimation" className="relative group text-white text-[14px] font-bold">
   Estimer un bien
@@ -191,6 +192,11 @@ if (pathname.startsWith("/admin")) return null;
   <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
 </Link>*/}
 
+<Link href="/recherche" className="relative group text-white text-[14px] font-semibold">
+  Nos biens
+  <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
+</Link>
+
 <div className="relative group">
   <span
     className="relative text-white text-[14px] font-semibold cursor-default"
@@ -200,6 +206,8 @@ if (pathname.startsWith("/admin")) return null;
   </span>
 
   <div className="absolute left-1/2 -translate-x-1/2 top-[100%] mt-4 w-[220px] bg-white shadow-2xl py-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 rounded-sm">
+
+
 
   <Link
       href="/agence/nos-agences"
@@ -228,24 +236,24 @@ if (pathname.startsWith("/admin")) return null;
   </div>
 </div>
 
-
-
-
-
 <Link href="/centre-affaires" className="relative group text-white text-[14px] font-semibold">
   Centre d&apos;affaires
   <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
 </Link>
 
-<Link href="/nous-rejoindre" className="relative group text-white text-[14px] font-semibold">
-  Nous rejoindre
+<Link href="/centre-affaires" className="relative group text-white text-[14px] font-semibold">
+  Nos biens
   <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
 </Link>
+
+
 
 <Link href="/contact" className="relative group text-white text-[14px] font-semibold">
   Contact
   <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
 </Link>
+
+
 
 <ReelsNavLink />
 
