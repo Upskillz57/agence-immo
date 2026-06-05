@@ -28,7 +28,7 @@ const agencies = [
     image: "/vitrine.jpeg",
     address: ["2 rue Auguste Rolland", "57580 Remilly"],
     phone: "03 87 74 44 73",
-    email: "admin.marchal@marchalimmobilier.com",
+    email: "centredaffaires.marchal@marchalimmobilier.com",
     hours: null,
     rdv: true,
   },

@@ -192,10 +192,7 @@ if (pathname.startsWith("/admin")) return null;
   <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
 </Link>*/}
 
-<Link href="/recherche" className="relative group text-white text-[14px] font-semibold">
-  Nos biens
-  <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
-</Link>
+
 
 <div className="relative group">
   <span
@@ -236,15 +233,17 @@ if (pathname.startsWith("/admin")) return null;
   </div>
 </div>
 
+<Link href="/recherche" className="relative group text-white text-[14px] font-semibold">
+  Nos biens
+  <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
+</Link>
+
 <Link href="/centre-affaires" className="relative group text-white text-[14px] font-semibold">
   Centre d&apos;affaires
   <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
 </Link>
 
-<Link href="/centre-affaires" className="relative group text-white text-[14px] font-semibold">
-  Nos biens
-  <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
-</Link>
+
 
 
 
