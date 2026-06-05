@@ -6,6 +6,7 @@ import PropertyList from "@/components/PropertyList";
 import PropertyListMap from "@/components/PropertyListMap";
 import { useState, useEffect, useRef } from "react";
 import { LayoutGrid, Map, SlidersHorizontal, Home, BedDouble, Maximize, MapPin, Navigation } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 // ─── Constantes ────────────────────────────────────────────────────────────────
 const TRANSACTION_OPTIONS = [
@@ -105,10 +106,13 @@ export default function RechercheClient() {
     amenities:   [] as string[],
     type:        "Tous",
     transaction: urlTx       || "vente",
+    priceMin:    "",           // ← nouveau
     priceMax:    urlPrice    || "",
     bedrooms:    "",
+    bedroomsMax: "",           // ← nouveau
     bathrooms:   "",
     surface:     "",
+    surfaceMax:  "",           // ← nouveau
     location:    urlLocation || "",
     radius:      urlRadius   || "5",
   });
@@ -145,6 +149,26 @@ export default function RechercheClient() {
     return () => { if (geoTimerRef.current) clearTimeout(geoTimerRef.current); };
   }, [filters.location]);
 
+// Scroll restoration
+useEffect(() => {
+  if (!loading) {
+    const saved = sessionStorage.getItem("recherche_scroll");
+    if (saved && Number(saved) > 0) {
+      setTimeout(() => {
+        window.scrollTo({ top: Number(saved), behavior: "instant" });
+      }, 100);
+    }
+  }
+}, [loading]);
+
+useEffect(() => {
+  const handleScroll = () => {
+    sessionStorage.setItem("recherche_scroll", String(window.scrollY));
+  };
+  window.addEventListener("scroll", handleScroll, { passive: true });
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
+
   // ─── Filtrage ───────────────────────────────────────────────────────────────
   const parseMin = (val: string) => parseInt(val.replace("+", ""));
 
@@ -166,7 +190,12 @@ export default function RechercheClient() {
         if (filters.transaction && p.transaction !== filters.transaction) return false;
 
         // Prix
-        if (filters.priceMax && filters.priceMax !== "unlimited" && p.price > Number(filters.priceMax)) return false;
+if (filters.priceMin && p.price < Number(filters.priceMin)) return false;
+if (filters.priceMax && filters.priceMax !== "unlimited" && p.price > Number(filters.priceMax)) return false;
+
+// surface
+if (filters.surface && (p.surface || 0) < Number(filters.surface)) return false;
+if (filters.surfaceMax && (p.surface || 0) > Number(filters.surfaceMax)) return false;
 
         // Chambres / surface
         if (filters.bedrooms && (p.bedrooms || 0) < parseMin(filters.bedrooms)) return false;
@@ -225,8 +254,11 @@ if (filters.location.trim()) {
 
   const resetFilters = () => setFilters({
     amenities: [], type: "Tous", transaction: "vente",
-    priceMax: "", bedrooms: "", bathrooms: "",
-    surface: "", location: "", radius: "5",
+    priceMin: "", priceMax: "",
+    bedrooms: "", bedroomsMax: "",
+    bathrooms: "",
+    surface: "", surfaceMax: "",
+    location: "", radius: "5",
   });
 
   const activeFiltersCount =
@@ -601,60 +633,66 @@ if (filters.location.trim()) {
             </div>
 
             {/* Prix */}
-            <div className="py-4 border-b">
-              <div className="flex items-center gap-3 mb-4"><Maximize size={18} /><span className="font-medium">Prix maximum</span></div>
-              <input
-                type="range"
-                min="0"
-                max="1100000"
-                step="50000"
-                value={filters.priceMax === "unlimited" ? 1100000 : (filters.priceMax || 0)}
-                onChange={e => {
-                  const val = Number(e.target.value);
-                  setFilters(p => ({ ...p, priceMax: val >= 1100000 ? "unlimited" : val === 0 ? "" : String(val) }));
-                }}
-                className="w-full accent-[#122e53]"
-              />
-              <div className="flex justify-between text-sm text-gray-500 mt-2">
-                <span>0 €</span>
-                <span className="font-medium text-[#122e53]">
-                  {filters.priceMax === "unlimited"
-                    ? "1 000 000 € +"
-                    : filters.priceMax
-                    ? `${Number(filters.priceMax).toLocaleString("fr-FR")} €`
-                    : "Tous les prix"}
-                </span>
-                <span>1 000 000 € +</span>
-              </div>
-            </div>
+<div className="py-4 border-b">
+  <div className="flex items-center gap-3 mb-4">
+    <Maximize size={18} />
+    <span className="font-medium">Budget</span>
+  </div>
+  <div className="flex items-center gap-3">
+    <div className="flex-1">
+      <label className="text-xs text-gray-400 mb-1 block">Min (€)</label>
+      <input
+        type="number"
+        placeholder="0"
+        value={filters.priceMin || ""}
+        onChange={e => setFilters(p => ({ ...p, priceMin: e.target.value }))}
+        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-[#122e53] focus:outline-none focus:ring-2 focus:ring-[#122e53]"
+      />
+    </div>
+    <span className="text-gray-400 mt-4">—</span>
+    <div className="flex-1">
+      <label className="text-xs text-gray-400 mb-1 block">Max (€)</label>
+      <input
+        type="number"
+        placeholder="Illimité"
+        value={filters.priceMax === "unlimited" ? "" : (filters.priceMax || "")}
+        onChange={e => setFilters(p => ({ ...p, priceMax: e.target.value || "" }))}
+        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-[#122e53] focus:outline-none focus:ring-2 focus:ring-[#122e53]"
+      />
+    </div>
+  </div>
+</div>
 
             {/* Surface */}
-            <div className="py-4 border-b">
-              <div className="flex items-center gap-3 mb-4"><Maximize size={18} /><span className="font-medium">Surface minimum</span></div>
-              <input
-                type="range"
-                min="0"
-                max="210"
-                step="10"
-                value={filters.surface === "200" ? 210 : (filters.surface || 0)}
-                onChange={e => {
-                  const val = Number(e.target.value);
-                  setFilters(p => ({ ...p, surface: val >= 210 ? "200" : val === 0 ? "" : String(val) }));
-                }}
-                className="w-full accent-[#122e53]"
-              />
-              <div className="flex justify-between text-sm text-gray-500 mt-2">
-                <span>0 m²</span>
-                <span className="font-medium text-[#122e53]">
-                  {filters.surface === "200"
-                    ? "200 m² +"
-                    : filters.surface
-                    ? `${filters.surface} m²`
-                    : "Toutes surfaces"}
-                </span>
-                <span>200 m² +</span>
-              </div>
-            </div>
+<div className="py-4 border-b">
+  <div className="flex items-center gap-3 mb-4">
+    <Maximize size={18} />
+    <span className="font-medium">Surface (m²)</span>
+  </div>
+  <div className="flex items-center gap-3">
+    <div className="flex-1">
+      <label className="text-xs text-gray-400 mb-1 block">Min (m²)</label>
+      <input
+        type="number"
+        placeholder="0"
+        value={filters.surface || ""}
+        onChange={e => setFilters(p => ({ ...p, surface: e.target.value }))}
+        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-[#122e53] focus:outline-none focus:ring-2 focus:ring-[#122e53]"
+      />
+    </div>
+    <span className="text-gray-400 mt-4">—</span>
+    <div className="flex-1">
+      <label className="text-xs text-gray-400 mb-1 block">Max (m²)</label>
+      <input
+        type="number"
+        placeholder="Illimité"
+        value={filters.surfaceMax || ""}
+        onChange={e => setFilters(p => ({ ...p, surfaceMax: e.target.value }))}
+        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-[#122e53] focus:outline-none focus:ring-2 focus:ring-[#122e53]"
+      />
+    </div>
+  </div>
+</div>
 
             {/* Chambres */}
             <div className="py-4 border-b">

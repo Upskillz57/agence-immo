@@ -7,6 +7,9 @@ import Gallery from "@/components/Gallery";
 import { BedDouble, Bath, Maximize, MapPin, Share2, Trash2, Heart } from "lucide-react";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { getPropertyVideo } from "@/lib/getPropertyVideo";
+import ShareButton from "@/components/ShareButton";
+import PropertyDescription from "@/components/PropertyDescription";
+
 
 
 export default async function PropertyPage({ params }: any) {
@@ -77,19 +80,20 @@ export default async function PropertyPage({ params }: any) {
 
               {/* ACTIONS */}
 <div className="flex items-center gap-2 shrink-0">
-  <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:border-gray-400">
-    <Share2 size={16} />
-  </button>
   
+  {/*
   <button className="flex items-center gap-2 border border-gray-200 rounded-full px-4 py-2 text-sm text-rose-500 hover:border-rose-300">
     <Heart size={15} /> Sauvegarder
-  </button>
+  </button>*/}
 
   <WhatsAppButton
     propertyTitle={property.title}
     propertyId={property.id}
   />
 </div>
+
+<ShareButton title={property.title} id={property.id} />
+
 
             </div>
 
@@ -120,15 +124,7 @@ export default async function PropertyPage({ params }: any) {
 
 
             {/* DESCRIPTION */}
-            <div className="mb-10">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Description</h2>
-              <p className="text-gray-600 leading-relaxed line-clamp-6">
-                {property.description}
-              </p>
-              <button className="mt-3 text-sm font-medium text-gray-900 flex items-center gap-1 hover:underline">
-                lire plus ▾
-              </button>
-            </div>
+<PropertyDescription description={property.description} />
 
             
 
@@ -143,9 +139,9 @@ export default async function PropertyPage({ params }: any) {
                   <p className="text-sm font-semibold text-gray-800">Marchal Immobilier</p>
                 </div>
               </div>
-              <a href="#contact-form" className="text-sm font-semibold text-gray-900 border border-gray-300 px-4 py-2 rounded-full hover:bg-gray-50 transition">
-                Poser une question
-              </a>
+              <a href="tel:+33387744473" className="text-sm font-semibold text-gray-900 border border-gray-300 px-4 py-2 rounded-full hover:bg-gray-50 transition">
+  Nous appeler
+</a>
             </div>
 
                
@@ -177,9 +173,7 @@ export default async function PropertyPage({ params }: any) {
                 </div>
               </div>
 
-              <a href="#contact-form" className="mt-5 inline-block border border-gray-300 text-gray-500 px-5 py-2 rounded-full hover:bg-gray-100 transition text-sm">
-                Demander plus d&apos;infos
-              </a>
+             
             </div>
 
             {/* GALLERY SECTION */}

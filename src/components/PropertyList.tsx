@@ -133,7 +133,12 @@ function PropertyCardMobile({ property }: { property: any }) {
 // ─── Carte DESKTOP (layout horizontal) ────────────────────────────────────────
 function PropertyCardDesktop({ property, hoveredId, setHoveredId }: any) {
   return (
-    <Link href={`/bien/${property.id}`}>
+    <Link
+  href={`/bien/${property.id}`}
+  onClick={() => {
+    sessionStorage.setItem("recherche_scroll", String(window.scrollY));
+  }}
+>
       <div
         onMouseEnter={() => setHoveredId?.(property.id)}
         onMouseLeave={() => setHoveredId?.(null)}

@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import FooterContactForm from "@/components/FooterContactForm";
+
 
 export default function Footer() {
   return (
@@ -17,8 +19,12 @@ export default function Footer() {
               Marchal Immobilier
             </h3>
             <ul className="space-y-5 text-gray-300 text-sm">
-              <li className="hover:text-white transition">À propos</li>
-              <li className="hover:text-white transition">Contact</li>
+              <li className="hover:text-white transition cursor-pointer">
+                <Link href="agence/qui-sommes-nous">Qui sommes-nous</Link>
+              </li>
+              <li className="hover:text-white transition cursor-pointer">
+                <Link href="/contact">Contact</Link>
+              </li>
             </ul>
           </div>
 
@@ -27,8 +33,9 @@ export default function Footer() {
               Pour les vendeurs
             </h3>
             <ul className="space-y-5 text-gray-300 text-sm">
-              <li className="hover:text-white transition">Estimer mon bien</li>
-              <li className="hover:text-white transition">Vendre avec nous</li>
+              <li className="hover:text-white transition cursor-pointer">
+                <Link href="/vendre">Vendre avec nous</Link>
+              </li>
             </ul>
           </div>
 
@@ -37,48 +44,30 @@ export default function Footer() {
         {/* COLONNE CENTRE - RÉSEAUX */}
         <div className="flex flex-col items-center text-center">
           <h3 className="uppercase tracking-[0.35em] text-[11px] text-[#C6A75E] mb-10">
-           Suivez-nous
+            Suivez-nous
           </h3>
 
           <div className="flex items-center gap-8">
-
-            <Image src="/fb.png" alt="Facebook" width={24} height={24} className="opacity-70 hover:opacity-100 transition duration-300" />
-            <Image src="/insta.png" alt="Instagram" width={24} height={24} className="opacity-70 hover:opacity-100 transition duration-300" />
-            <Image src="/yt.png" alt="Youtube" width={24} height={24} className="opacity-70 hover:opacity-100 transition duration-300" />
-            <Image src="/tiktok.png" alt="TikTok" width={24} height={24} className="opacity-70 hover:opacity-100 transition duration-300" />
-
+            <a href="https://www.facebook.com/profile.php?id=100078900047893" target="_blank" rel="noopener noreferrer">
+              <Image src="/fb.png" alt="Facebook" width={24} height={24} className="opacity-70 hover:opacity-100 transition duration-300" />
+            </a>
+            <a href="https://www.instagram.com/centredaffairesmarchalimmo/" target="_blank" rel="noopener noreferrer">
+              <Image src="/insta.png" alt="Instagram" width={24} height={24} className="opacity-70 hover:opacity-100 transition duration-300" />
+            </a>
+            <a href="https://www.youtube.com/@fabienmarchalimmobilier6981" target="_blank" rel="noopener noreferrer">
+              <Image src="/yt.png" alt="Youtube" width={24} height={24} className="opacity-70 hover:opacity-100 transition duration-300" />
+            </a>
           </div>
         </div>
 
         {/* COLONNE DROITE - FORMULAIRE */}
-        <div>
-          <h3 className="uppercase tracking-[0.35em] text-[11px] text-[#C6A75E] mb-8">
-            Être recontacté
-          </h3>
-
-          <form className="space-y-5">
-
-            <input
-              type="text"
-              placeholder="Votre nom"
-              className="w-full bg-transparent border-b border-white/30 pb-2 text-sm placeholder-gray-400 focus:outline-none focus:border-[#C6A75E] transition"
-            />
-
-            <input
-              type="tel"
-              placeholder="Votre téléphone"
-              className="w-full bg-transparent border-b border-white/30 pb-2 text-sm placeholder-gray-400 focus:outline-none focus:border-[#C6A75E] transition"
-            />
-
-            <button
-              type="submit"
-              className="mt-6 border border-[#C6A75E] text-[#C6A75E] px-6 py-2 text-sm tracking-widest uppercase hover:bg-[#C6A75E] hover:text-[#122e53] transition duration-300"
-            >
-              Envoyer
-            </button>
-
-          </form>
-        </div>
+        {/* COLONNE DROITE - FORMULAIRE */}
+<div>
+  <h3 className="uppercase tracking-[0.35em] text-[11px] text-[#C6A75E] mb-8">
+    Être recontacté
+  </h3>
+  <FooterContactForm />
+</div>
 
       </div>
 
@@ -87,11 +76,9 @@ export default function Footer() {
 
       {/* BAS */}
       <div className="max-w-7xl mx-auto px-8 py-10 flex flex-col md:flex-row justify-between items-center text-gray-400 text-xs tracking-widest">
-
         <p>
           © {new Date().getFullYear()} Marchal Immobilier — Tous droits réservés. Réalisation Upskillz
         </p>
-
         <Image
           src="/logo-marchal.png"
           alt="Marchal Immobilier"
@@ -99,7 +86,6 @@ export default function Footer() {
           height={50}
           className="mt-6 md:mt-0 opacity-90"
         />
-
       </div>
 
     </footer>

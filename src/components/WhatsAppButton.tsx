@@ -92,18 +92,7 @@ export default function WhatsAppButton({ propertyTitle, propertyId, onEmailClick
             </a>
 
             {/* EMAIL */}
-            <button
-              onClick={() => { setOpen(false); onEmailClick?.(); }}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition group w-full text-left"
-            >
-              <div className="w-9 h-9 rounded-full bg-[#c79b4b] flex items-center justify-center flex-shrink-0">
-                <Mail size={16} className="text-white" />
-              </div>
-              <div>
-                <p className="text-[13px] font-semibold text-gray-900">Email</p>
-                <p className="text-[11px] text-gray-400">Formulaire de contact</p>
-              </div>
-            </button>
+          
 
           </div>
 

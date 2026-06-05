@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Montserrat } from "next/font/google";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Upload, Trash2, ArrowLeft, CheckCircle, Loader2, Eye, X } from "lucide-react";
+import { Upload, Trash2, ArrowLeft, CheckCircle, Loader2, Eye, X, GripVertical, ChevronUp, ChevronDown } from "lucide-react";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -20,6 +20,7 @@ export default function AdminVideos() {
 
   const [properties, setProperties] = useState<any[]>([]);
   const [videoMap, setVideoMap] = useState<Record<string, string>>({});
+  const [order, setOrder] = useState<string[]>([]); // IDs dans l'ordre de diffusion
   const [selectedProperty, setSelectedProperty] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -29,6 +30,12 @@ export default function AdminVideos() {
   const [search, setSearch] = useState("");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [storageUsed, setStorageUsed] = useState<number>(0);
+  const [orderSaving, setOrderSaving] = useState(false);
+  const [orderSaved, setOrderSaved] = useState(false);
+
+  // Drag state
+  const dragIndex = useRef<number | null>(null);
+  const dragOverIndex = useRef<number | null>(null);
 
   useEffect(() => {
     fetch("/api/properties")
@@ -42,17 +49,27 @@ export default function AdminVideos() {
     fetch("/api/admin/storage")
       .then(r => r.json())
       .then(data => setStorageUsed(data.totalBytes));
+
+    // Charger l'ordre sauvegardé
+    fetch("/api/admin/reels-order")
+      .then(r => r.json())
+      .then(data => setOrder(data.order || []));
   }, []);
 
+  // Synchroniser l'ordre quand videoMap change (nouvelles vidéos, suppressions)
+  useEffect(() => {
+    const ids = Object.keys(videoMap);
+    setOrder(prev => {
+      // Garder l'ordre existant, ajouter les nouveaux en fin, retirer les supprimés
+      const kept = prev.filter(id => ids.includes(id));
+      const added = ids.filter(id => !kept.includes(id));
+      return [...kept, ...added];
+    });
+  }, [videoMap]);
+
   function handleFile(f: File) {
-    if (f.size > MAX_FILE_SIZE) {
-      setError("Fichier trop volumineux (max 500MB)");
-      return;
-    }
-    if (storageUsed + f.size > MAX_STORAGE) {
-      setError("Espace de stockage dépassé (max 10GB)");
-      return;
-    }
+    if (f.size > MAX_FILE_SIZE) { setError("Fichier trop volumineux (max 500MB)"); return; }
+    if (storageUsed + f.size > MAX_STORAGE) { setError("Espace de stockage dépassé (max 10GB)"); return; }
     setError("");
     setFile(f);
   }
@@ -66,19 +83,15 @@ export default function AdminVideos() {
     setUploading(true);
     setError("");
     setProgress(0);
-
     try {
       const ext = file.name.split(".").pop();
       const filename = `${selectedProperty}.${ext}`;
-
       const res = await fetch("/api/admin/upload-url", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ filename, contentType: file.type }),
       });
-
       const { uploadUrl, publicUrl } = await res.json();
-
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.upload.addEventListener("progress", (e) => {
@@ -90,20 +103,18 @@ export default function AdminVideos() {
         xhr.setRequestHeader("Content-Type", file.type);
         xhr.send(file);
       });
-
       await fetch("/api/admin/videos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ propertyId: selectedProperty, videoUrl: publicUrl }),
       });
-
       setVideoMap(prev => ({ ...prev, [selectedProperty]: publicUrl }));
       setStorageUsed(prev => prev + file.size);
       setSuccess(true);
       setFile(null);
       setSelectedProperty("");
       setTimeout(() => setSuccess(false), 3000);
-    } catch (e) {
+    } catch {
       setError("Erreur lors de l'upload. Réessayez.");
     } finally {
       setUploading(false);
@@ -118,15 +129,42 @@ export default function AdminVideos() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ propertyId }),
     });
-    setVideoMap(prev => {
-      const next = { ...prev };
-      delete next[propertyId];
+    setVideoMap(prev => { const next = { ...prev }; delete next[propertyId]; return next; });
+    fetch("/api/admin/storage").then(r => r.json()).then(data => setStorageUsed(data.totalBytes));
+  }
+
+  // Déplacer une vidéo dans l'ordre
+  function moveItem(fromIndex: number, toIndex: number) {
+    if (toIndex < 0 || toIndex >= order.length) return;
+    setOrder(prev => {
+      const next = [...prev];
+      const [moved] = next.splice(fromIndex, 1);
+      next.splice(toIndex, 0, moved);
       return next;
     });
-    // Refresh storage
-    fetch("/api/admin/storage")
-      .then(r => r.json())
-      .then(data => setStorageUsed(data.totalBytes));
+  }
+
+  // Drag & drop handlers
+  function onDragStart(index: number) { dragIndex.current = index; }
+  function onDragEnter(index: number) { dragOverIndex.current = index; }
+  function onDragEnd() {
+    if (dragIndex.current !== null && dragOverIndex.current !== null && dragIndex.current !== dragOverIndex.current) {
+      moveItem(dragIndex.current, dragOverIndex.current);
+    }
+    dragIndex.current = null;
+    dragOverIndex.current = null;
+  }
+
+  async function saveOrder() {
+    setOrderSaving(true);
+    await fetch("/api/admin/reels-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ order }),
+    });
+    setOrderSaving(false);
+    setOrderSaved(true);
+    setTimeout(() => setOrderSaved(false), 2500);
   }
 
   const storagePercent = Math.min((storageUsed / MAX_STORAGE) * 100, 100);
@@ -150,16 +188,13 @@ export default function AdminVideos() {
 
       <main className="max-w-4xl mx-auto px-6 py-10">
 
-        {/* UPLOAD */}
+        {/* UPLOAD — identique à avant */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 mb-8">
-
-          {/* TITRE + STOCKAGE */}
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-semibold text-[#122e53]">Ajouter une vidéo</h2>
             <div className="text-right">
               <p className="text-xs text-gray-400">
-                <span className={`font-semibold ${storageColor}`}>{storageGB} GB</span>
-                {" / 10 GB utilisés"}
+                <span className={`font-semibold ${storageColor}`}>{storageGB} GB</span>{" / 10 GB utilisés"}
               </p>
               <div className="w-32 bg-gray-100 rounded-full h-1.5 mt-1">
                 <div className={`h-1.5 rounded-full transition-all ${barColor}`} style={{ width: `${storagePercent}%` }} />
@@ -167,11 +202,8 @@ export default function AdminVideos() {
             </div>
           </div>
 
-          {/* RECHERCHE BIEN */}
           <div className="mb-4">
-            <label className="block text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">
-              Rechercher un bien
-            </label>
+            <label className="block text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">Rechercher un bien</label>
             <input
               type="text"
               placeholder="Nom, ville, référence..."
@@ -181,7 +213,6 @@ export default function AdminVideos() {
             />
           </div>
 
-          {/* LISTE BIENS */}
           {search && (
             <div className="border border-gray-100 rounded-lg mb-4 max-h-48 overflow-y-auto">
               {filtered.slice(0, 10).map(p => (
@@ -198,7 +229,6 @@ export default function AdminVideos() {
             </div>
           )}
 
-          {/* BIEN SÉLECTIONNÉ */}
           {selectedProperty && (
             <div className="bg-[#122e53]/5 rounded-lg px-4 py-3 mb-4 text-sm text-[#122e53] font-medium flex justify-between">
               <span>✓ Bien sélectionné : {selectedProperty}</span>
@@ -206,47 +236,26 @@ export default function AdminVideos() {
             </div>
           )}
 
-          {/* UPLOAD FICHIER */}
           <div
             onClick={() => fileInputRef.current?.click()}
-            onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
-            onDragEnter={(e) => { e.preventDefault(); e.stopPropagation(); }}
-            onDrop={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              const dropped = e.dataTransfer.files?.[0];
-              if (dropped) handleFile(dropped);
-            }}
+            onDragOver={e => { e.preventDefault(); e.stopPropagation(); }}
+            onDrop={e => { e.preventDefault(); e.stopPropagation(); const f = e.dataTransfer.files?.[0]; if (f) handleFile(f); }}
             className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center cursor-pointer hover:border-[#122e53] transition mb-4"
           >
             <Upload size={28} className="mx-auto text-gray-300 mb-3" />
             <p className="text-sm text-gray-400">
-              {file ? (
-                <span className="text-[#122e53] font-medium">
-                  {file.name} — {(file.size / (1024 * 1024)).toFixed(1)} MB
-                </span>
-              ) : (
-                "Cliquez ou glissez une vidéo MP4 ici (max 500MB)"
-              )}
+              {file
+                ? <span className="text-[#122e53] font-medium">{file.name} — {(file.size / (1024 * 1024)).toFixed(1)} MB</span>
+                : "Cliquez ou glissez une vidéo MP4 ici (max 500MB)"}
             </p>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="video/mp4,video/*"
-              className="hidden"
-              onChange={e => {
-                const selected = e.target.files?.[0];
-                if (selected) handleFile(selected);
-              }}
-            />
+            <input ref={fileInputRef} type="file" accept="video/mp4,video/*" className="hidden"
+              onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
           </div>
 
-          {/* PROGRESS */}
           {uploading && (
             <div className="mb-4">
               <div className="flex justify-between text-xs text-gray-400 mb-1">
-                <span>Upload en cours...</span>
-                <span>{progress}%</span>
+                <span>Upload en cours...</span><span>{progress}%</span>
               </div>
               <div className="w-full bg-gray-100 rounded-full h-2">
                 <div className="bg-[#122e53] h-2 rounded-full transition-all" style={{ width: `${progress}%` }} />
@@ -255,11 +264,9 @@ export default function AdminVideos() {
           )}
 
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-
           {success && (
             <div className="flex items-center gap-2 text-green-600 text-sm mb-4">
-              <CheckCircle size={16} />
-              Vidéo uploadée avec succès !
+              <CheckCircle size={16} /> Vidéo uploadée avec succès !
             </div>
           )}
 
@@ -272,29 +279,101 @@ export default function AdminVideos() {
           </button>
         </div>
 
-        {/* LISTE VIDÉOS EXISTANTES */}
+        {/* LISTE VIDÉOS — avec ordre de diffusion */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
-          <h2 className="text-lg font-semibold text-[#122e53] mb-6">Vidéos existantes ({Object.keys(videoMap).length})</h2>
-          {Object.keys(videoMap).length === 0 ? (
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-lg font-semibold text-[#122e53]">
+              Vidéos existantes ({order.length})
+            </h2>
+            {order.length > 0 && (
+              <button
+                onClick={saveOrder}
+                disabled={orderSaving}
+                className="flex items-center gap-2 bg-[#122e53] text-white text-xs font-semibold px-5 py-2.5 rounded-full hover:bg-black transition disabled:opacity-40"
+              >
+                {orderSaving
+                  ? <><Loader2 size={13} className="animate-spin" /> Sauvegarde...</>
+                  : orderSaved
+                  ? <><CheckCircle size={13} /> Ordre sauvegardé</>
+                  : "Sauvegarder l'ordre"}
+              </button>
+            )}
+          </div>
+
+          {order.length > 0 && (
+            <p className="text-xs text-gray-400 mb-6">
+              Glissez les lignes ou utilisez les flèches pour définir l'ordre de diffusion dans les réels.
+            </p>
+          )}
+
+          {order.length === 0 ? (
             <p className="text-sm text-gray-400">Aucune vidéo pour l'instant.</p>
           ) : (
-            <div className="flex flex-col gap-3">
-              {Object.entries(videoMap).map(([id, url]) => {
+            <div className="flex flex-col gap-2">
+              {order.map((id, i) => {
+                const url = videoMap[id];
                 const property = properties.find(p => p.id === id);
                 return (
-                  <div key={id} className="flex items-center justify-between p-4 bg-[#f5f5f5] rounded-lg">
-                    <div>
-                      <p className="text-sm font-medium text-[#122e53]">{property?.title || id}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">{property?.city} — {id}</p>
+                  <div
+                    key={id}
+                    draggable
+                    onDragStart={() => onDragStart(i)}
+                    onDragEnter={() => onDragEnter(i)}
+                    onDragEnd={onDragEnd}
+                    onDragOver={e => e.preventDefault()}
+                    className="flex items-center gap-3 p-4 bg-[#f5f5f5] rounded-lg group cursor-grab active:cursor-grabbing hover:bg-[#eef1f6] transition"
+                  >
+                    {/* Numéro d'ordre */}
+                    <span className="w-6 text-center text-xs font-bold text-[#122e53]/40 flex-shrink-0">
+                      {i + 1}
+                    </span>
+
+                    {/* Grip icon */}
+                    <GripVertical size={16} className="text-gray-300 group-hover:text-gray-400 flex-shrink-0 transition" />
+
+                    {/* Infos bien */}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-[#122e53] truncate">
+                        {property?.title || id}
+                      </p>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        {property?.city} — {id}
+                      </p>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <button onClick={() => setPreviewUrl(url)} className="text-gray-300 hover:text-[#122e53] transition">
-                        <Eye size={18} />
+
+                    {/* Flèches ↑↓ */}
+                    <div className="flex flex-col gap-0.5 flex-shrink-0">
+                      <button
+                        onClick={() => moveItem(i, i - 1)}
+                        disabled={i === 0}
+                        className="text-gray-300 hover:text-[#122e53] disabled:opacity-20 transition"
+                      >
+                        <ChevronUp size={16} />
                       </button>
-                      <button onClick={() => handleDelete(id)} className="text-gray-300 hover:text-red-500 transition">
-                        <Trash2 size={18} />
+                      <button
+                        onClick={() => moveItem(i, i + 1)}
+                        disabled={i === order.length - 1}
+                        className="text-gray-300 hover:text-[#122e53] disabled:opacity-20 transition"
+                      >
+                        <ChevronDown size={16} />
                       </button>
                     </div>
+
+                    {/* Aperçu */}
+                    <button
+                      onClick={() => setPreviewUrl(url)}
+                      className="text-gray-300 hover:text-[#122e53] transition flex-shrink-0"
+                    >
+                      <Eye size={18} />
+                    </button>
+
+                    {/* Supprimer */}
+                    <button
+                      onClick={() => handleDelete(id)}
+                      className="text-gray-300 hover:text-red-500 transition flex-shrink-0"
+                    >
+                      <Trash2 size={18} />
+                    </button>
                   </div>
                 );
               })}
@@ -304,23 +383,12 @@ export default function AdminVideos() {
 
         {/* POPUP PREVIEW */}
         {previewUrl && (
-          <div
-            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-            onClick={() => setPreviewUrl(null)}
-          >
+          <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={() => setPreviewUrl(null)}>
             <div className="relative max-w-2xl w-full" onClick={e => e.stopPropagation()}>
-              <button
-                onClick={() => setPreviewUrl(null)}
-                className="absolute -top-10 right-0 text-white/70 hover:text-white transition"
-              >
+              <button onClick={() => setPreviewUrl(null)} className="absolute -top-10 right-0 text-white/70 hover:text-white transition">
                 <X size={24} />
               </button>
-              <video
-                src={previewUrl}
-                controls
-                autoPlay
-                className="w-full rounded-xl shadow-2xl max-h-[80vh]"
-              />
+              <video src={previewUrl} controls autoPlay className="w-full rounded-xl shadow-2xl max-h-[80vh]" />
             </div>
           </div>
         )}

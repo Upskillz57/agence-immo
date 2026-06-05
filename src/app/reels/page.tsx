@@ -4,9 +4,6 @@ import { useRef, useEffect, useState } from "react";
 import Link from "next/link";
 import { BedDouble, Maximize, Volume2, VolumeX } from "lucide-react";
 
-
-
-
 export default function ReelsPage() {
   const [properties, setProperties] = useState<any[]>([]);
   const [muted, setMuted] = useState(true);
@@ -21,21 +18,27 @@ export default function ReelsPage() {
     };
   }, []);
 
+  // ✅ Un seul useEffect pour charger les propriétés, avec l'ordre
+  useEffect(() => {
+    Promise.all([
+      fetch("/api/admin/videos").then(r => r.json()),
+      fetch("/api/properties").then(r => r.json()),
+      fetch("/api/admin/reels-order").then(r => r.json()),
+    ]).then(([videoMap, all, { order }]) => {
+      const withVideo = all
+        .map((p: any) => ({ ...p, videoUrl: videoMap[p.id] ?? null }))
+        .filter((p: any) => p.videoUrl !== null);
 
-useEffect(() => {
-  fetch("/api/admin/videos")
-    .then(r => r.json())
-    .then((videoMap) => {
-      fetch("/api/properties")
-        .then(r => r.json())
-        .then((all) => {
-          const withVideo = all
-            .map((p: any) => ({ ...p, videoUrl: videoMap[p.id] ?? null }))
-            .filter((p: any) => p.videoUrl !== null);
-          setProperties(withVideo);
-        });
+      const ordered = order?.length > 0
+        ? [
+            ...order.map((id: string) => withVideo.find((p: any) => p.id === id)).filter(Boolean),
+            ...withVideo.filter((p: any) => !order.includes(p.id)),
+          ]
+        : withVideo;
+
+      setProperties(ordered);
     });
-}, []);
+  }, []);
 
   useEffect(() => {
     const observers = videoRefs.current.map((video) => {
@@ -66,16 +69,9 @@ useEffect(() => {
   );
 
   return (
-    <div
-      className="overflow-y-scroll snap-y snap-mandatory bg-black md:bg-gray-950"
-      style={{ height: "100dvh" }}
-    >
-      {/* BOUTON RETOUR */}
+    <div className="overflow-y-scroll snap-y snap-mandatory bg-black md:bg-gray-950" style={{ height: "100dvh" }}>
       <div className="fixed top-5 left-4 z-50">
-        <Link
-          href="/"
-          className="flex items-center gap-2 bg-black/50 backdrop-blur-sm text-white text-sm px-4 py-2 rounded-full border border-white/20 hover:bg-black/70 transition"
-        >
+        <Link href="/" className="flex items-center gap-2 bg-black/50 backdrop-blur-sm text-white text-sm px-4 py-2 rounded-full border border-white/20 hover:bg-black/70 transition">
           ← Retour au site
         </Link>
       </div>
@@ -86,59 +82,33 @@ useEffect(() => {
           className="relative w-full snap-start snap-always flex-shrink-0 flex items-end md:flex-row md:items-center md:justify-center md:gap-12 md:px-16"
           style={{ height: "100dvh" }}
         >
-          {/* VIDÉO */}
           <video
             ref={(el) => { videoRefs.current[i] = el; }}
             src={property.videoUrl}
-            loop
-            muted
-            playsInline
-            preload="metadata"
+            loop muted playsInline preload="metadata"
             className="absolute inset-0 h-full w-full object-cover md:static md:inset-auto md:h-[80dvh] md:w-auto md:rounded-2xl md:shadow-2xl md:flex-shrink-0"
           />
-
-          {/* OVERLAY GRADIENT — mobile seulement */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent md:hidden" />
-
-          {/* INFOS */}
           <div className="relative z-10 p-6 pb-10 text-white w-full md:static md:w-[320px] md:p-0 md:text-white">
-            <p className="text-xs uppercase tracking-widest text-white/60 mb-1">
-              {property.postalCode} {property.city}
-            </p>
-            <h2 className="text-xl font-semibold leading-tight mb-2">
-              {property.title}
-            </h2>
-            <p className="text-2xl font-bold mb-4">
-              {(property.price || 0).toLocaleString("fr-FR")} €
-            </p>
+            <p className="text-xs uppercase tracking-widest text-white/60 mb-1">{property.postalCode} {property.city}</p>
+            <h2 className="text-xl font-semibold leading-tight mb-2">{property.title}</h2>
+            <p className="text-2xl font-bold mb-4">{(property.price || 0).toLocaleString("fr-FR")} €</p>
             <div className="flex gap-4 text-sm text-white/70 mb-6">
               <span className="flex items-center gap-1"><Maximize size={14} /> {property.surface} m²</span>
               <span className="flex items-center gap-1"><BedDouble size={14} /> {property.bedrooms} ch.</span>
               <span>{property.rooms} pièces</span>
             </div>
-            <Link
-              href={`/bien/${property.id}`}
-              className="inline-block bg-white text-black text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-gray-100 transition"
-            >
+            <Link href={`/bien/${property.id}`} className="inline-block bg-white text-black text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-gray-100 transition">
               Voir le bien →
             </Link>
           </div>
-
-          {/* BOUTON SON — unique, dans la slide */}
           <button
             onClick={() => setMuted(!muted)}
-            className="absolute z-20 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20 text-white hover:bg-black/70 transition
-              bottom-[220px] right-4
-              md:bottom-auto md:top-[10%] md:right-4"
+            className="absolute z-20 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20 text-white hover:bg-black/70 transition bottom-[220px] right-4 md:bottom-auto md:top-[10%] md:right-4"
           >
             {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
           </button>
-
-          {/* COMPTEUR */}
-          <div className="absolute top-5 right-16 text-white/50 text-xs z-10">
-            {i + 1} / {properties.length}
-          </div>
-
+          <div className="absolute top-5 right-16 text-white/50 text-xs z-10">{i + 1} / {properties.length}</div>
         </div>
       ))}
     </div>
