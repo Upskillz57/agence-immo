@@ -12,4 +12,5 @@ export interface Property {
     description: string;
   
     images: string[];
+    virtualTour?: string;
   }

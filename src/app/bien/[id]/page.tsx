@@ -9,6 +9,8 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import { getPropertyVideo } from "@/lib/getPropertyVideo";
 import ShareButton from "@/components/ShareButton";
 import PropertyDescription from "@/components/PropertyDescription";
+import VirtualTourButton from "@/components/VirtualTourButton";
+
 
 
 
@@ -28,10 +30,13 @@ export default async function PropertyPage({ params }: any) {
         </Link>
       </div>
 
-      {/* GALERIE */}
-      <div className="max-w-7xl mx-auto px-4 mt-4">
-        <Gallery images={property.images || []} />
-      </div>
+     {/* GALERIE */}
+<div className="max-w-7xl mx-auto px-4 mt-4 relative">
+  <Gallery images={property.images || []} />
+  {property.virtualTour && (
+    <VirtualTourButton url={property.virtualTour} />
+  )}
+</div>
 
       {/* VIDÉO */}
 {videoUrl && (
@@ -48,6 +53,8 @@ export default async function PropertyPage({ params }: any) {
     </video>
   </div>
 )}
+
+
 
       {/* CONTENU PRINCIPAL */}
       <div className="max-w-7xl mx-auto px-4 mt-8 pb-20">

@@ -182,6 +182,7 @@ export async function parseHektorCSV() {
         image: images[0] || "/placeholder.jpg",
         images,
         imageCount: images.length,
+        virtualTour: get(103) || "",  
 
         lat: geo.lat,
         lng: geo.lng,
