@@ -300,47 +300,37 @@ if (pathname.startsWith("/admin")) return null;
         <X size={28} />
       </button>
 
-      {/* <Link href="/estimation" onClick={() => setMenuOpen(false)}>
-  Estimer un bien
-</Link>*/}
-
-<Link href="/recherche?transaction=vente" onClick={() => setMenuOpen(false)}>
-        Vendre
-      </Link>
-
       <Link href="/agence/nos-agences" onClick={() => setMenuOpen(false)}>
-        Nos agences
-      </Link>
+  Nos agences
+</Link>
 
-      <Link href="/agence/conseillers" onClick={() => setMenuOpen(false)}>
-        Notre équipe
-      </Link>
+<Link href="/agence/conseillers" onClick={() => setMenuOpen(false)}>
+  Notre équipe
+</Link>
 
-      <Link href="/agence/qui-sommes-nous" onClick={() => setMenuOpen(false)}>
-        Qui sommes-nous
-      </Link>
+<Link href="/agence/qui-sommes-nous" onClick={() => setMenuOpen(false)}>
+  Qui sommes-nous
+</Link>
 
-      
+<Link href="/recherche" onClick={() => setMenuOpen(false)}>
+  Nos biens
+</Link>
 
-      <Link href="/centre-affaires" onClick={() => setMenuOpen(false)}>
-        Centre d&apos;affaires
-      </Link>
+<Link href="/centre-affaires" onClick={() => setMenuOpen(false)}>
+  Centre d&apos;affaires
+</Link>
 
-      <Link href="/nous-rejoindre" onClick={() => setMenuOpen(false)}>
-        Nous rejoindre
-      </Link>
+<Link href="/contact" onClick={() => setMenuOpen(false)}>
+  Contact
+</Link>
 
-      <Link href="/contact" onClick={() => setMenuOpen(false)}>
-        Contact
-      </Link>
+<div className="pt-2">
+  <ReelsNavLink onClick={() => setMenuOpen(false)} />
+</div>
 
-      <div className="pt-2">
-        <ReelsNavLink onClick={() => setMenuOpen(false)} />
-      </div>
-
-      <div className="mt-auto pt-6 border-t border-white/20">
-        <GoogleReviewsBadge />
-      </div>
+<div className="mt-auto pt-6 border-t border-white/20">
+  <GoogleReviewsBadge />
+</div>
 
     </motion.div>
   </>

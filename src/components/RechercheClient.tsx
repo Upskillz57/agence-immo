@@ -13,6 +13,7 @@ const TRANSACTION_OPTIONS = [
   { value: "vente",          label: "À vendre"      },
   { value: "location",       label: "À louer"        },
   { value: "professionnels", label: "Professionnels" },
+  { value: "vendu",          label: "Vendu"          },
 ];
 
 const RADIUS_OPTIONS = [
@@ -187,7 +188,13 @@ useEffect(() => {
         ) return false;
 
         // Transaction
-        if (filters.transaction && p.transaction !== filters.transaction) return false;
+        if (filters.transaction) {
+          if (filters.transaction === "vendu") {
+            if (p.status !== "VENDU") return false;
+          } else {
+            if (p.transaction !== filters.transaction) return false;
+          }
+        }
 
         // Prix
 if (filters.priceMin && p.price < Number(filters.priceMin)) return false;

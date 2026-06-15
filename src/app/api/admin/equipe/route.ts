@@ -25,7 +25,21 @@ async function getAdvisors() {
   try {
     const res = await s3.send(new GetObjectCommand({ Bucket: process.env.R2_BUCKET_NAME, Key: "equipe.json" }));
     const body = await res.Body?.transformToString();
-    return body ? JSON.parse(body) : DEFAULT_ADVISORS;
+    const advisors = body ? JSON.parse(body) : DEFAULT_ADVISORS;
+
+    try {
+      const orderRes = await s3.send(new GetObjectCommand({ Bucket: process.env.R2_BUCKET_NAME, Key: "equipe-order.json" }));
+      const order: string[] = JSON.parse(await orderRes.Body!.transformToString());
+      advisors.sort((a: any, b: any) => {
+        const ai = order.indexOf(a.id);
+        const bi = order.indexOf(b.id);
+        if (ai === -1) return 1;
+        if (bi === -1) return -1;
+        return ai - bi;
+      });
+    } catch {}
+
+    return advisors;
   } catch {
     return DEFAULT_ADVISORS;
   }
@@ -66,5 +80,16 @@ export async function DELETE(req: Request) {
   const { id } = await req.json();
   const advisors = await getAdvisors();
   await saveAdvisors(advisors.filter((a: any) => a.id !== id));
+  return NextResponse.json({ ok: true });
+}
+
+export async function PATCH(req: Request) {
+  const { order } = await req.json();
+  await s3.send(new PutObjectCommand({
+    Bucket: process.env.R2_BUCKET_NAME,
+    Key: "equipe-order.json",
+    Body: JSON.stringify(order),
+    ContentType: "application/json",
+  }));
   return NextResponse.json({ ok: true });
 }

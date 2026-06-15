@@ -53,7 +53,7 @@ export default function HomePage() {
       className="relative h-[260px] sm:h-[380px] lg:h-[550px] w-full overflow-hidden rounded-xl md:rounded-none"
     >
       <motion.img
-        src="/la-maxe.jpg"
+        src="/accueilca.jpg"
         alt="Marchal Immobilier"
         className="w-full h-full object-cover"
         initial={{ scale: 1.05 }}

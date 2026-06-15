@@ -156,7 +156,15 @@ export async function parseHektorCSV() {
       const description = (get(20) || "").replace(/<[^>]*>/g, "");
       const title = get(19) || "Sans titre";
 
-      const status = ""; // inchangé — vos badges sont gérés séparément
+
+
+// Par :
+const hektorStatus = get(135);
+const status =
+  hektorStatus === "5" ? "VENDU" :
+  hektorStatus === "4" ? "SOUS COMPROMIS" :
+  hektorStatus === "3" ? "SOUS OFFRE" :
+  "";
 
       data.push({
         id: get(1) || i.toString(),

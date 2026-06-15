@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Montserrat } from "next/font/google";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { ArrowLeft, Pencil, CheckCircle, Loader2, X, Plus, Trash2, UserPlus } from "lucide-react";
+import { ArrowLeft, Pencil, CheckCircle, Loader2, X, Plus, Trash2, UserPlus, GripVertical } from "lucide-react";
 
 const montserrat = Montserrat({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
@@ -35,6 +35,8 @@ export default function AdminEquipe() {
   const [uploadingNewPhoto, setUploadingNewPhoto] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const newFileInputRef = useRef<HTMLInputElement>(null);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+
 
   useEffect(() => {
     fetch("/api/admin/equipe")
@@ -96,6 +98,31 @@ export default function AdminEquipe() {
     setAdvisors(prev => prev.filter(a => a.id !== id));
   }
 
+  async function saveOrder(newAdvisors: Advisor[]) {
+    await fetch("/api/admin/equipe", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ order: newAdvisors.map(a => a.id) }),
+    });
+  }
+  
+  function onDragStart(i: number) { setDragIndex(i); }
+  
+  function onDragOver(e: React.DragEvent, i: number) {
+    e.preventDefault();
+    if (dragIndex === null || dragIndex === i) return;
+    const reordered = [...advisors];
+    const [moved] = reordered.splice(dragIndex, 1);
+    reordered.splice(i, 0, moved);
+    setAdvisors(reordered);
+    setDragIndex(i);
+  }
+  
+  function onDragEnd() {
+    setDragIndex(null);
+    saveOrder(advisors);
+  }
+
   async function addAdvisor() {
     if (!newData.name.trim()) { setError("Le nom est obligatoire"); return; }
     setSavingNew(true); setError("");
@@ -144,8 +171,15 @@ export default function AdminEquipe() {
 
         {/* LISTE */}
         <div className="flex flex-col gap-4 mb-6">
-          {advisors.map(advisor => (
-            <div key={advisor.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        {advisors.map((advisor, index) => (
+            <div
+            key={advisor.id}
+            draggable
+            onDragStart={() => onDragStart(index)}
+            onDragOver={e => onDragOver(e, index)}
+            onDragEnd={onDragEnd}
+            className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 cursor-grab active:cursor-grabbing"
+          >
               {editingId === advisor.id ? (
 
                 /* MODE ÉDITION */
@@ -213,12 +247,15 @@ export default function AdminEquipe() {
                     <p className="text-xs text-[#d4af37] uppercase tracking-wide mt-0.5">{advisor.role}</p>
                     <p className="text-xs text-gray-400 mt-1">{advisor.phone} · {advisor.email}</p>
                   </div>
+
+                  <GripVertical size={16} className="text-gray-300" />
                   <button onClick={() => startEdit(advisor)} className="text-gray-300 hover:text-[#122e53] transition">
                     <Pencil size={17} />
                   </button>
                   <button onClick={() => deleteAdvisor(advisor.id, advisor.name)} className="text-gray-300 hover:text-red-500 transition">
                     <Trash2 size={17} />
                   </button>
+                  
                 </div>
               )}
             </div>
