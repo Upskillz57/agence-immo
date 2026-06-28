@@ -12,7 +12,36 @@ import PropertyDescription from "@/components/PropertyDescription";
 import VirtualTourButton from "@/components/VirtualTourButton";
 
 
+export async function generateMetadata({ params }: any) {
+  const { id } = await params;
+  const property = await getPropertyById(id);
+  if (!property) return {};
 
+  const image = property.images?.[0];
+  const description = (property.description || "").slice(0, 200);
+  const title = `${property.title} — Marchal Immobilier`;
+  const url = `https://marchal-immo.fr/bien/${id}`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: "Marchal Immobilier",
+      images: image ? [{ url: image, width: 1200, height: 800 }] : [],
+      locale: "fr_FR",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: image ? [image] : [],
+    },
+  };
+}
 
 export default async function PropertyPage({ params }: any) {
   const { id } = await params;
