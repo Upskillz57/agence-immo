@@ -5,10 +5,6 @@ import { Inter, Source_Serif_4, Montserrat } from "next/font/google";
 import Footer from "../components/Footer";
 import "mapbox-gl/dist/mapbox-gl.css";
 
-
-
-
-
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
@@ -19,14 +15,13 @@ const montserrat = Montserrat({
   weight: ["400", "500", "600", "700"],
 });
 
-
-
 const sourceSerif = Source_Serif_4({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://marchalimmobilier.com"),
   title: "Marchal Immobilier",
   description: "Agence immobilière à Metz",
   icons: {
@@ -42,11 +37,9 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={`${montserrat.className} antialiased relative`}>
-
-      <Header />
+        <Header />
         {children}
         <Footer />
-
       </body>
     </html>
   );
