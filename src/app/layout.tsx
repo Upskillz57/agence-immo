@@ -21,7 +21,9 @@ const sourceSerif = Source_Serif_4({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://marchalimmobilier.com"),
+
+  metadataBase: new URL("https://www.marchalimmobilier.com"),
+
   title: "Marchal Immobilier",
   description: "Agence immobilière à Metz",
   icons: {
