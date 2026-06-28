@@ -179,7 +179,8 @@ if (pathname.startsWith("/admin")) return null;
   </Link>
 
   {/* NAV DESKTOP */}
-  <nav className="hidden md:flex items-center gap-7">
+  <nav className="hidden md:flex items-center gap-4 flex-nowrap whitespace-nowrap">
+
 
 
   {/*<Link href="/estimation" className="relative group text-white text-[14px] font-bold">
@@ -233,12 +234,17 @@ if (pathname.startsWith("/admin")) return null;
   </div>
 </div>
 
-<Link href="/recherche" className="relative group text-white text-[14px] font-semibold">
+<Link href="/recherche" className="relative group text-white text-[14px] font-semibold whitespace-nowrap">
   Nos biens
   <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
 </Link>
 
-<Link href="/centre-affaires" className="relative group text-white text-[14px] font-semibold">
+<Link href="/recherche?transaction=vendu" className="relative group text-white text-[14px] font-semibold whitespace-nowrap">
+  Nos biens vendus
+  <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
+</Link>
+
+<Link href="/centre-affaires" className="relative group text-white text-[14px] font-semibold whitespace-nowrap">
   Centre d&apos;affaires
   <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
 </Link>
@@ -247,7 +253,7 @@ if (pathname.startsWith("/admin")) return null;
 
 
 
-<Link href="/contact" className="relative group text-white text-[14px] font-semibold">
+<Link href="/contact" className="relative group text-white text-[14px] font-semibold whitespace-nowrap">
   Contact
   <span className="absolute left-0 -bottom-2 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
 </Link>
@@ -314,6 +320,10 @@ if (pathname.startsWith("/admin")) return null;
 
 <Link href="/recherche" onClick={() => setMenuOpen(false)}>
   Nos biens
+</Link>
+
+<Link href="/recherche?transaction=vendu" onClick={() => setMenuOpen(false)}>
+  Nos biens vendus
 </Link>
 
 <Link href="/centre-affaires" onClick={() => setMenuOpen(false)}>

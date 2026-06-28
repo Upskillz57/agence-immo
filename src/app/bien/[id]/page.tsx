@@ -50,7 +50,8 @@ export default async function PropertyPage({ params }: any) {
   const videoUrl = await getPropertyVideo(property.id);
 
   return (
-    <main className="pt-[80px] bg-white min-h-screen">
+    <main className="pt-[80px] bg-white min-h-screen overflow-x-hidden">
+
 
       {/* ← RETOUR */}
       <div className="max-w-7xl mx-auto px-4 pt-4">
@@ -75,7 +76,8 @@ export default async function PropertyPage({ params }: any) {
       controls
       playsInline
       preload="metadata"
-      className="rounded-xl bg-black h-[500px] w-auto"
+      className="rounded-xl bg-black h-[500px] w-auto max-w-full"
+
       poster={property.images?.[0]}
     >
       Votre navigateur ne supporte pas la lecture vidéo.
@@ -139,7 +141,8 @@ export default async function PropertyPage({ params }: any) {
     {(property.price || 0).toLocaleString("fr-FR")} €
   </div>
 
-  <div className="flex gap-8 mt-4 text-sm text-gray-600">
+  <div className="flex flex-wrap gap-4 md:gap-8 mt-4 text-sm text-gray-600">
+
     <span className="flex items-center gap-2">
       <Maximize size={16} className="text-gray-400" />
       {property.surface} m²
