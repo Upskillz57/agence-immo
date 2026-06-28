@@ -95,45 +95,31 @@ export default async function PropertyPage({ params }: any) {
           <div className="lg:col-span-2">
 
             {/* MINIMAP + TITRE + ACTIONS */}
-            <div className="flex items-start justify-between gap-4 mb-6">
+            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
 
-              <div className="flex items-start gap-4">
-                {/* MINIMAP PLACEHOLDER */}
-                <div className="w-[80px] h-[80px] overflow-hidden shrink-0 flex items-center justify-center">
-  <img
-    src="/mi_noirok.png"
-    className="w-full h-full object-contain"
-  />
+  <div className="flex items-start gap-4 min-w-0">
+    {/* MINIMAP PLACEHOLDER */}
+    <div className="w-[80px] h-[80px] overflow-hidden shrink-0 flex items-center justify-center">
+      <img src="/mi_noirok.png" className="w-full h-full object-contain" />
+    </div>
+
+    <div className="min-w-0">
+      <h1 className="text-2xl md:text-3xl font-semibold text-gray-900 leading-tight">
+        {property.title}
+      </h1>
+      <p className="text-gray-500 text-sm mt-1">
+        {property.postalCode} {property.city}
+      </p>
+    </div>
+  </div>
+
+  {/* ACTIONS */}
+  <div className="flex items-center gap-2 shrink-0">
+    <WhatsAppButton propertyTitle={property.title} propertyId={property.id} />
+    <ShareButton title={property.title} id={property.id} />
+  </div>
+
 </div>
-
-                <div>
-                  <h1 className="text-2xl md:text-3xl font-semibold text-gray-900 leading-tight">
-                    {property.title}
-                  </h1>
-                  <p className="text-gray-500 text-sm mt-1">
-                    {property.postalCode} {property.city}
-                  </p>
-                </div>
-              </div>
-
-              {/* ACTIONS */}
-<div className="flex items-center gap-2 shrink-0">
-  
-  {/*
-  <button className="flex items-center gap-2 border border-gray-200 rounded-full px-4 py-2 text-sm text-rose-500 hover:border-rose-300">
-    <Heart size={15} /> Sauvegarder
-  </button>*/}
-
-  <WhatsAppButton
-    propertyTitle={property.title}
-    propertyId={property.id}
-  />
-</div>
-
-<ShareButton title={property.title} id={property.id} />
-
-
-            </div>
 
             {/* PRIX + STATS */}
 <div className="border-t border-b py-5 mb-8">
