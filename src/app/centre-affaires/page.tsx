@@ -15,7 +15,7 @@ const services = [
   "Le courtage en financement",
   "Les assurances",
   "La construction",
-  "L'architecture et l'architecture d'intérieur",
+  "L'architecture d'intérieur",
   "L'agencement sur mesure et les cuisines",
   "Les travaux et la rénovation",
   "Les diagnostics immobiliers",

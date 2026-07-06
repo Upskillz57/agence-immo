@@ -83,6 +83,14 @@ function Tag({ label, onRemove }: { label: string; onRemove: () => void }) {
   );
 }
 
+function normalize(str: string = "") {
+  return str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
 // ─── Composant principal ───────────────────────────────────────────────────────
 export default function RechercheClient() {
 
@@ -211,13 +219,15 @@ if (filters.surfaceMax && (p.surface || 0) > Number(filters.surfaceMax)) return 
         // ── Rayon ──────────────────────────────────────────────────────────
        // ── Localisation ───────────────────────────────────────────────────
 if (filters.location.trim()) {
-  const q = filters.location.trim().toLowerCase();
+  const q = normalize(filters.location);
+const city = normalize(p.city);
+const postalCode = normalize(p.postalCode);
   const isPostalQuery = /^\d+$/.test(q);
 
   // Correspondance texte directe sur city ou postalCode
   const textMatch =
-    p.city?.toLowerCase().includes(q) ||
-    p.postalCode?.toLowerCase().includes(q);
+  city.includes(q) ||
+  postalCode.includes(q);
 
   if (!textMatch) {
     // Si c'est un CP pur et qu'on a les coords → tenter Haversine
