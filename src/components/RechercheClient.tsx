@@ -86,9 +86,11 @@ function Tag({ label, onRemove }: { label: string; onRemove: () => void }) {
 function normalize(str: string = "") {
   return str
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim();
+    .replace(/[\u0300-\u036f]/g, "") // supprime les accents
+    .replace(/[-']/g, " ")           // tirets et apostrophes -> espace
+    .replace(/\s+/g, " ")            // espaces multiples -> un seul
+    .trim()
+    .toLowerCase();
 }
 
 // ─── Composant principal ───────────────────────────────────────────────────────
