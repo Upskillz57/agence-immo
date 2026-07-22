@@ -111,12 +111,12 @@ export default function ContactPage() {
                 Horaires
               </h3>
               <p className="text-base text-gray-700">
-                Lun - Ven : 8h - 12h3O et 13h30 - 19H
+                Lun - Jeu : 9h - 12h et 14h00 - 18H
 
               </p>
               <p className="text-base text-gray-700">
 
-                Samedi : 9h - 12h30 et 13h30 - 18H
+                Ven : 9h - 12h00 et 14h - 17H
               </p>
             </div>
 
