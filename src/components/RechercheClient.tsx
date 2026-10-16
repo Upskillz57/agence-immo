@@ -87,10 +87,12 @@ function normalize(str: string = "") {
   return str
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "") // supprime les accents
-    .replace(/[-']/g, " ")           // tirets et apostrophes -> espace
-    .replace(/\s+/g, " ")            // espaces multiples -> un seul
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")     // tirets (-, –, —), apostrophes (', ’), points… -> espace
+    .replace(/\bste\b/g, "sainte")   // "Ste-Marie" -> "sainte marie"
+    .replace(/\bst\b/g, "saint")     // "St-Avold"  -> "saint avold"
     .trim()
-    .toLowerCase();
+    .replace(/ /g, "");              // "saint avold" / "saint-avold" / "saintavold" -> "saintavold"
 }
 
 // ─── Composant principal ───────────────────────────────────────────────────────
