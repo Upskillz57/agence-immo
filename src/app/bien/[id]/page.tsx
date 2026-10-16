@@ -18,7 +18,11 @@ export async function generateMetadata({ params }: any) {
   if (!property) return {};
 
   const image = property.images?.[0];
-  const description = (property.description || "").slice(0, 200);
+  const description = (property.description || "")
+    .replace(/\*\*/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 200);
   const title = `${property.title} — Marchal Immobilier`;
   const url = `https://www.marchalimmobilier.com/bien/${id}`;
 

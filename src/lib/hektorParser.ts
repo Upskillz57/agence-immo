@@ -153,7 +153,15 @@ export async function parseHektorCSV() {
           console.log("🔍 AUBE GEO:", geo, "postal:", postal);
         }
 
-      const description = (get(20) || "").replace(/<[^>]*>/g, "");
+      // On garde les retours à la ligne de Hektor (<br>) pour la mise en forme
+      const description = (get(20) || "")
+        .replace(/<br[^>]*>/gi, "\n")
+        .replace(/<[^>]*>/g, "")
+        .split("\n")
+        .map((l) => l.trim())
+        .join("\n")
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
       const title = get(19) || "Sans titre";
 
 
